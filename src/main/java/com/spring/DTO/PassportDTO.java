@@ -9,7 +9,7 @@ import javax.validation.constraints.NotBlank;
 @Data
 @NoArgsConstructor
 public class PassportDTO {
-    @JsonProperty("passport_id")
+    @JsonProperty("id")
     private Long id;
 
     @NotBlank

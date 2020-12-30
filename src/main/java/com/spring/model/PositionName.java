@@ -17,8 +17,15 @@ public class PositionName {
     @Column(nullable = false)
     private String name;
 
-    @OneToMany(mappedBy = "positionName")
+    @OneToMany(mappedBy = "positionName", cascade = CascadeType.ALL)
     private List<Position> positions = new ArrayList<>();
+
+    public PositionName() {
+    }
+
+    public PositionName(Long id) {
+        this.id = id;
+    }
 
     @Override
     public String toString() {

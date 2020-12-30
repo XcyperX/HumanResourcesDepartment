@@ -20,6 +20,13 @@ public class Subdivision {
     @OneToMany(mappedBy = "subdivision")
     private List<Employee> employees = new ArrayList<>();
 
+    public Subdivision() {
+    }
+
+    public Subdivision(Long id) {
+        this.id = id;
+    }
+
     @Override
     public String toString() {
         return "Subdivision{" +

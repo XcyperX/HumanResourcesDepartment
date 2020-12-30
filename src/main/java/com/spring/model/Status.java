@@ -20,6 +20,13 @@ public class Status {
     @OneToMany(mappedBy = "status")
     private List<Employee> employees = new ArrayList<>();
 
+    public Status() {
+    }
+
+    public Status(Long id) {
+        this.id = id;
+    }
+
     @Override
     public String toString() {
         return "Status{" +

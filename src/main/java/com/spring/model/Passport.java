@@ -26,8 +26,15 @@ public class Passport {
     @Column(nullable = false)
     private String dateIssue;
 
-    @OneToMany(mappedBy = "passport")
-    private List<Employee> employees = new ArrayList<>();
+    @OneToOne(mappedBy = "passport")
+    private Employee employees;
+
+    public Passport() {
+    }
+
+    public Passport(Long id) {
+        this.id = id;
+    }
 
     @Override
     public String toString() {

@@ -1,10 +1,13 @@
 package com.spring.DTO;
 
 import com.fasterxml.jackson.annotation.JsonProperty;
+import com.spring.model.Passport;
+import com.spring.model.Position;
 import lombok.Data;
 import lombok.NoArgsConstructor;
 
 import javax.validation.constraints.NotBlank;
+import javax.validation.constraints.NotNull;
 import java.time.LocalDate;
 
 @Data
@@ -21,11 +24,10 @@ public class EmployeeDTO {
     @JsonProperty("last_name")
     private String lastName;
 
-    @NotBlank
     @JsonProperty("address")
     private AddressDTO address;
 
-    @NotBlank
+    @NotNull
     @JsonProperty("number_inn")
     private Integer numberINN;
 
@@ -42,19 +44,17 @@ public class EmployeeDTO {
     @NotBlank
     private String gender;
 
-    @NotBlank
-    @JsonProperty("position_id")
-    private Long positionId;
+    @NotNull
+    private PositionDTO position;
 
-    @NotBlank
+    @NotNull
     @JsonProperty("subdivision_id")
     private Long subdivisionId;
 
-    @NotBlank
+    @NotNull
     @JsonProperty("status_id")
     private Long statusId;
 
-    @NotBlank
-    @JsonProperty("passport_id")
-    private Long passportId;
+    @NotNull
+    private PassportDTO passport;
 }

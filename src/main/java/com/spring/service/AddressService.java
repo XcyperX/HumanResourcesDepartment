@@ -1,7 +1,8 @@
-//package com.spring.service;
-//
-//import com.spring.webcontent.DTO.AddressDTO;
-//import com.spring.webcontent.base.CRUDService;
-//
-//public interface AddressService extends CRUDService<AddressDTO, Long> {
-//}
+package com.spring.service;
+
+
+import com.spring.DTO.AddressDTO;
+import com.spring.base.CRUDService;
+
+public interface AddressService extends CRUDService<AddressDTO, Long> {
+}

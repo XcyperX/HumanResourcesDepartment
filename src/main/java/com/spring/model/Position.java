@@ -15,7 +15,7 @@ public class Position {
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
 
-    @ManyToOne
+    @ManyToOne(fetch = FetchType.EAGER, cascade = CascadeType.MERGE)
     @JoinColumn(name = "position_id", referencedColumnName = "id")
     private PositionName positionName;
 
@@ -23,8 +23,15 @@ public class Position {
 
     private LocalDate dateDismissal;
 
-    @OneToMany(mappedBy = "position")
-    private List<Employee> employees = new ArrayList<>();
+    @OneToOne(mappedBy = "position")
+    private Employee employees;
+
+    public Position() {
+    }
+
+    public Position(Long id) {
+        this.id = id;
+    }
 
     @Override
     public String toString() {
