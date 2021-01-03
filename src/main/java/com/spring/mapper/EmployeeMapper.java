@@ -31,8 +31,10 @@ public class EmployeeMapper implements MapperService<Employee, EmployeeDTO> {
         employee.setGender(Gender.valueOf(dto.getGender()));
         employee.setPosition(positionMapper.toEntity(dto.getPosition()));
         employee.setSubdivision(new Subdivision(dto.getSubdivisionId()));
-        employee.setStatus(new Status(dto.getStatusId()));
+        employee.setStatus(dto.getStatus());
         employee.setPassport(passportMapper.toEntity(dto.getPassport()));
+        employee.setVacationStart(dto.getVacationStart());
+        employee.setVacationFinal(dto.getVacationFinal());
         return employee;
     }
 
@@ -50,8 +52,10 @@ public class EmployeeMapper implements MapperService<Employee, EmployeeDTO> {
         employeeDTO.setGender(entity.getGender().getNameGender());
         employeeDTO.setPosition(positionMapper.toDto(entity.getPosition()));
         employeeDTO.setSubdivisionId(entity.getSubdivision().getId());
-        employeeDTO.setStatusId(entity.getStatus().getId());
+        employeeDTO.setStatus(entity.getStatus());
         employeeDTO.setPassport(passportMapper.toDto(entity.getPassport()));
+        employeeDTO.setVacationStart(entity.getVacationStart());
+        employeeDTO.setVacationFinal(entity.getVacationFinal());
         return employeeDTO;
     }
 

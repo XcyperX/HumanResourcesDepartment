@@ -7,6 +7,8 @@ import com.spring.service.PositionService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
+import java.util.List;
+
 @Service
 public class PositionServiceImpl implements PositionService {
     @Autowired
@@ -14,8 +16,11 @@ public class PositionServiceImpl implements PositionService {
     @Autowired
     private PositionRepository positionRepository;
     @Override
-    public PositionDTO getById(Long aLong) {
-        return null;
+    public PositionDTO getById(Long id) {
+        if (positionRepository.findById(id).isEmpty()) {
+            throw new RuntimeException("Ошибка, нет такогой должности!");
+        }
+        return positionMapper.toDto(positionRepository.findById(id).get());
     }
 
     @Override
@@ -31,5 +36,10 @@ public class PositionServiceImpl implements PositionService {
     @Override
     public void delete(Long aLong) {
 
+    }
+
+    @Override
+    public List<PositionDTO> findAll() {
+        return positionMapper.toDtos(positionRepository.findAll());
     }
 }

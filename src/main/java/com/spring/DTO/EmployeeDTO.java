@@ -37,9 +37,9 @@ public class EmployeeDTO {
     @NotBlank
     private String phone;
 
-    @NotBlank
+    @NotNull
     @JsonProperty("date_birth")
-    private String dateBirth;
+    private LocalDate dateBirth;
 
     @NotBlank
     private String gender;
@@ -51,10 +51,14 @@ public class EmployeeDTO {
     @JsonProperty("subdivision_id")
     private Long subdivisionId;
 
-    @NotNull
-    @JsonProperty("status_id")
-    private Long statusId;
+    private String status;
 
     @NotNull
     private PassportDTO passport;
+
+    @JsonProperty("vacation_start")
+    private LocalDate vacationStart;
+
+    @JsonProperty("vacation_final")
+    private LocalDate vacationFinal;
 }

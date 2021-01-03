@@ -13,7 +13,11 @@ public class PassportMapper implements MapperService<Passport, PassportDTO> {
     @Override
     public Passport toEntity(PassportDTO dto) {
         Passport passport = new Passport();
-        passport.setId(dto.getId());
+        if (dto.getId() != null) {
+            passport.setId(dto.getId());
+        } else {
+            passport.setId(null);
+        }
         passport.setNumberSeries(dto.getNumberSeries());
         passport.setPassportId(dto.getPassportId());
         passport.setIssuedBy(dto.getIssuedBy());

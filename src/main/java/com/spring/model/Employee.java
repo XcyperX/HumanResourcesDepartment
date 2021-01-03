@@ -19,7 +19,7 @@ public class Employee {
     @Column(nullable = false)
     private String lastName;
 
-    @OneToOne(cascade = CascadeType.ALL)
+    @OneToOne(cascade = CascadeType.PERSIST)
     @JoinColumn(name = "address_id")
     private Address address;
 
@@ -33,7 +33,7 @@ public class Employee {
     private String phone;
 
     @Column(nullable = false)
-    private String dateBirth;
+    private LocalDate dateBirth;
 
     @Enumerated(EnumType.STRING)
     private Gender gender;
@@ -46,13 +46,16 @@ public class Employee {
     @JoinColumn(name = "subdivision_id", referencedColumnName = "id")
     private Subdivision subdivision;
 
-    @ManyToOne
-    @JoinColumn(name = "status_id", referencedColumnName = "id")
-    private Status status;
+    private String status;
 
-    @OneToOne(cascade = CascadeType.ALL)
+    @OneToOne(cascade = {CascadeType.ALL})
     @JoinColumn(name = "passport_id", referencedColumnName = "id")
     private Passport passport;
+
+    private LocalDate vacationStart;
+
+    private LocalDate vacationFinal;
+
 
     public Employee() {
     }

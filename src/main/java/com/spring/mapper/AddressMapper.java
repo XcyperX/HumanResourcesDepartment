@@ -13,6 +13,11 @@ public class AddressMapper implements MapperService<Address, AddressDTO> {
     @Override
     public Address toEntity(AddressDTO dto) {
         Address address = new Address();
+        if (dto.getId() != null) {
+            address.setId(dto.getId());
+        } else {
+            address.setId(null);
+        }
         address.setCity(dto.getCity());
         address.setHouse(dto.getHouse());
         address.setFlat(dto.getFlat());

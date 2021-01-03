@@ -14,7 +14,11 @@ public class PositionMapper implements MapperService<Position, PositionDTO> {
     @Override
     public Position toEntity(PositionDTO dto) {
         Position position = new Position();
-        position.setId(dto.getId());
+        if (dto.getId() != null) {
+            position.setId(dto.getId());
+        } else {
+            position.setId(null);
+        }
         position.setPositionName(new PositionName(dto.getPositionNameId()));
         position.setDateReceipt(dto.getDateReceipt());
         position.setDateDismissal(dto.getDateDismissal());

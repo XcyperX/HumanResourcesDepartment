@@ -7,6 +7,8 @@ import com.spring.service.SubdivisionService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
+import java.util.List;
+
 @Service
 public class SubdivisionServiceImpl implements SubdivisionService {
     @Autowired
@@ -31,5 +33,10 @@ public class SubdivisionServiceImpl implements SubdivisionService {
     @Override
     public void delete(Long aLong) {
 
+    }
+
+    @Override
+    public List<SubdivisionDTO> findAll() {
+        return subdivisionMapper.toDtos(subdivisionRepository.findAll());
     }
 }

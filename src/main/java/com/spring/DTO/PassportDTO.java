@@ -9,7 +9,7 @@ import javax.validation.constraints.NotBlank;
 @Data
 @NoArgsConstructor
 public class PassportDTO {
-    @JsonProperty("id")
+    @JsonProperty("pas_id")
     private Long id;
 
     @NotBlank
@@ -27,4 +27,9 @@ public class PassportDTO {
     @NotBlank
     @JsonProperty("date_issue")
     private String dateIssue;
+
+    @Override
+    public String toString() {
+        return numberSeries + ", " + passportId + ", " + issuedBy + ", " + dateIssue;
+    }
 }

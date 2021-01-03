@@ -15,7 +15,7 @@ public class Position {
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
 
-    @ManyToOne(fetch = FetchType.EAGER, cascade = CascadeType.MERGE)
+    @ManyToOne()
     @JoinColumn(name = "position_id", referencedColumnName = "id")
     private PositionName positionName;
 

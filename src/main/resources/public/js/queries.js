@@ -34,17 +34,73 @@ submitUpdateUserById = (user_id) => {
     updateUserById(user_id, user);
 }
 
-submitNewRequest = () => {
-    request.types = document.getElementById("types").value;
-    request.description = document.getElementById("description").value;
-    request.email = document.getElementById("email").value;
-    request.phone = document.getElementById("phone").value;
-    request.status = "UNDER_CONSIDERATION";
-    request.address.city = document.getElementById("city").value;
-    request.address.street = document.getElementById("street").value;
-    request.address.house = document.getElementById("house").value;
-    request.address.flat = document.getElementById("flat").value;
-    createNewRequest(request);
+submitNewEmployees = () => {
+    employee.first_name = document.getElementById("first_name").value;
+    employee.last_name = document.getElementById("last_name").value;
+    employee.passport.number_series = Number(document.getElementById("number_series").value);
+    employee.passport.passport_id = Number(document.getElementById("passport_id").value);
+    employee.passport.issued_by = document.getElementById("issued_by").value;
+    employee.passport.date_issue = document.getElementById("date_issue").value;
+    employee.email = document.getElementById("email").value;
+    employee.phone = document.getElementById("phone").value;
+    employee.date_birth = document.getElementById("date_birth").value;
+    employee.address.city = document.getElementById("city").value;
+    employee.address.street = document.getElementById("street").value;
+    employee.address.house = document.getElementById("house").value;
+    employee.address.flat = document.getElementById("flat").value;
+    employee.number_inn = Number(document.getElementById("number_inn").value);
+    employee.gender = document.getElementById("genders").value;
+    employee.subdivision_id = document.getElementById("subdivision").value;
+    employee.position.position_name_id = document.getElementById("positions").value;
+    employee.position.date_receipt = document.getElementById("date_receipt").value;
+    console.log(employee);
+    createNewEmployee(employee);
+}
+
+submitUpdateEmployees = (employee_id) => {
+    employee.first_name = document.getElementById("first_name").value;
+    employee.last_name = document.getElementById("last_name").value;
+    employee.passport.number_series = Number(document.getElementById("number_series").value);
+    employee.passport.passport_id = Number(document.getElementById("passport_id").value);
+    employee.passport.issued_by = document.getElementById("issued_by").value;
+    employee.passport.date_issue = document.getElementById("date_issue").value;
+    employee.email = document.getElementById("email").value;
+    employee.phone = document.getElementById("phone").value;
+    employee.date_birth = document.getElementById("date_birth").value;
+    employee.address.city = document.getElementById("city").value;
+    employee.address.street = document.getElementById("street").value;
+    employee.address.house = document.getElementById("house").value;
+    employee.address.flat = document.getElementById("flat").value;
+    employee.number_inn = Number(document.getElementById("number_inn").value);
+    employee.gender = document.getElementById("genders").value;
+    employee.subdivision_id = document.getElementById("subdivision").value;
+    employee.position.position_name_id = document.getElementById("positions").value;
+    employee.position.date_receipt = document.getElementById("date_receipt").value;
+    employee.position.date_dismissal = document.getElementById("date_dismissal").value;
+    employee.status = document.getElementById("status").value;
+    employee.passport.pas_id = Number(document.getElementById("pas_id").value);
+    employee.address.address_id = Number(document.getElementById("address_id").value);
+    employee.position.position_id = Number(document.getElementById("position_id").value);
+    console.log(employee);
+    updateEmployeeById(employee_id, employee);
+}
+
+submitNewSubdivision = () => {
+    if (document.getElementById("subdivision").value !== "") {
+        subdivision.name = document.getElementById("subdivision").value;
+        createNewSubdivision(subdivision);
+    } else {
+        alert("Введите название подразделения!!!")
+    }
+}
+
+submitNewPosition = () => {
+    if (document.getElementById("position").value !== "") {
+        position.name = document.getElementById("position").value;
+        createNewPosition(position);
+    } else {
+        alert("Введите название должности!!!")
+    }
 }
 
 const user = {
@@ -54,18 +110,49 @@ const user = {
     role: ""
 }
 
-const request = {
-    types: "",
-    description: "",
+const employee = {
+    first_name: "",
+    last_name: "",
+    passport: {
+        pas_id: null,
+        number_series: -1,
+        passport_id: -1,
+        issued_by: "",
+        date_issue: ""
+    },
     email: "",
     phone: "",
-    status: "",
+    date_birth: "",
     address: {
+        address_id: null,
         city: "",
         street: "",
         house: "",
         flat: ""
-    }
+    },
+    number_inn: -1,
+    gender: "",
+    subdivision_id: -1,
+    position: {
+        position_id: null,
+        position_name_id: "",
+        date_receipt: "",
+        date_dismissal: ""
+    },
+    status: ""
+}
+
+const subdivision = {
+    name: ""
+}
+
+const position = {
+    name: ""
+}
+
+const vacation = {
+    vacation_start: "",
+    vacation_final: ""
 }
 
 
@@ -121,8 +208,8 @@ deleteUserById = (user_id) => {
     });
 }
 
-declinedRequestById = (request_id) => {
-    sendRequest('PUT', '/api/requests/declined/employee/' + request_id).then(response => {
+createNewSubdivision = (subdivision) => {
+    sendRequest('POST', '/api/subdivisions', subdivision).then(response => {
         if (response.ok) {
             console.log(response);
             document.location.reload(true);
@@ -132,8 +219,8 @@ declinedRequestById = (request_id) => {
     });
 }
 
-acceptedRequestById = (request_id) => {
-    sendRequest('PUT', '/api/requests/accepted/employee/' + request_id).then(response => {
+createNewPosition = (position) => {
+    sendRequest('POST', '/api/positions/names', position).then(response => {
         if (response.ok) {
             console.log(response);
             document.location.reload(true);
@@ -143,27 +230,44 @@ acceptedRequestById = (request_id) => {
     });
 }
 
-performedRequestById = (request_id) => {
-    getRequestById(request_id).then(request => {
-        let price = document.getElementById("price_" + request_id).value;
-        if (price === "") {
-            alert("Введите стоимость услуги!")
+createNewEmployee = (employee) => {
+    sendRequest('POST', '/api/employees', employee).then(response => {
+        if (response.ok) {
+            console.log(response);
+            document.location.reload(true);
         } else {
-            request.price = price;
-            sendRequest('PUT', '/api/requests/performed/', request).then(response => {
-                if (response.ok) {
-                    console.log(response);
-                    document.location.reload(true);
-                } else {
-                    console.log(response);
-                }
-            });
+            console.log(response);
         }
-    })
+    });
 }
 
-getRequestById = (request_id) => {
-    return sendRequest('GET', '/api/get/requests/' + request_id).then(response => {
+updateEmployeeById = (employee_id, employee) => {
+    sendRequest('PUT', '/api/employees/' + employee_id, employee).then(response => {
+        if (response.ok) {
+            console.log(response);
+            document.location.href = "http://localhost:8080/employees";
+        } else {
+            console.log(response);
+        }
+    });
+}
+
+updateEmployeeVacationById = (employee_id) => {
+    vacation.vacation_start = document.getElementById("vacation_start").value;
+    vacation.vacation_final = document.getElementById("vacation_final").value;
+    console.log(vacation);
+    sendRequest('PUT', '/api/employees/vacation/' + employee_id, vacation).then(response => {
+        if (response.ok) {
+            console.log(response);
+            document.location.href = "http://localhost:8080/vacation";
+        } else {
+            console.log(response);
+        }
+    });
+}
+
+getEmployeeById = (employee_id) => {
+    return sendRequest('GET', '/api/get/employee/' + employee_id).then(response => {
         if (response.ok) {
             return response.json();
         } else {
@@ -172,8 +276,8 @@ getRequestById = (request_id) => {
     });
 }
 
-createNewRequest = (request) => {
-    sendRequest('POST', '/api/requests', request).then(response => {
+deleteEmployeeById = (employee_id) => {
+    sendRequest('DELETE', '/api/employees/' + employee_id).then(response => {
         if (response.ok) {
             console.log(response);
             document.location.reload(true);
@@ -182,14 +286,3 @@ createNewRequest = (request) => {
         }
     });
 }
-
-
-$(document).ready(function(){
-    $('#types').change(function(){
-        if (this.value === "CONNECTION") {
-            document.getElementsByClassName("description")[0].hidden = true;
-        } else {
-            document.getElementsByClassName("description")[0].hidden = false;
-        }
-    });
-});
