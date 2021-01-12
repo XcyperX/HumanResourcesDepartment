@@ -1,20 +1,17 @@
 <#macro employee employees subdivisions positionsNames create=true vacation=false>
-    <div class="container pl-5 pr-5">
+    <#--<div class="container pl-5 pr-5">-->
         <div class="row">
             <div class="col-sm">
-                <form id="createEmployee" name="createEmployee">
+                <form id="createEmployee<#if employees?has_content>_${employees.id}</#if>" name="createEmployee">
                     <#if !vacation>
-                        <div class="form-row">
-                            <label>Форма заявки</label>
-                        </div>
                         <div class="form-row mb-2">
-                            <div class="form-group col-md-6">
+                            <div class="form-group col-md-6 pl-0 ml-0">
                                 <label>Введите имя</label>
                                 <input id="first_name" type="text" name="first_name" class="form-control"
                                        placeholder="Введите имя"
                                        value="<#if employees?has_content>${employees.firstName}</#if>">
                             </div>
-                            <div class="form-group col-md-6">
+                            <div class="form-group col-md-6 pr-0 mr-0">
                                 <label>Введите фамилию</label>
                                 <input id="last_name" type="text" name="last_name" class="form-control"
                                        placeholder="Введите фамилию"
@@ -22,7 +19,7 @@
                             </div>
                         </div>
                         <div class="form-row mb-2">
-                            <div class="form-group col-md-3">
+                            <div class="form-group col-md-3  px-0 mx-0">
                                 <label>Серия паспорта</label>
                                 <input id="number_series" type="text" name="number_series" class="form-control"
                                        placeholder="Введите серию паспорта"
@@ -40,7 +37,7 @@
                                        placeholder="Введите кем выдан паспорт"
                                        value="<#if employees?has_content>${employees.passport.issuedBy}</#if>">
                             </div>
-                            <div class="form-group col-md-3">
+                            <div class="form-group col-md-3  px-0 mx-0">
                                 <label>Дата выдачи</label>
                                 <input id="date_issue" type="date" name="date_issue" class="form-control"
                                        value="<#if employees?has_content>${employees.passport.dateIssue}</#if>">
@@ -63,7 +60,7 @@
                                    value="<#if employees?has_content>${employees.dateBirth}</#if>">
                         </div>
                         <div class="form-row mb-2">
-                            <div class="form-group col-md-3">
+                            <div class="form-group col-md-3 px-0 mx-0">
                                 <label>Введите город</label>
                                 <input id="city" type="text" name="city" class="form-control"
                                        placeholder="Введите город"
@@ -81,7 +78,7 @@
                                        placeholder="Введите дом"
                                        value="<#if employees?has_content>${employees.address.house}</#if>">
                             </div>
-                            <div class="form-group col-md-3">
+                            <div class="form-group col-md-3  px-0 mx-0">
                                 <label>Введите квартиры</label>
                                 <input id="flat" type="text" name="flat" class="form-control"
                                        placeholder="Введите квартиру"
@@ -145,14 +142,14 @@
                                 </#list>
                             </select>
                         </div>
-                        <div class="form-row mb-2">
-                            <div class="form-group col-md-3">
+                        <div class="form-row">
+                            <div class="form-group col-md-3 pl-0 ml-0">
                                 <label>Дата приема на работу</label>
                                 <input id="date_receipt" type="date" name="date_receipt" class="form-control"
                                        value="<#if employees?has_content>${employees.position.dateReceipt}</#if>">
                             </div>
                             <#if !create>
-                                <div class="form-group col-md-3">
+                                <div class="form-group col-md-3  pr-0 mr-0">
                                     <label>Дата увольнения</label>
                                     <input id="date_dismissal" type="date" name="date_dismissal" class="form-control"
                                            value="<#if employees?has_content && employees.position.dateDismissal?has_content>${employees.position.dateDismissal}</#if>">
@@ -173,39 +170,34 @@
                                value="<#if employees?has_content>${employees.address.id}</#if>" hidden>
                         <input id="position_id" type="text"
                                value="<#if employees?has_content>${employees.position.id}</#if>" hidden>
-                        <#if employees?has_content>
-                            <div class="form-row">
-                                <input class="btn btn-primary  mb-4" type="button"
-                                       onclick="submitUpdateEmployees(${employees.id})"
-                                       value="Изменить сотрудника">
-                            </div>
-                        <#else>
-                            <div class="form-row">
-                                <input class="btn btn-primary  mb-4" type="button" onclick="submitNewEmployees()"
-                                       value="Добавить сотрудника">
-                            </div>
-                        </#if>
+                        <#--<#if employees?has_content>-->
+                            <#--<div class="form-row">-->
+                                <#--<input class="btn btn-primary  mb-4" type="button"-->
+                                       <#--onclick="submitUpdateEmployees(${employees.id})"-->
+                                       <#--value="Изменить сотрудника">-->
+                            <#--</div>-->
+                        <#--&lt;#&ndash;<#else>&ndash;&gt;-->
+                            <#--&lt;#&ndash;<div class="form-row">&ndash;&gt;-->
+                                <#--&lt;#&ndash;<input class="btn btn-primary  mb-4" type="button" onclick="submitNewEmployees()"&ndash;&gt;-->
+                                       <#--&lt;#&ndash;value="Добавить сотрудника">&ndash;&gt;-->
+                            <#--&lt;#&ndash;</div>&ndash;&gt;-->
+                        <#--</#if>-->
                     <#else>
                         <div class="form-row mb-2">
-                            <div class="form-group col-md-6">
+                            <div class="form-group col-md-6 pl-0 ml-0">
                                 <label>Дата начала отпуска</label>
                                 <input id="vacation_start" type="date" name="vacation_start" class="form-control"
                                        value="<#if employees?has_content && employees.vacationStart?has_content>${employees.vacationStart}</#if>">
                             </div>
-                            <div class="form-group col-md-6">
+                            <div class="form-group col-md-6 pr-0 mr-0">
                                 <label>Дата окончания отпуска</label>
                                 <input id="vacation_final" type="date" name="vacation_final" class="form-control"
                                        value="<#if employees?has_content && employees.vacationFinal?has_content>${employees.vacationFinal}</#if>">
                             </div>
                         </div>
-                        <div class="form-row">
-                            <input class="btn btn-primary  mb-4" type="button"
-                                   onclick="updateEmployeeVacationById(${employees.id})"
-                                   value="Изменить сотрудника">
-                        </div>
                     </#if>
                 </form>
             </div>
-        </div>
+        <#--</div>-->
     </div>
 </#macro>

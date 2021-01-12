@@ -75,32 +75,38 @@ public class UiController {
         return "listEmployeesByAll";
     }
 
-    @GetMapping("/employees/{id}")
-    public String editEmployee(@PathVariable("id") Long id, Model model) throws TemplateModelException {
-        TemplateHashModel gender = BeansWrapper.getDefaultInstance().getEnumModels();
-        gender = (TemplateHashModel) gender.get("com.spring.model.Gender");
-        model.addAttribute("employees", employeeService.getById(id));
-        model.addAttribute("subdivisions", subdivisionService.findAll());
-        model.addAttribute("positions", positionService.findAll());
-        model.addAttribute("genders", gender);
-        model.addAttribute("positionsNames", positionNameService.findAll());
-        return "employeesEdit";
-    }
+//    @GetMapping("/employees/{id}")
+//    public String editEmployee(@PathVariable("id") Long id, Model model) throws TemplateModelException {
+//        TemplateHashModel gender = BeansWrapper.getDefaultInstance().getEnumModels();
+//        gender = (TemplateHashModel) gender.get("com.spring.model.Gender");
+//        model.addAttribute("employees", employeeService.getById(id));
+//        model.addAttribute("subdivisions", subdivisionService.findAll());
+//        model.addAttribute("positions", positionService.findAll());
+//        model.addAttribute("genders", gender);
+//        model.addAttribute("positionsNames", positionNameService.findAll());
+//        return "employeesEdit";
+//    }
 
     @GetMapping("/employees/subdivisions")
-    public String listEmployeesBySubdivision(Model model) {
+    public String listEmployeesBySubdivision(Model model) throws TemplateModelException {
+        TemplateHashModel gender = BeansWrapper.getDefaultInstance().getEnumModels();
+        gender = (TemplateHashModel) gender.get("com.spring.model.Gender");
         model.addAttribute("employees", employeeService.findAll());
         model.addAttribute("subdivisions", subdivisionService.findAll());
         model.addAttribute("positions", positionService.findAll());
+        model.addAttribute("genders", gender);
         model.addAttribute("positionsNames", positionNameService.findAll());
         return "listEmployeesBySubdivision";
     }
 
     @GetMapping("/employees/position")
-    public String listEmployeesByPosition(Model model) {
+    public String listEmployeesByPosition(Model model) throws TemplateModelException {
+        TemplateHashModel gender = BeansWrapper.getDefaultInstance().getEnumModels();
+        gender = (TemplateHashModel) gender.get("com.spring.model.Gender");
         model.addAttribute("employees", employeeService.findAll());
         model.addAttribute("subdivisions", subdivisionService.findAll());
         model.addAttribute("positions", positionService.findAll());
+        model.addAttribute("genders", gender);
         model.addAttribute("positionsNames", positionNameService.findAll());
         return "listEmployeesByPosition";
     }
@@ -114,17 +120,17 @@ public class UiController {
         return "listEmployeesByVacation";
     }
 
-    @GetMapping("/employees/vacation/{id}")
-    public String editEmployeeVacation(@PathVariable("id") Long id, Model model) throws TemplateModelException {
-        TemplateHashModel gender = BeansWrapper.getDefaultInstance().getEnumModels();
-        gender = (TemplateHashModel) gender.get("com.spring.model.Gender");
-        model.addAttribute("employees", employeeService.getById(id));
-        model.addAttribute("subdivisions", subdivisionService.findAll());
-        model.addAttribute("positions", positionService.findAll());
-        model.addAttribute("genders", gender);
-        model.addAttribute("positionsNames", positionNameService.findAll());
-        return "employeesEditByVacation";
-    }
+//    @GetMapping("/employees/vacation/{id}")
+//    public String editEmployeeVacation(@PathVariable("id") Long id, Model model) throws TemplateModelException {
+//        TemplateHashModel gender = BeansWrapper.getDefaultInstance().getEnumModels();
+//        gender = (TemplateHashModel) gender.get("com.spring.model.Gender");
+//        model.addAttribute("employees", employeeService.getById(id));
+//        model.addAttribute("subdivisions", subdivisionService.findAll());
+//        model.addAttribute("positions", positionService.findAll());
+//        model.addAttribute("genders", gender);
+//        model.addAttribute("positionsNames", positionNameService.findAll());
+//        return "employeesEditByVacation";
+//    }
 
     @GetMapping(value = "/pdf/request", produces = MediaType.APPLICATION_PDF_VALUE)
     public ResponseEntity<InputStreamResource> chequeRequestReport(@AuthenticationPrincipal User user){

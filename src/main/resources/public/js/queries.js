@@ -58,29 +58,30 @@ submitNewEmployees = () => {
 }
 
 submitUpdateEmployees = (employee_id) => {
-    employee.first_name = document.getElementById("first_name").value;
-    employee.last_name = document.getElementById("last_name").value;
-    employee.passport.number_series = Number(document.getElementById("number_series").value);
-    employee.passport.passport_id = Number(document.getElementById("passport_id").value);
-    employee.passport.issued_by = document.getElementById("issued_by").value;
-    employee.passport.date_issue = document.getElementById("date_issue").value;
-    employee.email = document.getElementById("email").value;
-    employee.phone = document.getElementById("phone").value;
-    employee.date_birth = document.getElementById("date_birth").value;
-    employee.address.city = document.getElementById("city").value;
-    employee.address.street = document.getElementById("street").value;
-    employee.address.house = document.getElementById("house").value;
-    employee.address.flat = document.getElementById("flat").value;
-    employee.number_inn = Number(document.getElementById("number_inn").value);
-    employee.gender = document.getElementById("genders").value;
-    employee.subdivision_id = document.getElementById("subdivision").value;
-    employee.position.position_name_id = document.getElementById("positions").value;
-    employee.position.date_receipt = document.getElementById("date_receipt").value;
-    employee.position.date_dismissal = document.getElementById("date_dismissal").value;
-    employee.status = document.getElementById("status").value;
-    employee.passport.pas_id = Number(document.getElementById("pas_id").value);
-    employee.address.address_id = Number(document.getElementById("address_id").value);
-    employee.position.position_id = Number(document.getElementById("position_id").value);
+    let legacyEmployee = document.getElementById("createEmployee_" + employee_id);
+    employee.first_name = legacyEmployee.querySelector("#first_name").value;
+    employee.last_name = legacyEmployee.querySelector("#last_name").value;
+    employee.passport.number_series = Number(legacyEmployee.querySelector("#number_series").value);
+    employee.passport.passport_id = Number(legacyEmployee.querySelector("#passport_id").value);
+    employee.passport.issued_by = legacyEmployee.querySelector("#issued_by").value;
+    employee.passport.date_issue = legacyEmployee.querySelector("#date_issue").value;
+    employee.email = legacyEmployee.querySelector("#email").value;
+    employee.phone = legacyEmployee.querySelector("#phone").value;
+    employee.date_birth = legacyEmployee.querySelector("#date_birth").value;
+    employee.address.city = legacyEmployee.querySelector("#city").value;
+    employee.address.street = legacyEmployee.querySelector("#street").value;
+    employee.address.house = legacyEmployee.querySelector("#house").value;
+    employee.address.flat = legacyEmployee.querySelector("#flat").value;
+    employee.number_inn = Number(legacyEmployee.querySelector("#number_inn").value);
+    employee.gender = legacyEmployee.querySelector("#genders").value;
+    employee.subdivision_id = legacyEmployee.querySelector("#subdivision").value;
+    employee.position.position_name_id = legacyEmployee.querySelector("#positions").value;
+    employee.position.date_receipt = legacyEmployee.querySelector("#date_receipt").value;
+    employee.position.date_dismissal = legacyEmployee.querySelector("#date_dismissal").value;
+    employee.status = legacyEmployee.querySelector("#status").value;
+    employee.passport.pas_id = Number(legacyEmployee.querySelector("#pas_id").value);
+    employee.address.address_id = Number(legacyEmployee.querySelector("#address_id").value);
+    employee.position.position_id = Number(legacyEmployee.querySelector("#position_id").value);
     console.log(employee);
     updateEmployeeById(employee_id, employee);
 }
@@ -253,8 +254,9 @@ updateEmployeeById = (employee_id, employee) => {
 }
 
 updateEmployeeVacationById = (employee_id) => {
-    vacation.vacation_start = document.getElementById("vacation_start").value;
-    vacation.vacation_final = document.getElementById("vacation_final").value;
+    let legacyEmployee = document.getElementById("createEmployee_" + employee_id);
+    vacation.vacation_start = legacyEmployee.querySelector("#vacation_start").value;
+    vacation.vacation_final = legacyEmployee.querySelector("#vacation_final").value;
     console.log(vacation);
     sendRequest('PUT', '/api/employees/vacation/' + employee_id, vacation).then(response => {
         if (response.ok) {

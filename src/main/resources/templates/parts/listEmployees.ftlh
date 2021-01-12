@@ -1,3 +1,4 @@
+<#import "createEmployee.ftlh" as ce>
 <#macro listEmployees employees subdivisions positions positionsNames subdivision=false position=false all=false vacation=false>
     <table class="table table-bordered">
         <thead class="thead-dark">
@@ -99,10 +100,60 @@
 
 
                 <#if vacation>
-                    <td><a class="btn btn-primary" type="button" href="/employees/vacation/${employee.id}">Изменить</a>
+                    <td>
+                            <button type="button" class="btn btn-primary" data-toggle="modal" data-target="#updateVacationEmployee_${employee.id}">
+                                    Изменить
+                            </button>
+
+                            <!-- Modal -->
+                            <div class="modal fade" id="updateVacationEmployee_${employee.id}" tabindex="-1" role="dialog" aria-labelledby="exampleModalLabel" aria-hidden="true">
+                                    <div class="modal-dialog modal-lg">
+                                            <div class="modal-content">
+                                                    <div class="modal-header">
+                                                            <h5 class="modal-title" id="exampleModalLabel">Отпуск сотрудника ${employee.firstName} ${employee.lastName}</h5>
+                                                            <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                                                                    <span aria-hidden="true">&times;</span>
+                                                            </button>
+                                                    </div>
+                                                    <div class="modal-body">
+                                                            <@ce.employee employees=employee subdivisions=subdivisions positionsNames=positionsNames vacation=true/>
+                                                    </div>
+                                                    <div class="modal-footer">
+                                                            <button type="button" class="btn btn-secondary" data-dismiss="modal">Отмена</button>
+                                                            <button type="button" class="btn btn-primary" onclick="updateEmployeeVacationById(${employee.id})">Сохранить отпуск сотрудника</button>
+                                                    </div>
+                                            </div>
+                                    </div>
+                            </div>
+                            <#--<a class="btn btn-primary" type="button" href="/employees/vacation/${employee.id}">Изменить</a>-->
                     </td>
                 <#else>
-                    <td><a class="btn btn-primary" type="button" href="/employees/${employee.id}">Изменить</a></td>
+                    <td>
+                            <button type="button" class="btn btn-primary" data-toggle="modal" data-target="#updateEmployee_${employee.id}">
+                                    Изменить
+                            </button>
+
+                            <!-- Modal -->
+                            <div class="modal fade" id="updateEmployee_${employee.id}" tabindex="-1" role="dialog" aria-labelledby="exampleModalLabel" aria-hidden="true">
+                                    <div class="modal-dialog modal-lg">
+                                            <div class="modal-content">
+                                                    <div class="modal-header">
+                                                            <h5 class="modal-title" id="exampleModalLabel">Редактирование сотрудника ${employee.firstName} ${employee.lastName}</h5>
+                                                            <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                                                                    <span aria-hidden="true">&times;</span>
+                                                            </button>
+                                                    </div>
+                                                    <div class="modal-body">
+                                                            <@ce.employee employees=employee subdivisions=subdivisions positionsNames=positionsNames create=false/>
+                                                    </div>
+                                                    <div class="modal-footer">
+                                                            <button type="button" class="btn btn-secondary" data-dismiss="modal">Отмена</button>
+                                                            <button type="button" class="btn btn-primary" onclick="submitUpdateEmployees(${employee.id})">Сохранить изменения</button>
+                                                    </div>
+                                            </div>
+                                    </div>
+                            </div>
+                    </td>
                     <td><input class="btn btn-primary" type="button" onclick="deleteEmployeeById(${employee.id})"
                                value="Удалить"></td>
                 </#if>
