@@ -1,9 +1,9 @@
 <#import "parts/common.ftlh" as c>
 
 <@c.page>
-    <div class="text-center">
-        <form class="form-signin" action="/login" method="post">
-            <h1 class="h3 mb-3 font-weight-normal">Пожалуйста, войдите в систему</h1>
+    <div class="custom-login">
+        <form class="form" action="/login" method="post">
+            <h1 class="h3 mb-3 font-weight-normal">Авторизация</h1>
             <label for="inputEmail" class="sr-only">Логин</label>
             <input type="text" id="username" name="username" class="form-control mb-2" placeholder="Введите email" required autofocus>
             <label for="inputPassword" class="sr-only">Пароль</label>

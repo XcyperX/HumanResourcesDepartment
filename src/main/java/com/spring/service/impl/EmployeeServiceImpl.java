@@ -60,4 +60,9 @@ public class EmployeeServiceImpl implements EmployeeService {
         employeeRepository.deleteById(id);
         return employeeMapper.toDto(employeeRepository.save(employee));
     }
+
+    @Override
+    public List<EmployeeDTO> findAllByAgreementDataIsNotNull() {
+        return employeeMapper.toDtos(employeeRepository.findAllByAgreementDataIsNotNull());
+    }
 }

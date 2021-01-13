@@ -23,8 +23,8 @@ public class RestApiController {
     private PositionService positionService;
     @Autowired
     private SubdivisionService subdivisionService;
-//    @Autowired
-//    private StatusService statusService;
+    @Autowired
+    private AgreementDataService agreementDataService;
     @Autowired
     private PositionNameService positionNameService;
 
@@ -78,5 +78,10 @@ public class RestApiController {
     @GetMapping("/get/employee/{id}")
     public ResponseEntity<?> getRequestById(@PathVariable("id") Long id) {
         return ResponseEntity.ok(employeeService.getById(id));
+    }
+
+    @PostMapping("/agreements")
+    public AgreementDataDTO createAgreement(@RequestBody @Valid AgreementDataDTO agreementDataDTO) {
+        return agreementDataService.save(agreementDataDTO);
     }
 }

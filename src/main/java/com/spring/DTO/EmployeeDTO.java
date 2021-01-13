@@ -61,4 +61,7 @@ public class EmployeeDTO {
 
     @JsonProperty("vacation_final")
     private LocalDate vacationFinal;
+
+    @JsonProperty("work_agreement")
+    private Boolean workAgreement;
 }

@@ -9,4 +9,5 @@ import java.util.List;
 public interface EmployeeService extends CRUDService<EmployeeDTO, Long> {
     List<EmployeeDTO> findAll();
     EmployeeDTO updateVacationEmployeeById(Long id, VacationDateDTO vacationDateDTO);
+    List<EmployeeDTO> findAllByAgreementDataIsNotNull();
 }

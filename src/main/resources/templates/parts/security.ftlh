@@ -12,8 +12,8 @@ isAdmin = false
     >
 <#else>
     <#assign
-    name = "unknown"
-    role = "unknown"
+    name = ""
+    role = ""
     isAdmin = false
     >
 </#if>

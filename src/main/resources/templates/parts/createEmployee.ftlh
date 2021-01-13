@@ -1,4 +1,4 @@
-<#macro employee employees subdivisions positionsNames create=true vacation=false>
+<#macro employee employees subdivisions positionsNames create=true vacation=false workAgreement=false>
     <#--<div class="container pl-5 pr-5">-->
         <div class="row">
             <div class="col-sm">
@@ -170,6 +170,8 @@
                                value="<#if employees?has_content>${employees.address.id}</#if>" hidden>
                         <input id="position_id" type="text"
                                value="<#if employees?has_content>${employees.position.id}</#if>" hidden>
+                        <input id="work_agreement" type="text"
+                               value="<#if workAgreement>true<#else>false</#if>" hidden>
                         <#--<#if employees?has_content>-->
                             <#--<div class="form-row">-->
                                 <#--<input class="btn btn-primary  mb-4" type="button"-->

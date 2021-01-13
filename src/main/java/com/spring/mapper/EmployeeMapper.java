@@ -35,6 +35,7 @@ public class EmployeeMapper implements MapperService<Employee, EmployeeDTO> {
         employee.setPassport(passportMapper.toEntity(dto.getPassport()));
         employee.setVacationStart(dto.getVacationStart());
         employee.setVacationFinal(dto.getVacationFinal());
+        employee.setWorkAgreement(dto.getWorkAgreement());
         return employee;
     }
 
@@ -56,6 +57,7 @@ public class EmployeeMapper implements MapperService<Employee, EmployeeDTO> {
         employeeDTO.setPassport(passportMapper.toDto(entity.getPassport()));
         employeeDTO.setVacationStart(entity.getVacationStart());
         employeeDTO.setVacationFinal(entity.getVacationFinal());
+        employeeDTO.setWorkAgreement(entity.getWorkAgreement());
         return employeeDTO;
     }
 

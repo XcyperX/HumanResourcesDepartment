@@ -1,6 +1,7 @@
 <#import "parts/common.ftlh" as c>
 
 <@c.page>
+    <a href="/registration" class="btn btn-primary mr-3 mb-2" type="button">Регистрация</a>
     <table class="table table-bordered">
         <thead class="thead-dark">
         <tr>

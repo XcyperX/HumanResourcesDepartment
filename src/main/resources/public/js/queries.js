@@ -34,31 +34,20 @@ submitUpdateUserById = (user_id) => {
     updateUserById(user_id, user);
 }
 
-submitNewEmployees = () => {
-    employee.first_name = document.getElementById("first_name").value;
-    employee.last_name = document.getElementById("last_name").value;
-    employee.passport.number_series = Number(document.getElementById("number_series").value);
-    employee.passport.passport_id = Number(document.getElementById("passport_id").value);
-    employee.passport.issued_by = document.getElementById("issued_by").value;
-    employee.passport.date_issue = document.getElementById("date_issue").value;
-    employee.email = document.getElementById("email").value;
-    employee.phone = document.getElementById("phone").value;
-    employee.date_birth = document.getElementById("date_birth").value;
-    employee.address.city = document.getElementById("city").value;
-    employee.address.street = document.getElementById("street").value;
-    employee.address.house = document.getElementById("house").value;
-    employee.address.flat = document.getElementById("flat").value;
-    employee.number_inn = Number(document.getElementById("number_inn").value);
-    employee.gender = document.getElementById("genders").value;
-    employee.subdivision_id = document.getElementById("subdivision").value;
-    employee.position.position_name_id = document.getElementById("positions").value;
-    employee.position.date_receipt = document.getElementById("date_receipt").value;
-    console.log(employee);
-    createNewEmployee(employee);
-}
-
-submitUpdateEmployees = (employee_id) => {
-    let legacyEmployee = document.getElementById("createEmployee_" + employee_id);
+submitCrateAndUpdateEmployees = (employee_id) => {
+    let legacyEmployee;
+    if (employee_id == null) {
+        console.log("Нет id");
+        legacyEmployee = document.getElementById("createEmployee");
+    } else {
+        console.log("Есть id");
+        legacyEmployee = document.getElementById("createEmployee_" + employee_id);
+        employee.position.date_dismissal = legacyEmployee.querySelector("#date_dismissal").value;
+        employee.status = legacyEmployee.querySelector("#status").value;
+        employee.passport.pas_id = Number(legacyEmployee.querySelector("#pas_id").value);
+        employee.address.address_id = Number(legacyEmployee.querySelector("#address_id").value);
+        employee.position.position_id = Number(legacyEmployee.querySelector("#position_id").value);
+    }
     employee.first_name = legacyEmployee.querySelector("#first_name").value;
     employee.last_name = legacyEmployee.querySelector("#last_name").value;
     employee.passport.number_series = Number(legacyEmployee.querySelector("#number_series").value);
@@ -77,18 +66,30 @@ submitUpdateEmployees = (employee_id) => {
     employee.subdivision_id = legacyEmployee.querySelector("#subdivision").value;
     employee.position.position_name_id = legacyEmployee.querySelector("#positions").value;
     employee.position.date_receipt = legacyEmployee.querySelector("#date_receipt").value;
-    employee.position.date_dismissal = legacyEmployee.querySelector("#date_dismissal").value;
-    employee.status = legacyEmployee.querySelector("#status").value;
-    employee.passport.pas_id = Number(legacyEmployee.querySelector("#pas_id").value);
-    employee.address.address_id = Number(legacyEmployee.querySelector("#address_id").value);
-    employee.position.position_id = Number(legacyEmployee.querySelector("#position_id").value);
+    employee.work_agreement = legacyEmployee.querySelector("#work_agreement").value;
     console.log(employee);
-    updateEmployeeById(employee_id, employee);
+    if (employee_id == null) {
+        createNewEmployee(employee);
+    }  else {
+        updateEmployeeById(employee_id, employee);
+    }
+}
+
+submitCreateAgreement = () => {
+    agreement.employee_id = document.getElementById("employee_id").value;
+    agreement.start = document.getElementById("start").value;
+    agreement.finish = document.getElementById("finish").value;
+    agreement.payment = document.getElementById("payment").value;
+    agreement.price = Number(document.getElementById("price").value);
+    agreement.deduction_code = document.getElementById("deduction_code").textContent.replace(/\s/g, '');
+    agreement.sum_tax = (agreement.price/100)*20;
+    console.log(agreement);
+    createNewAgreement(agreement);
 }
 
 submitNewSubdivision = () => {
-    if (document.getElementById("subdivision").value !== "") {
-        subdivision.name = document.getElementById("subdivision").value;
+    if (document.getElementById("subdivision_input").value !== "") {
+        subdivision.name = document.getElementById("subdivision_input").value;
         createNewSubdivision(subdivision);
     } else {
         alert("Введите название подразделения!!!")
@@ -96,8 +97,8 @@ submitNewSubdivision = () => {
 }
 
 submitNewPosition = () => {
-    if (document.getElementById("position").value !== "") {
-        position.name = document.getElementById("position").value;
+    if (document.getElementById("position_input").value !== "") {
+        position.name = document.getElementById("position_input").value;
         createNewPosition(position);
     } else {
         alert("Введите название должности!!!")
@@ -140,7 +141,8 @@ const employee = {
         date_receipt: "",
         date_dismissal: ""
     },
-    status: ""
+    status: "",
+    work_agreement: false
 }
 
 const subdivision = {
@@ -154,6 +156,16 @@ const position = {
 const vacation = {
     vacation_start: "",
     vacation_final: ""
+}
+
+const agreement = {
+    start: "",
+    finish: "",
+    payment: "",
+    price: -1,
+    sum_tax: -1,
+    deduction_code: "",
+    employee_id: -1
 }
 
 
@@ -178,6 +190,17 @@ sendRequest = (method, url, body) => {
 
 createNewUser = (user) => {
     sendRequest('POST', '/api/registrations', user).then(response => {
+        if (response.ok) {
+            console.log(response);
+            document.location.reload(true);
+        } else {
+            console.log(response);
+        }
+    });
+}
+
+createNewAgreement = (agreement) => {
+    sendRequest('POST', '/api/agreements', agreement).then(response => {
         if (response.ok) {
             console.log(response);
             document.location.reload(true);

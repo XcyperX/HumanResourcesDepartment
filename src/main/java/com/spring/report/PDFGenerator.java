@@ -5,10 +5,7 @@ import com.itextpdf.text.pdf.BaseFont;
 import com.itextpdf.text.pdf.PdfPCell;
 import com.itextpdf.text.pdf.PdfPTable;
 import com.itextpdf.text.pdf.PdfWriter;
-import com.spring.DTO.EmployeeDTO;
-import com.spring.DTO.PositionDTO;
-import com.spring.DTO.PositionNameDTO;
-import com.spring.DTO.SubdivisionDTO;
+import com.spring.DTO.*;
 import com.spring.model.User;
 
 import java.io.ByteArrayInputStream;
@@ -82,6 +79,61 @@ public class PDFGenerator {
                         table.addCell(new Phrase(subdivisionDTO.getName(), fontNormal));
                     }
                 }
+            }
+
+            table.setTotalWidth(PageSize.A4.rotate().getWidth());
+            table.setLockedWidth(true);
+            document.add(table);
+
+            Paragraph manager = new Paragraph("Отчет сформировал: " + user.getName(), fontHeader);
+            document.add(manager);
+            document.add(Chunk.NEWLINE);
+
+            document.close();
+        } catch (DocumentException e) {
+            e.printStackTrace();
+        }
+        return new ByteArrayInputStream(out.toByteArray());
+    }
+
+    public ByteArrayInputStream PDFReportAgreement(List<EmployeeDTO> employeeDTOList, User user, List<AgreementDataDTO> agreementDataDTOS, List<SubdivisionDTO> subdivisionDTOList) {
+        Document document = new Document();
+        ByteArrayOutputStream out = new ByteArrayOutputStream();
+
+        try {
+            PdfWriter.getInstance(document, out);
+            document.open();
+            document.setPageSize(PageSize.A4.rotate());
+            document.newPage();
+
+            Paragraph para = new Paragraph("Договор подряда", fontHeader);
+            para.setAlignment(Element.ALIGN_CENTER);
+            document.add(para);
+            document.add(Chunk.NEWLINE);
+
+            PdfPTable table = new PdfPTable(10);
+            Stream.of("Имя", "Фамилия", "Телефон", "Подразделение", "Дата начала", "Дата окончания", "Сумма по договору", "Оплата", "Код вычета", "Сумма вычета")
+                    .forEach(headerTitle -> {
+                        PdfPCell header = new PdfPCell();
+                        header.setBackgroundColor(BaseColor.LIGHT_GRAY);
+                        header.setHorizontalAlignment(Element.ALIGN_CENTER);
+                        header.setBorderWidth(2);
+                        header.setPhrase(new Phrase(headerTitle, fontNormal));
+                        table.addCell(header);
+                    });
+
+            for (AgreementDataDTO agreementDataDTO : agreementDataDTOS) {
+                EmployeeDTO employeeDTO = employeeDTOList.stream().filter(i -> i.getId().equals(agreementDataDTO.getEmployeeId())).findFirst().orElseThrow();
+                table.addCell(new Phrase(employeeDTO.getFirstName(), fontNormal));
+                table.addCell(new Phrase(employeeDTO.getLastName(), fontNormal));
+                table.addCell(new Phrase(employeeDTO.getPhone(), fontNormal));
+                table.addCell(new Phrase(subdivisionDTOList.stream().filter(i -> i.getId().equals(employeeDTO.getSubdivisionId())).findFirst().orElseThrow().getName(), fontNormal));
+                table.addCell(new Phrase(agreementDataDTO.getStart().toString(), fontNormal));
+                table.addCell(new Phrase(agreementDataDTO.getFinish().toString(), fontNormal));
+                table.addCell(new Phrase(agreementDataDTO.getPrice().toString(), fontNormal));
+                table.addCell(new Phrase(agreementDataDTO.getPayment(), fontNormal));
+                table.addCell(new Phrase(agreementDataDTO.getDeductionCode(), fontNormal));
+                table.addCell(new Phrase(agreementDataDTO.getSumTax().toString(), fontNormal));
             }
 
             table.setTotalWidth(PageSize.A4.rotate().getWidth());

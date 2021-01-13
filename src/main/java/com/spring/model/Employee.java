@@ -4,6 +4,8 @@ import lombok.Data;
 
 import javax.persistence.*;
 import java.time.LocalDate;
+import java.util.ArrayList;
+import java.util.List;
 
 @Entity
 @Table(name = "employees")
@@ -56,6 +58,10 @@ public class Employee {
 
     private LocalDate vacationFinal;
 
+    private Boolean workAgreement;
+
+    @OneToMany(mappedBy = "employee", cascade = CascadeType.ALL)
+    private List<AgreementData> agreementData = new ArrayList<>();
 
     public Employee() {
     }
