@@ -18,7 +18,7 @@
                     </button>
                 </div>
                 <div class="modal-body">
-                    <@ce.employee employees="" subdivisions=subdivisions positionsNames=positionsNames create=true/>
+                    <@ce.product products="" categories=categories positionsNames=positionsNames create=true/>
                 </div>
                 <div class="modal-footer">
                     <button type="button" class="btn btn-secondary" data-dismiss="modal">Отмена</button>
@@ -42,7 +42,7 @@
                     </button>
                 </div>
                 <div class="modal-body">
-                    <@e.listEmployees agreementData="" employees=employees subdivisions=subdivisions positions=positions positionsNames=positionsNames position=true/>
+                    <@e.listEmployees orderHistory="" products=products categories=categories positions=positions positionsNames=positionsNames position=true/>
                 </div>
                 <div class="modal-footer">
                     <button type="button" class="btn btn-secondary" data-dismiss="modal">Закрыть</button>
@@ -65,7 +65,7 @@
                     </button>
                 </div>
                 <div class="modal-body">
-                    <@e.listEmployees agreementData="" employees=employees subdivisions=subdivisions positions=positions positionsNames=positionsNames subdivision=true/>
+                    <@e.listEmployees orderHistory="" products=products categories=categories positions=positions positionsNames=positionsNames categories=true/>
                 </div>
                 <div class="modal-footer">
                     <button type="button" class="btn btn-secondary" data-dismiss="modal">Закрыть</button>
@@ -74,5 +74,5 @@
         </div>
     </div>
 
-    <@e.listEmployees agreementData="" employees=employees subdivisions=subdivisions positions=positions positionsNames=positionsNames all=true/>
+    <@e.listEmployees orderHistory="" products=products categories=categories positions=positions positionsNames=positionsNames all=true/>
 </@c.page>

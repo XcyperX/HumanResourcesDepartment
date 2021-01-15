@@ -12,10 +12,10 @@
         <ul class="navbar-nav mr-auto">
             <#if isAdmin>
                 <li class="nav-item">
-                    <a class="nav-link" href="/employees">Сотрудники</a>
+                    <a class="nav-link" href="/products">Сотрудники</a>
                 </li>
                 <li class="nav-item">
-                    <a class="nav-link" href="/employees/agreement">Договора подряда</a>
+                    <a class="nav-link" href="/products/agreement">Договора подряда</a>
                 </li>
                 <li class="nav-item">
                     <a class="nav-link" href="/vacation">Отпуска</a>

@@ -7,9 +7,9 @@ import java.util.ArrayList;
 import java.util.List;
 
 @Entity
-@Table(name = "statuses")
+@Table(name = "categories")
 @Data
-public class Status {
+public class Categories {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
@@ -17,19 +17,19 @@ public class Status {
     @Column(nullable = false)
     private String name;
 
-    @OneToMany(mappedBy = "status")
-    private List<OrderHistory> orderHistories = new ArrayList<>();
+    @OneToMany(mappedBy = "categories")
+    private List<Product> products = new ArrayList<>();
 
-    public Status() {
+    public Categories() {
     }
 
-    public Status(Long id) {
+    public Categories(Long id) {
         this.id = id;
     }
 
     @Override
     public String toString() {
-        return "Status{" +
+        return "Categories{" +
                 "id=" + id +
                 '}';
     }

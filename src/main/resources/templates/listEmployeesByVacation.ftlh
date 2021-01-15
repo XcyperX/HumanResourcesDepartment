@@ -3,5 +3,5 @@
 
 <@c.page>
     <a class="btn btn-primary mb-2" type="button" href="/pdf/request">Сформировать отчет</a>
-    <@e.listEmployees agreementData="" employees=employees subdivisions=subdivisions positions=positions positionsNames=positionsNames vacation=true/>
+    <@e.listEmployees orderHistory="" products=products categories=categories positions=positions positionsNames=positionsNames vacation=true/>
 </@c.page>

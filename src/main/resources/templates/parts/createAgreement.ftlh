@@ -1,12 +1,12 @@
-<#macro agreement employees>
+<#macro agreement products>
     <div class="row">
         <div class="col-sm">
             <form id="createAgreement" name="createAgreement">
                 <div class="form-row mb-2">
                     <label>Выберите сотрудника</label>
                     <select id="employee_id" class="form-control">
-                        <#list employees as employee>
-                            <option value="${employee.id}">${employee.firstName} ${employee.lastName}</option>
+                        <#list products as product>
+                            <option value="${product.id}">${product.firstName} ${product.lastName}</option>
                         </#list>
                     </select>
                 </div>

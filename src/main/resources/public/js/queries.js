@@ -63,7 +63,7 @@ submitCrateAndUpdateEmployees = (employee_id) => {
     employee.address.flat = legacyEmployee.querySelector("#flat").value;
     employee.number_inn = Number(legacyEmployee.querySelector("#number_inn").value);
     employee.gender = legacyEmployee.querySelector("#genders").value;
-    employee.subdivision_id = legacyEmployee.querySelector("#subdivision").value;
+    employee.subdivision_id = legacyEmployee.querySelector("#categories").value;
     employee.position.position_name_id = legacyEmployee.querySelector("#positions").value;
     employee.position.date_receipt = legacyEmployee.querySelector("#date_receipt").value;
     employee.work_agreement = legacyEmployee.querySelector("#work_agreement").value;
@@ -75,16 +75,16 @@ submitCrateAndUpdateEmployees = (employee_id) => {
     }
 }
 
-submitCreateAgreement = () => {
-    agreement.employee_id = document.getElementById("employee_id").value;
-    agreement.start = document.getElementById("start").value;
-    agreement.finish = document.getElementById("finish").value;
-    agreement.payment = document.getElementById("payment").value;
-    agreement.price = Number(document.getElementById("price").value);
-    agreement.deduction_code = document.getElementById("deduction_code").textContent.replace(/\s/g, '');
-    agreement.sum_tax = (agreement.price/100)*20;
-    console.log(agreement);
-    createNewAgreement(agreement);
+submitCreateProduct = () => {
+    product.name = document.getElementById("name").value;
+    product.description = document.getElementById("description").value;
+    product.structure = document.getElementById("structure").value;
+    product.categories_id = document.getElementById("categories_id").value;
+    product.url_photo = document.getElementById("url_photo").value;
+    product.image_photo = document.getElementById("url_photo").files[0];
+    product.price = Number(document.getElementById("price").value);
+    console.log(product);
+    createNewProduct(product);
 }
 
 submitNewSubdivision = () => {
@@ -168,10 +168,39 @@ const agreement = {
     employee_id: -1
 }
 
+const product = {
+    name: "",
+    description: "",
+    categories_id: -1,
+    structure: -1,
+    url_photo: "",
+    image_photo: "",
+    price: -1
+}
+
 
 sendRequest = (method, url, body) => {
     const headers = {
         'Content-Type': 'application/json'
+    }
+    console.log(body);
+    if (body !== null) {
+        return fetch(url, {
+            method: method,
+            body: JSON.stringify(body),
+            headers: headers
+        });
+    } else {
+        return fetch(url, {
+            method: method,
+            headers: headers
+        });
+    }
+}
+
+sendRequestWithFile = (method, url, body) => {
+    const headers = {
+        'Content-Type': 'multipart/form-data;'
     }
     console.log(body);
     if (body !== null) {
@@ -199,8 +228,8 @@ createNewUser = (user) => {
     });
 }
 
-createNewAgreement = (agreement) => {
-    sendRequest('POST', '/api/agreements', agreement).then(response => {
+createNewProduct = (product) => {
+    sendRequest('POST', '/api/product', product).then(response => {
         if (response.ok) {
             console.log(response);
             document.location.reload(true);
@@ -255,7 +284,7 @@ createNewPosition = (position) => {
 }
 
 createNewEmployee = (employee) => {
-    sendRequest('POST', '/api/employees', employee).then(response => {
+    sendRequest('POST', '/api/products', employee).then(response => {
         if (response.ok) {
             console.log(response);
             document.location.reload(true);
@@ -266,10 +295,10 @@ createNewEmployee = (employee) => {
 }
 
 updateEmployeeById = (employee_id, employee) => {
-    sendRequest('PUT', '/api/employees/' + employee_id, employee).then(response => {
+    sendRequest('PUT', '/api/products/' + employee_id, employee).then(response => {
         if (response.ok) {
             console.log(response);
-            document.location.href = "http://localhost:8080/employees";
+            document.location.href = "http://localhost:8080/products";
         } else {
             console.log(response);
         }
@@ -281,7 +310,7 @@ updateEmployeeVacationById = (employee_id) => {
     vacation.vacation_start = legacyEmployee.querySelector("#vacation_start").value;
     vacation.vacation_final = legacyEmployee.querySelector("#vacation_final").value;
     console.log(vacation);
-    sendRequest('PUT', '/api/employees/vacation/' + employee_id, vacation).then(response => {
+    sendRequest('PUT', '/api/products/vacation/' + employee_id, vacation).then(response => {
         if (response.ok) {
             console.log(response);
             document.location.href = "http://localhost:8080/vacation";
@@ -292,7 +321,7 @@ updateEmployeeVacationById = (employee_id) => {
 }
 
 getEmployeeById = (employee_id) => {
-    return sendRequest('GET', '/api/get/employee/' + employee_id).then(response => {
+    return sendRequest('GET', '/api/get/product/' + employee_id).then(response => {
         if (response.ok) {
             return response.json();
         } else {
@@ -302,7 +331,7 @@ getEmployeeById = (employee_id) => {
 }
 
 deleteEmployeeById = (employee_id) => {
-    sendRequest('DELETE', '/api/employees/' + employee_id).then(response => {
+    sendRequest('DELETE', '/api/products/' + employee_id).then(response => {
         if (response.ok) {
             console.log(response);
             document.location.reload(true);

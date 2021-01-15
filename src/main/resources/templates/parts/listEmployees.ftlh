@@ -1,5 +1,5 @@
 <#import "createEmployee.ftlh" as ce>
-<#macro listEmployees employees agreementData subdivisions positions positionsNames subdivision=false position=false all=false vacation=false agreement=false>
+<#macro listEmployees products orderHistory categories positions positionsNames categories=false position=false all=false vacation=false agreement=false>
     <#if position>
         <form id="createPosition" name="createPosition">
             <div class="form-row mb-3">
@@ -14,11 +14,11 @@
             </div>
         </form>
     </#if>
-    <#if subdivision>
+    <#if categories>
         <form id="createSubdivisions" name="createSubdivisions">
             <div class="form-row mb-3">
                 <div class="col-8">
-                    <input id="subdivision_input" type="text" name="subdivision" class="form-control"
+                    <input id="subdivision_input" type="text" name="categories" class="form-control"
                            placeholder="Введите название подразделения">
                 </div>
                 <div class="col">
@@ -47,7 +47,7 @@
             <#elseif position>
                 <th scope="col">#</th>
                 <th scope="col">Название</th>
-            <#elseif subdivision>
+            <#elseif categories>
                 <th scope="col">#</th>
                 <th scope="col">Название</th>
             <#elseif vacation>
@@ -81,24 +81,24 @@
                     <td>${positionsName.name}</td>
                 </tr>
             </#list>
-        <#elseif subdivision>
-            <#list subdivisions as subdivision>
+        <#elseif categories>
+            <#list categories as categories>
                 <tr>
-                    <td>${subdivision.id}</td>
-                    <td>${subdivision.name}</td>
+                    <td>${categories.id}</td>
+                    <td>${categories.name}</td>
                 </tr>
             </#list>
         <#elseif agreement>
-            <#list agreementData as agreData>
+            <#list orderHistory as agreData>
                 <tr>
-                    <#list employees as employee>
-                        <#if employee.id == agreData.employeeId>
-                            <td>${employee.firstName}</td>
-                            <td>${employee.lastName}</td>
-                            <td>${employee.phone}</td>
-                            <#list subdivisions as subdivision>
-                                <#if subdivision.id == employee.subdivisionId>
-                                    <td>${subdivision.name}</td>
+                    <#list products as product>
+                        <#if product.id == agreData.employeeId>
+                            <td>${product.firstName}</td>
+                            <td>${product.lastName}</td>
+                            <td>${product.phone}</td>
+                            <#list categories as categories>
+                                <#if categories.id == product.subdivisionId>
+                                    <td>${categories.name}</td>
                                 </#if>
                             </#list>
                         </#if>
@@ -116,44 +116,44 @@
                 </tr>
             </#list>
         </#if>
-        <#list employees as employee>
+        <#list products as product>
             <tr>
                 <#if all>
-                    <td>${employee.firstName}</td>
-                    <td>${employee.lastName}</td>
-                    <td>${employee.gender}</td>
-                    <td>${employee.phone}</td>
-                    <td>${employee.email}</td>
+                    <td>${product.firstName}</td>
+                    <td>${product.lastName}</td>
+                    <td>${product.gender}</td>
+                    <td>${product.phone}</td>
+                    <td>${product.email}</td>
                     <#list positionsNames as positionsName>
-                        <#if positionsName.id == employee.position.positionNameId>
+                        <#if positionsName.id == product.position.positionNameId>
                             <td>${positionsName.name}</td>
                         </#if>
                     </#list>
-                    <#list subdivisions as subdivision>
-                        <#if subdivision.id == employee.subdivisionId>
-                            <td>${subdivision.name}</td>
+                    <#list categories as categories>
+                        <#if categories.id == product.subdivisionId>
+                            <td>${categories.name}</td>
                         </#if>
                     </#list>
-                    <td>${employee.position.dateReceipt}</td>
-                    <td><#if employee.position.dateDismissal?has_content>
-                            ${employee.position.dateDismissal}
+                    <td>${product.position.dateReceipt}</td>
+                    <td><#if product.position.dateDismissal?has_content>
+                            ${product.position.dateDismissal}
                         <#else>
                             Null
                         </#if>
                     </td>
-                    <td>${employee.status}</td>
+                    <td>${product.status}</td>
                 <#elseif vacation>
-                    <td>${employee.firstName}</td>
-                    <td>${employee.lastName}</td>
-                    <td>${employee.phone}</td>
-                    <td><#if employee.vacationStart?has_content>
-                            ${employee.vacationStart}
+                    <td>${product.firstName}</td>
+                    <td>${product.lastName}</td>
+                    <td>${product.phone}</td>
+                    <td><#if product.vacationStart?has_content>
+                            ${product.vacationStart}
                         <#else>
                             Null
                         </#if>
                     </td>
-                    <td><#if employee.vacationFinal?has_content>
-                            ${employee.vacationFinal}
+                    <td><#if product.vacationFinal?has_content>
+                            ${product.vacationFinal}
                         <#else>
                             Null
                         </#if>
@@ -163,30 +163,30 @@
                 <#if vacation>
                     <td>
                         <button type="button" class="btn btn-primary" data-toggle="modal"
-                                data-target="#updateVacationEmployee_${employee.id}">
+                                data-target="#updateVacationEmployee_${product.id}">
                             Изменить
                         </button>
 
                         <!-- Modal -->
-                        <div class="modal fade" id="updateVacationEmployee_${employee.id}" tabindex="-1" role="dialog"
+                        <div class="modal fade" id="updateVacationEmployee_${product.id}" tabindex="-1" role="dialog"
                              aria-labelledby="exampleModalLabel" aria-hidden="true">
                             <div class="modal-dialog modal-lg">
                                 <div class="modal-content">
                                     <div class="modal-header">
                                         <h5 class="modal-title" id="exampleModalLabel">Отпуск
-                                            сотрудника ${employee.firstName} ${employee.lastName}</h5>
+                                            сотрудника ${product.firstName} ${product.lastName}</h5>
                                         <button type="button" class="close" data-dismiss="modal" aria-label="Close">
                                             <span aria-hidden="true">&times;</span>
                                         </button>
                                     </div>
                                     <div class="modal-body">
-                                        <@ce.employee employees=employee subdivisions=subdivisions positionsNames=positionsNames vacation=true/>
+                                        <@ce.product products=product categories=categories positionsNames=positionsNames vacation=true/>
                                     </div>
                                     <div class="modal-footer">
                                         <button type="button" class="btn btn-secondary" data-dismiss="modal">Отмена
                                         </button>
                                         <button type="button" class="btn btn-primary"
-                                                onclick="updateEmployeeVacationById(${employee.id})">Сохранить отпуск
+                                                onclick="updateEmployeeVacationById(${product.id})">Сохранить отпуск
                                             сотрудника
                                         </button>
                                     </div>
@@ -197,30 +197,30 @@
                 <#elseif all>
                     <td>
                         <button type="button" class="btn btn-primary" data-toggle="modal"
-                                data-target="#updateEmployee_${employee.id}">
+                                data-target="#updateEmployee_${product.id}">
                             Изменить
                         </button>
 
                         <!-- Modal -->
-                        <div class="modal fade" id="updateEmployee_${employee.id}" tabindex="-1" role="dialog"
+                        <div class="modal fade" id="updateEmployee_${product.id}" tabindex="-1" role="dialog"
                              aria-labelledby="exampleModalLabel" aria-hidden="true">
                             <div class="modal-dialog modal-lg">
                                 <div class="modal-content">
                                     <div class="modal-header">
                                         <h5 class="modal-title" id="exampleModalLabel">Редактирование
-                                            сотрудника ${employee.firstName} ${employee.lastName}</h5>
+                                            сотрудника ${product.firstName} ${product.lastName}</h5>
                                         <button type="button" class="close" data-dismiss="modal" aria-label="Close">
                                             <span aria-hidden="true">&times;</span>
                                         </button>
                                     </div>
                                     <div class="modal-body">
-                                        <@ce.employee employees=employee subdivisions=subdivisions positionsNames=positionsNames create=false/>
+                                        <@ce.product products=product categories=categories positionsNames=positionsNames create=false/>
                                     </div>
                                     <div class="modal-footer">
                                         <button type="button" class="btn btn-secondary" data-dismiss="modal">Отмена
                                         </button>
                                         <button type="button" class="btn btn-primary"
-                                                onclick="submitCrateAndUpdateEmployees(${employee.id})">Сохранить
+                                                onclick="submitCrateAndUpdateEmployees(${product.id})">Сохранить
                                             изменения
                                         </button>
                                     </div>
@@ -228,7 +228,7 @@
                             </div>
                         </div>
                     </td>
-                    <td><input class="btn btn-primary" type="button" onclick="deleteEmployeeById(${employee.id})"
+                    <td><input class="btn btn-primary" type="button" onclick="deleteEmployeeById(${product.id})"
                                value="Удалить"></td>
                 </#if>
             </tr>
