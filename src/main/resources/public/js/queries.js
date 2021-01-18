@@ -70,22 +70,31 @@ submitCrateAndUpdateEmployees = (employee_id) => {
     console.log(employee);
     if (employee_id == null) {
         createNewEmployee(employee);
-    }  else {
+    } else {
         updateEmployeeById(employee_id, employee);
     }
 }
 
-submitCreateProduct = () => {
-    product.name = document.getElementById("name").value;
-    product.description = document.getElementById("description").value;
-    product.structure = document.getElementById("structure").value;
-    product.categories_id = document.getElementById("categories_id").value;
-    product.url_photo = document.getElementById("url_photo").value;
-    product.image_photo = document.getElementById("url_photo").files[0];
-    product.price = Number(document.getElementById("price").value);
-    console.log(product);
-    createNewProduct(product);
+submitCreateAndUpdateProduct = (formNam) => {
+    if (formNam == null) {
+        product.name = document.getElementById("name").value;
+        product.description = document.getElementById("description").value;
+        product.structure = document.getElementById("structure").value;
+        product.categories_id = document.getElementById("categories_id").value;
+        product.price = Number(document.getElementById("price").value);
+        createNewProduct(product);
+    } else {
+        legacyProduct = document.getElementById("updateProduct_" + formNam);
+        product.name = legacyProduct.querySelector("#name").value;
+        product.description = legacyProduct.querySelector("#description").value;
+        product.structure = legacyProduct.querySelector("#structure").value;
+        product.categories_id = legacyProduct.querySelector("#categories_id").value;
+        product.price = Number(legacyProduct.querySelector("#price").value);
+        updateProductById(formNam, product);
+    }
+
 }
+
 
 submitNewSubdivision = () => {
     if (document.getElementById("subdivision_input").value !== "") {
@@ -200,13 +209,13 @@ sendRequest = (method, url, body) => {
 
 sendRequestWithFile = (method, url, body) => {
     const headers = {
-        'Content-Type': 'multipart/form-data;'
+        'Content-Type': 'application/x-www-form-urlencoded; charset=UTF-8'
     }
     console.log(body);
     if (body !== null) {
         return fetch(url, {
             method: method,
-            body: JSON.stringify(body),
+            body: new FormData(body),
             headers: headers
         });
     } else {
@@ -230,6 +239,28 @@ createNewUser = (user) => {
 
 createNewProduct = (product) => {
     sendRequest('POST', '/api/product', product).then(response => {
+        if (response.ok) {
+            console.log(response);
+            document.location.reload(true);
+        } else {
+            console.log(response);
+        }
+    });
+}
+
+updateProductById = (product_id, product) => {
+    sendRequest('PUT', '/api/product/' + product_id, product).then(response => {
+        if (response.ok) {
+            console.log(response);
+            document.location.reload(true);
+        } else {
+            console.log(response);
+        }
+    });
+}
+
+deleteProductById = (product_id) => {
+    sendRequest('DELETE', '/api/product/' + product_id).then(response => {
         if (response.ok) {
             console.log(response);
             document.location.reload(true);
@@ -339,4 +370,42 @@ deleteEmployeeById = (employee_id) => {
             console.log(response);
         }
     });
+}
+
+getProductById = (product_id) => {
+    return sendRequest('GET', '/api/product/' + product_id).then(response => {
+        if (response.ok) {
+            return response.json();
+        } else {
+            console.log(response);
+        }
+    });
+}
+
+addOrder = (id) => {
+    getProductById(id).then(product => {
+        let str = `<div class="form-row">
+                    <div class="col">
+                        <p class="name_order">${product.name}</p>
+                    </div>
+                    <div class="col-5">
+                        <p class="price_order">${product.price} р.</p>
+                    </div>
+                    <input id="product_id" type="text" name="product_id" class="form-control product_id" value="${product.id}" hidden>
+                </div>`;
+        console.log(str);
+        let order = document.createRange().createContextualFragment(str);
+        let orderHistory = document.getElementById("history_products_order");
+        orderHistory.appendChild(order);
+        sumOrder();
+    });
+}
+
+sumOrder = () => {
+    let allOrder = document.getElementsByClassName("price_order");
+    let sumOrder = 0;
+    for (let i = 0; i < allOrder.length; ++i) {
+        sumOrder += Number(allOrder[i].textContent.replaceAll("р.", ""));
+    }
+    document.getElementById("sum_order").textContent = String(sumOrder) + "р.";
 }

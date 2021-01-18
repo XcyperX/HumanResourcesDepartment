@@ -29,9 +29,6 @@ public class Product {
     private String structure;
 
     @Column(nullable = false)
-    private String urlPhoto;
-
-    @Column(nullable = false)
     private Float price;
 
     @ManyToMany(fetch = FetchType.LAZY, cascade = {CascadeType.MERGE}, mappedBy = "productList")

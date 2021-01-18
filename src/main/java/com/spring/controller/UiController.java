@@ -22,20 +22,10 @@ import java.io.ByteArrayInputStream;
 public class UiController {
     @Autowired
     private UserService userService;
-//    @Autowired
-//    private EmployeeService employeeService;
-//    @Autowired
-//    private AddressService addressService;
-//    @Autowired
-//    private PositionService positionService;
     @Autowired
     private CategoriesService categoriesService;
     @Autowired
     private ProductService productService;
-//    @Autowired
-//    private AgreementDataService agreementDataService;
-//    @Autowired
-//    private PositionNameService positionNameService;
 //
 //
     @GetMapping("/registration")
@@ -65,7 +55,14 @@ public class UiController {
     }
 //
     @GetMapping("/products")
-    public String listEmployees(Model model) {
+    public String listProducts(Model model) {
+        model.addAttribute("categories", categoriesService.findAll());
+        model.addAttribute("listProducts", productService.findAll());
+        return "listProductsByGuest";
+    }
+
+    @GetMapping("/admin/products")
+    public String listProductsByAdmin(Model model) {
         model.addAttribute("categories", categoriesService.findAll());
         model.addAttribute("listProducts", productService.findAll());
         return "listProductsByAdministrator";

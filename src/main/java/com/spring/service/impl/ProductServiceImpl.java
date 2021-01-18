@@ -40,11 +40,17 @@ public class ProductServiceImpl implements ProductService {
 
     @Override
     public ProductDTO update(ProductDTO productDTO) {
-        return null;
+        if (productRepository.findById(productDTO.getId()).isEmpty()) {
+            throw new RuntimeException("Ошибка, нет такого продукта!");
+        }
+        return productMapper.toDto(productRepository.save(productMapper.toEntity(productDTO)));
     }
 
     @Override
-    public void delete(Long aLong) {
-
+    public void delete(Long id) {
+        if (productRepository.findById(id).isEmpty()) {
+            throw new RuntimeException("Ошибка, нет такого продукта!");
+        }
+        productRepository.deleteById(id);
     }
 }

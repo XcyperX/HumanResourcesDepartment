@@ -13,10 +13,7 @@ import org.springframework.web.multipart.MultipartFile;
 
 import javax.validation.Valid;
 import java.io.*;
-import java.util.ArrayList;
-import java.util.Arrays;
-import java.util.List;
-import java.util.UUID;
+import java.util.*;
 import java.util.stream.Stream;
 
 @RestController
@@ -64,51 +61,20 @@ public class RestApiController {
         userService.delete(id);
     }
 
-    @PostMapping(value = "/product")
+    @PostMapping("/product")
     public ProductDTO createProduct(@RequestBody @Valid ProductDTO productDTO) throws IOException {
-        if (productDTO.getUrlPhoto() != null) {
-            File uploadDir = new File(uploadPath);
-            if (!uploadDir.exists()) {
-                uploadDir.mkdir();
-            }
-            String uuidFile = UUID.randomUUID().toString();
-            List<String> list = Arrays.asList(productDTO.getUrlPhoto().replace("\\", "/").split("/"));
-            File is = productDTO.getImagePhoto();
-            File os = new File(uploadPath + "/" + uuidFile + list.get(list.size() - 1));
-            try {
-                FileCopyUtils.copy(is, os);
-            } catch (IOException e) {
-                e.printStackTrace();
-            }
-//            System.out.println(path);
-//            File fileStock = new File(path);
-//
-//            File fileResult = new File(uploadPath + "/" + uuidFile + list.get(list.size() - 1));
-//            try {
-//                FileCopyUtils.copy(fileStock, fileResult);
-//            } catch (IOException e) {
-//                e.printStackTrace();
-//            }
-            productDTO.setUrlPhoto(uuidFile + list.get(list.size() - 1));
-            System.out.println("Все гуд");
-        }
         return productService.save(productDTO);
     }
 
-    @PostMapping("/test/file")
-    public void createFile(@RequestParam("url_photo") MultipartFile file) throws IOException {
-        if (file != null && !file.getOriginalFilename().isEmpty()) {
-            File uploadDir = new File(uploadPath);
+    @PutMapping("/product/{id}")
+    public ProductDTO updateProduct(@PathVariable("id") Long id, @RequestBody ProductDTO productDTO) {
+        productDTO.setId(id);
+        return productService.update(productDTO);
+    }
 
-            if (!uploadDir.exists()) {
-                uploadDir.mkdir();
-            }
-
-            String uuidFile = UUID.randomUUID().toString();
-            String resultFilename = uuidFile + "." + file.getOriginalFilename();
-
-            file.transferTo(new File(uploadPath + "/" + resultFilename));
-        }
+    @DeleteMapping("/product/{id}")
+    public void deleteProduct(@PathVariable("id") Long id) {
+        productService.delete(id);
     }
 
     @PostMapping("/status")
@@ -121,12 +87,6 @@ public class RestApiController {
         return tablesService.save(tablesDTO);
     }
 
-
-    //    @PostMapping("/positions/names")
-//    public PositionNameDTO createPositionName(@RequestBody @Valid PositionNameDTO positionNameDTO) {
-//        return positionNameService.save(positionNameDTO);
-//    }
-//
     @PostMapping("/categories")
     public CategoriesDTO createCategories(@RequestBody @Valid CategoriesDTO categoriesDTO) {
         return categoriesService.save(categoriesDTO);
@@ -146,7 +106,18 @@ public class RestApiController {
     public ResponseEntity<?> getOrderHistory() {
         return ResponseEntity.ok(orderHistoryService.findAll());
     }
-//
+
+    @GetMapping("/product/{id}")
+    public ResponseEntity<?> getProduct(@PathVariable("id") Long id) {
+        return ResponseEntity.ok(productService.getById(id));
+    }
+
+//    @PostMapping("/product")
+//    @ResponseBody
+//    public String updateFoos(@RequestParam Map<String,String> allParams) {
+//        return "Parameters are " + allParams.entrySet();
+//    }
+    //
 //    @PostMapping("/employees")
 //    public ProductDTO createEmployee(@RequestBody @Valid ProductDTO productDTO) {
 //        return employeeService.save(productDTO);

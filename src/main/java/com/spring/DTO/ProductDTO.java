@@ -27,10 +27,6 @@ public class ProductDTO {
     @NotBlank
     private String structure;
 
-    @NotBlank
-    @JsonProperty("url_photo")
-    private String urlPhoto;
-
     @JsonProperty("image_photo")
     private File imagePhoto;
 

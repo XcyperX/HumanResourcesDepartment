@@ -10,9 +10,14 @@
 
     <div class="collapse navbar-collapse" id="navbarSupportedContent">
         <ul class="navbar-nav mr-auto">
+            <#if !isAdmin>
+            <li class="nav-item">
+                <a class="nav-link" href="/products">Меню</a>
+            </li>
+            </#if>
             <#if isAdmin>
                 <li class="nav-item">
-                    <a class="nav-link" href="/products">Сотрудники</a>
+                    <a class="nav-link" href="/admin/products">Меню</a>
                 </li>
                 <li class="nav-item">
                     <a class="nav-link" href="/products/agreement">Договора подряда</a>

@@ -19,7 +19,6 @@ public class ProductMapper implements MapperService<Product, ProductDTO> {
         product.setDescription(dto.getDescription());
         product.setCategories(new Categories(dto.getCategoriesId()));
         product.setStructure(dto.getStructure());
-        product.setUrlPhoto(dto.getUrlPhoto());
         product.setPrice(dto.getPrice());
         return product;
     }
@@ -32,7 +31,6 @@ public class ProductMapper implements MapperService<Product, ProductDTO> {
         productDTO.setDescription(entity.getDescription());
         productDTO.setCategoriesId(entity.getCategories().getId());
         productDTO.setStructure(entity.getStructure());
-        productDTO.setUrlPhoto(entity.getUrlPhoto());
         productDTO.setPrice(entity.getPrice());
         return productDTO;
     }
