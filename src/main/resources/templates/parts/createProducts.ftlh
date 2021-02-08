@@ -36,13 +36,12 @@
             <label>Загрузите фотографию</label>
         </div>
         <div class="form-row mb-2">
-            <input id="url_photo" type="file" name="url_photo" multiple>
+            <input id="url_photo" type="file" name="url_photo">
         </div>
         <div class="form-row mb-2">
             <label>Введите стоимость</label>
             <input id="price" type="text" name="price" class="form-control" placeholder="Введите стоимость"
                    value="<#if productsUpdate?has_content>${productsUpdate.price}</#if>">
         </div>
-        <button type="submit">Добавить</button>
     </form>
 </#macro>

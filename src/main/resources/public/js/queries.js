@@ -80,11 +80,15 @@ submitCreateProduct = () => {
     product.description = document.getElementById("description").value;
     product.structure = document.getElementById("structure").value;
     product.categories_id = document.getElementById("categories_id").value;
-    product.url_photo = document.getElementById("url_photo").value;
-    product.image_photo = document.getElementById("url_photo").files[0];
     product.price = Number(document.getElementById("price").value);
-    console.log(product);
-    createNewProduct(product);
+
+    let image_photo = document.getElementById("url_photo").files[0];
+
+    let formData = new FormData();
+    formData.append("file_test", image_photo, image_photo.name);
+    formData.append("productDTO", JSON.stringify(product));
+    console.log(formData.get("productDTO"));
+    createNewProduct(formData);
 }
 
 submitNewSubdivision = () => {
@@ -199,14 +203,12 @@ sendRequest = (method, url, body) => {
 }
 
 sendRequestWithFile = (method, url, body) => {
-    const headers = {
-        'Content-Type': 'multipart/form-data;'
-    }
+    const headers = {}
     console.log(body);
     if (body !== null) {
         return fetch(url, {
             method: method,
-            body: JSON.stringify(body),
+            body: body,
             headers: headers
         });
     } else {
@@ -229,7 +231,7 @@ createNewUser = (user) => {
 }
 
 createNewProduct = (product) => {
-    sendRequest('POST', '/api/product', product).then(response => {
+    sendRequestWithFile('POST', '/api/product/image', product).then(response => {
         if (response.ok) {
             console.log(response);
             document.location.reload(true);

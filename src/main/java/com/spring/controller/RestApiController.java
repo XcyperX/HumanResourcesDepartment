@@ -1,5 +1,8 @@
 package com.spring.controller;
 
+import com.fasterxml.jackson.core.JsonProcessingException;
+import com.fasterxml.jackson.databind.JsonMappingException;
+import com.fasterxml.jackson.databind.ObjectMapper;
 import com.spring.DTO.*;
 import com.spring.service.*;
 import org.apache.tomcat.util.http.fileupload.FileUtils;
@@ -64,52 +67,26 @@ public class RestApiController {
         userService.delete(id);
     }
 
-    @PostMapping(value = "/product")
-    public ProductDTO createProduct(@RequestBody @Valid ProductDTO productDTO) throws IOException {
-        if (productDTO.getUrlPhoto() != null) {
+    @PostMapping(value = "/product/image", consumes = {"multipart/form-data"})
+    public ProductDTO createProduct(String productDTO, @RequestParam("file_test") MultipartFile file) {
+        ProductDTO product = null;
+        try {
+            product = new ObjectMapper().readValue(productDTO, ProductDTO.class);
             File uploadDir = new File(uploadPath);
             if (!uploadDir.exists()) {
                 uploadDir.mkdir();
             }
             String uuidFile = UUID.randomUUID().toString();
-            List<String> list = Arrays.asList(productDTO.getUrlPhoto().replace("\\", "/").split("/"));
-            File is = productDTO.getImagePhoto();
-            File os = new File(uploadPath + "/" + uuidFile + list.get(list.size() - 1));
-            try {
-                FileCopyUtils.copy(is, os);
-            } catch (IOException e) {
-                e.printStackTrace();
-            }
-//            System.out.println(path);
-//            File fileStock = new File(path);
-//
-//            File fileResult = new File(uploadPath + "/" + uuidFile + list.get(list.size() - 1));
-//            try {
-//                FileCopyUtils.copy(fileStock, fileResult);
-//            } catch (IOException e) {
-//                e.printStackTrace();
-//            }
-            productDTO.setUrlPhoto(uuidFile + list.get(list.size() - 1));
-            System.out.println("Все гуд");
+            String resucltFileName = uuidFile + "." + file.getOriginalFilename();
+            file.transferTo(new File(uploadPath + "/" + resucltFileName));
+            product.setUrlPhoto(resucltFileName);
+        } catch (IOException e) {
+            e.printStackTrace();
         }
-        return productService.save(productDTO);
+
+        return productService.save(product);
     }
 
-    @PostMapping("/test/file")
-    public void createFile(@RequestParam("url_photo") MultipartFile file) throws IOException {
-        if (file != null && !file.getOriginalFilename().isEmpty()) {
-            File uploadDir = new File(uploadPath);
-
-            if (!uploadDir.exists()) {
-                uploadDir.mkdir();
-            }
-
-            String uuidFile = UUID.randomUUID().toString();
-            String resultFilename = uuidFile + "." + file.getOriginalFilename();
-
-            file.transferTo(new File(uploadPath + "/" + resultFilename));
-        }
-    }
 
     @PostMapping("/status")
     public StatusDTO createService(@RequestBody @Valid StatusDTO statusDTO) {
