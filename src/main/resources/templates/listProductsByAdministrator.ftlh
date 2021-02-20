@@ -1,5 +1,5 @@
 <#import "parts/common.ftlh" as c>
-<#import "parts/listProducts.ftlh" as lp>
+<#import "parts/listProductsCard.ftlh" as lp>
 <#import "parts/createProducts.ftlh" as p>
 
 <@c.page>
@@ -18,7 +18,6 @@
                     </button>
                 </div>
                 <div class="modal-body">
-                    <@p.pruduct categories=categories productsUpdate="" administrator=true/>
                 </div>
                 <div class="modal-footer">
                     <button type="button" class="btn btn-secondary" data-dismiss="modal">Отмена</button>

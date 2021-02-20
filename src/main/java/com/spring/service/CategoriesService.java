@@ -6,5 +6,5 @@ import com.spring.base.CRUDService;
 import java.util.List;
 
 public interface CategoriesService extends CRUDService<CategoriesDTO, Long> {
-    List<CategoriesDTO> findAll();
+//    List<CategoriesDTO> findAll();
 }

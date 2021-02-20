@@ -7,10 +7,11 @@ import lombok.NoArgsConstructor;
 import javax.validation.constraints.NotBlank;
 import javax.validation.constraints.NotNull;
 import java.io.File;
+import java.io.Serializable;
 
 @Data
 @NoArgsConstructor
-public class ProductDTO {
+public class ProductDTO implements Serializable {
     @JsonProperty("product_id")
     private Long id;
 
@@ -20,20 +21,25 @@ public class ProductDTO {
     @NotBlank
     private String description;
 
-    @NotNull
     @JsonProperty("categories_id")
     private Long categoriesId;
 
-    @NotBlank
-    private String structure;
+    @JsonProperty("manufacturer_id")
+    private Long manufacturerId;
 
-    @NotBlank
+    @JsonProperty("user_id")
+    private Long userId;
+
+    @JsonProperty("store_id")
+    private Long storeId;
+
+    @JsonProperty("supplies_id")
+    private Long suppliesId;
+
     @JsonProperty("url_photo")
     private String urlPhoto;
+    
+    private Integer amount;
 
-    @JsonProperty("image_photo")
-    private File imagePhoto;
-
-    @NotNull
     private Float price;
 }

@@ -5,37 +5,25 @@ import com.spring.service.*;
 import freemarker.ext.beans.BeansWrapper;
 import freemarker.template.TemplateHashModel;
 import freemarker.template.TemplateModelException;
-import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.core.io.InputStreamResource;
-import org.springframework.http.HttpHeaders;
-import org.springframework.http.MediaType;
-import org.springframework.http.ResponseEntity;
+import lombok.RequiredArgsConstructor;
 import org.springframework.security.core.annotation.AuthenticationPrincipal;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
 
-import java.io.ByteArrayInputStream;
-
 @Controller
+@RequiredArgsConstructor
 public class UiController {
-    @Autowired
-    private UserService userService;
-//    @Autowired
-//    private EmployeeService employeeService;
-//    @Autowired
-//    private AddressService addressService;
-//    @Autowired
-//    private PositionService positionService;
-    @Autowired
-    private CategoriesService categoriesService;
-    @Autowired
-    private ProductService productService;
-//    @Autowired
-//    private AgreementDataService agreementDataService;
-//    @Autowired
-//    private PositionNameService positionNameService;
+    private final UserService userService;
+    private final AddressService addressService;
+    private final PositionService positionService;
+    private final CategoriesService categoriesService;
+    private final ProductService productService;
+    private final PositionNameService positionNameService;
+    private final SubdivisionService subdivisionService;
+    private final StoreService storeService;
+    private final ManufacturerService manufacturerService;
 //
 //
     @GetMapping("/registration")
@@ -44,6 +32,20 @@ public class UiController {
         TemplateHashModel myRoles = (TemplateHashModel) roles.get("com.spring.model.Role");
         model.addAttribute("roles", myRoles);
         return "registration";
+    }
+
+    @GetMapping("/login")
+    public String login(Model model) throws TemplateModelException {
+        TemplateHashModel roles = BeansWrapper.getDefaultInstance().getEnumModels();
+        TemplateHashModel myRoles = (TemplateHashModel) roles.get("com.spring.model.Role");
+        TemplateHashModel gender = BeansWrapper.getDefaultInstance().getEnumModels();
+        gender = (TemplateHashModel) gender.get("com.spring.model.Gender");
+        model.addAttribute("roles", myRoles);
+        model.addAttribute("user", userService.findAll());
+        model.addAttribute("subdivisions", subdivisionService.findAll());
+        model.addAttribute("genders", gender);
+        model.addAttribute("positionNames", positionNameService.findAll());
+        return "login";
     }
 
     @GetMapping("/users")
@@ -63,12 +65,59 @@ public class UiController {
         model.addAttribute("user", userService.getById(id));
         return "editUser";
     }
-//
-    @GetMapping("/products")
-    public String listEmployees(Model model) {
+
+    @GetMapping("/provider/table/product")
+    public String providerTableProduct(@AuthenticationPrincipal User user, Model model) {
+        model.addAttribute("user", user);
+        model.addAttribute("stores", storeService.findAllByUsersId(user.getId()));
         model.addAttribute("categories", categoriesService.findAll());
-        model.addAttribute("listProducts", productService.findAll());
-        return "listProductsByAdministrator";
+        model.addAttribute("manufacturer", manufacturerService.findAll());
+        model.addAttribute("products", productService.findAllByUserId(user.getId()));
+        model.addAttribute("countAllProduct", productService.countAllByUserId(user.getId()));
+        return "listProductsByProviderTable";
+    }
+
+    @GetMapping("/provider/card/product")
+    public String providerCardProduct(@AuthenticationPrincipal User user, Model model) {
+        model.addAttribute("user", user);
+        model.addAttribute("stores", storeService.findAllByUsersId(user.getId()));
+        model.addAttribute("categories", categoriesService.findAll());
+        model.addAttribute("manufacturer", manufacturerService.findAll());
+        model.addAttribute("products", productService.findAllByUserId(user.getId()));
+        model.addAttribute("countAllProduct", productService.countAllByUserId(user.getId()));
+        return "listProductsByProviderCard";
+    }
+//
+    @GetMapping("/admin/table/products")
+    public String adminTableProducts(@AuthenticationPrincipal User user, Model model) {
+        model.addAttribute("user", user);
+        model.addAttribute("stores", storeService.findAllByIsProvide(false));
+        model.addAttribute("categories", categoriesService.findAll());
+        model.addAttribute("manufacturer", manufacturerService.findAll());
+        model.addAttribute("products", productService.findAll());
+        model.addAttribute("countAllProduct", productService.count());
+        return "listProductsByAdministratorTable";
+    }
+
+    @GetMapping("/admin/employees")
+    public String adminTableEmployees(@AuthenticationPrincipal User user, Model model) throws TemplateModelException {
+        TemplateHashModel roles = BeansWrapper.getDefaultInstance().getEnumModels();
+        TemplateHashModel myRoles = (TemplateHashModel) roles.get("com.spring.model.Role");
+        TemplateHashModel gender = BeansWrapper.getDefaultInstance().getEnumModels();
+        gender = (TemplateHashModel) gender.get("com.spring.model.Gender");
+        model.addAttribute("user", user);
+        model.addAttribute("stores", storeService.findAllByIsProvide(false));
+        model.addAttribute("categories", categoriesService.findAll());
+        model.addAttribute("manufacturer", manufacturerService.findAll());
+        model.addAttribute("products", productService.findAll());
+        model.addAttribute("countAllProduct", productService.count());
+        model.addAttribute("countAllUsers", productService.count());
+        model.addAttribute("roles", myRoles);
+        model.addAttribute("countAllUsers", userService.countUsers());
+        model.addAttribute("subdivisions", subdivisionService.findAll());
+        model.addAttribute("genders", gender);
+        model.addAttribute("positionNames", positionNameService.findAll());
+        return "listEmployeesByAdministratorTable";
     }
 //
 //    @GetMapping("/employees/agreement")

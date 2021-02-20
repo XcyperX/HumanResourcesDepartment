@@ -2,8 +2,13 @@ package com.spring.model;
 
 import org.springframework.security.core.GrantedAuthority;
 
-public enum Role implements GrantedAuthority {
-    ADMIN("Администратор");
+import java.io.Serializable;
+
+public enum Role implements GrantedAuthority, Serializable {
+    ADMIN("Администратор"),
+    PROVIDER("Поставщик"),
+    SELLER("Продавец"),
+    STOREKEEPER("Кладовщик");
 
     private String role;
 

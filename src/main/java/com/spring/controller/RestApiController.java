@@ -1,52 +1,36 @@
 package com.spring.controller;
 
-import com.fasterxml.jackson.core.JsonProcessingException;
-import com.fasterxml.jackson.databind.JsonMappingException;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.spring.DTO.*;
+import com.spring.repository.SubdivisionRepository;
 import com.spring.service.*;
-import org.apache.tomcat.util.http.fileupload.FileUtils;
+import lombok.RequiredArgsConstructor;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
-import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
-import org.springframework.util.FileCopyUtils;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.multipart.MultipartFile;
 
 import javax.validation.Valid;
 import java.io.*;
-import java.util.ArrayList;
-import java.util.Arrays;
-import java.util.List;
 import java.util.UUID;
-import java.util.stream.Stream;
 
 @RestController
 @RequestMapping("/api")
+@RequiredArgsConstructor
 public class RestApiController {
-    @Autowired
-    private UserService userService;
-    @Autowired
-    private ProductService productService;
-    @Autowired
-    private StatusService statusService;
-    @Autowired
-    private TablesService tablesService;
-    @Autowired
-    private OrderHistoryService orderHistoryService;
-    //    @Autowired
-//    private EmployeeService employeeService;
-//    @Autowired
-//    private AddressService addressService;
-//    @Autowired
-//    private PositionService positionService;
-    @Autowired
-    private CategoriesService categoriesService;
-//    @Autowired
-//    private AgreementDataService agreementDataService;
-//    @Autowired
-//    private PositionNameService positionNameService;
+    private final UserService userService;
+    private final ProductService productService;
+    private final StatusService statusService;
+    private final SuppliesService suppliesService;
+    private final OrderHistoryService orderHistoryService;
+    private final AddressService addressService;
+    private final PositionService positionService;
+    private final CategoriesService categoriesService;
+    private final PositionNameService positionNameService;
+    private final SubdivisionService subdivisionService;
+    private final StoreService storeService;
+    private final ManufacturerService manufacturerService;
 
     @Value("${upload.path}")
     private String uploadPath;
@@ -67,6 +51,11 @@ public class RestApiController {
         userService.delete(id);
     }
 
+    @GetMapping("/user")
+    public ResponseEntity<?> getUser() {
+        return ResponseEntity.ok(userService.findAll());
+    }
+
     @PostMapping(value = "/product/image", consumes = {"multipart/form-data"})
     public ProductDTO createProduct(String productDTO, @RequestParam("file_test") MultipartFile file) {
         ProductDTO product = null;
@@ -77,14 +66,39 @@ public class RestApiController {
                 uploadDir.mkdir();
             }
             String uuidFile = UUID.randomUUID().toString();
-            String resucltFileName = uuidFile + "." + file.getOriginalFilename();
-            file.transferTo(new File(uploadPath + "/" + resucltFileName));
-            product.setUrlPhoto(resucltFileName);
+            String resultFileName = uuidFile + "." + file.getOriginalFilename();
+            file.transferTo(new File(uploadPath + "/" + resultFileName));
+            product.setUrlPhoto(resultFileName);
         } catch (IOException e) {
             e.printStackTrace();
         }
 
         return productService.save(product);
+    }
+
+    @PutMapping(value = "/product/image/{id}", consumes = {"multipart/form-data"})
+    public ProductDTO updateProduct(@PathVariable("id") Long id, String productDTO, @RequestParam("file_test") MultipartFile file) {
+        ProductDTO product = null;
+        try {
+            product = new ObjectMapper().readValue(productDTO, ProductDTO.class);
+            product.setId(id);
+            File uploadDir = new File(uploadPath);
+            if (!uploadDir.exists()) {
+                uploadDir.mkdir();
+            }
+            String uuidFile = UUID.randomUUID().toString();
+            String resultFileName = uuidFile + "." + file.getOriginalFilename();
+            file.transferTo(new File(uploadPath + "/" + resultFileName));
+            product.setUrlPhoto(resultFileName);
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
+        return productService.update(product);
+    }
+
+    @DeleteMapping("/products/{id}")
+    public void deleteProduct(@PathVariable("id") Long id) {
+        productService.delete(id);
     }
 
 
@@ -94,19 +108,18 @@ public class RestApiController {
     }
 
     @PostMapping("/tables")
-    public TablesDTO createTable(@RequestBody @Valid TablesDTO tablesDTO) {
-        return tablesService.save(tablesDTO);
+    public SuppliesDTO createTable(@RequestBody @Valid SuppliesDTO suppliesDTO) {
+        return suppliesService.save(suppliesDTO);
     }
 
-
-    //    @PostMapping("/positions/names")
-//    public PositionNameDTO createPositionName(@RequestBody @Valid PositionNameDTO positionNameDTO) {
-//        return positionNameService.save(positionNameDTO);
-//    }
-//
     @PostMapping("/categories")
     public CategoriesDTO createCategories(@RequestBody @Valid CategoriesDTO categoriesDTO) {
         return categoriesService.save(categoriesDTO);
+    }
+
+    @PostMapping("/manufacturers")
+    public ManufacturerDTO createManufacturers(@RequestBody @Valid ManufacturerDTO manufacturerDTO) {
+        return manufacturerService.save(manufacturerDTO);
     }
 
     @PostMapping("/order/history")
@@ -123,40 +136,35 @@ public class RestApiController {
     public ResponseEntity<?> getOrderHistory() {
         return ResponseEntity.ok(orderHistoryService.findAll());
     }
-//
-//    @PostMapping("/employees")
-//    public ProductDTO createEmployee(@RequestBody @Valid ProductDTO productDTO) {
-//        return employeeService.save(productDTO);
-//    }
-//
-//    @PutMapping("/employees/{id}")
-//    public ProductDTO createEmployee(@PathVariable("id") Long id, @RequestBody @Valid ProductDTO productDTO) {
-//        productDTO.setId(id);
-//        return employeeService.update(productDTO);
-//    }
-//
-//    @PutMapping("/employees/vacation/{id}")
-//    public ProductDTO updateEmployeeVacation(@PathVariable("id") Long id, @RequestBody @Valid VacationDateDTO vacationDateDTO) {
-//        return employeeService.updateVacationEmployeeById(id, vacationDateDTO);
-//    }
-//
-//    @DeleteMapping("/employees/{id}")
-//    public void deleteEmployee(@PathVariable("id") Long id) {
-//        employeeService.delete(id);
-//    }
-//
-//    @GetMapping("/get/employee/{id}")
-//    public ResponseEntity<?> getRequestById(@PathVariable("id") Long id) {
-//        return ResponseEntity.ok(employeeService.getById(id));
-//    }
-//
-//    @PostMapping("/agreements")
-//    public AgreementDataDTO createAgreement(@RequestBody @Valid AgreementDataDTO agreementDataDTO) {
-//        return agreementDataService.save(agreementDataDTO);
-//    }
-//
-//    @DeleteMapping("/employees/agreement/{id}")
-//    public void deleteEmployeeAgreement(@PathVariable("id") Long id) {
-//        employeeService.delete(id);
-//    }
+
+    @PostMapping("/positions/names")
+    public PositionNameDTO createPositionName(@RequestBody @Valid PositionNameDTO positionNameDTO) {
+        return positionNameService.save(positionNameDTO);
+    }
+
+    @PostMapping("/subdivisions")
+    public SubdivisionDTO createSubdivision(@RequestBody @Valid SubdivisionDTO subdivisionDTO) {
+        return subdivisionService.save(subdivisionDTO);
+    }
+
+    @PostMapping("/products")
+    public ProductDTO createProduct(@RequestBody @Valid ProductDTO productDTO) {
+        return productService.save(productDTO);
+    }
+
+    @PostMapping("/store")
+    public StoreDTO createStore(@RequestBody @Valid StoreDTO storeDTO) {
+        return storeService.save(storeDTO);
+    }
+
+    @PutMapping("/store/{id}")
+    public StoreDTO updateStore(@PathVariable("id") Long id, @RequestBody StoreDTO storeDTO) {
+        storeDTO.setId(id);
+        return storeService.update(storeDTO);
+    }
+
+    @GetMapping("/store")
+    public ResponseEntity<?> getStore() {
+        return ResponseEntity.ok(storeService.findAll());
+    }
 }

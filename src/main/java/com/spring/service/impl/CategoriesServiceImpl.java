@@ -1,20 +1,21 @@
 package com.spring.service.impl;
 
 import com.spring.DTO.CategoriesDTO;
-import com.spring.mapper.CategoriesMapper;
+import com.spring.model.Categories;
 import com.spring.repository.CategoriesRepository;
 import com.spring.service.CategoriesService;
-import org.springframework.beans.factory.annotation.Autowired;
+import lombok.RequiredArgsConstructor;
+import ma.glasnost.orika.MapperFacade;
 import org.springframework.stereotype.Service;
 
 import java.util.List;
 
 @Service
+@RequiredArgsConstructor
 public class CategoriesServiceImpl implements CategoriesService {
-    @Autowired
-    private CategoriesMapper categoriesMapper;
-    @Autowired
-    private CategoriesRepository categoriesRepository;
+    private final MapperFacade mapperFacade;
+    private final CategoriesRepository categoriesRepository;
+
     @Override
     public CategoriesDTO getById(Long aLong) {
         return null;
@@ -22,7 +23,8 @@ public class CategoriesServiceImpl implements CategoriesService {
 
     @Override
     public CategoriesDTO save(CategoriesDTO categoriesDTO) {
-        return categoriesMapper.toDto(categoriesRepository.save(categoriesMapper.toEntity(categoriesDTO)));
+        Categories categories = categoriesRepository.save(mapperFacade.map(categoriesDTO, Categories.class));
+        return mapperFacade.map(categories, CategoriesDTO.class);
     }
 
     @Override
@@ -37,6 +39,6 @@ public class CategoriesServiceImpl implements CategoriesService {
 
     @Override
     public List<CategoriesDTO> findAll() {
-        return categoriesMapper.toDtos(categoriesRepository.findAll());
+        return mapperFacade.mapAsList(categoriesRepository.findAll(), CategoriesDTO.class);
     }
 }

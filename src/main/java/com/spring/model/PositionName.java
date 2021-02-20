@@ -3,13 +3,14 @@ package com.spring.model;
 import lombok.Data;
 
 import javax.persistence.*;
+import java.io.Serializable;
 import java.util.ArrayList;
 import java.util.List;
 
 @Entity
-@Table(name = "tables")
+@Table(name = "position_names")
 @Data
-public class Tables {
+public class PositionName implements Serializable {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
@@ -17,20 +18,21 @@ public class Tables {
     @Column(nullable = false)
     private String name;
 
-    @OneToMany(mappedBy = "tables")
-    private List<OrderHistory> orderHistories = new ArrayList<>();
+    @OneToMany(mappedBy = "positionName", cascade = CascadeType.ALL)
+    private List<Position> positions = new ArrayList<>();
 
-    public Tables() {
+    public PositionName() {
     }
 
-    public Tables(Long id) {
+    public PositionName(Long id) {
         this.id = id;
     }
 
     @Override
     public String toString() {
-        return "Status{" +
+        return "PositionName{" +
                 "id=" + id +
+                ", name='" + name + '\'' +
                 '}';
     }
 }

@@ -7,5 +7,5 @@ import com.spring.base.CRUDService;
 import java.util.List;
 
 public interface StatusService extends CRUDService<StatusDTO, Long> {
-    List<StatusDTO> findAll();
+//    List<StatusDTO> findAll();
 }

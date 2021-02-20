@@ -2,8 +2,7 @@ package com.spring.mapper;
 
 import com.spring.DTO.ProductDTO;
 import com.spring.base.MapperService;
-import com.spring.model.Categories;
-import com.spring.model.Product;
+import com.spring.model.*;
 import org.springframework.stereotype.Component;
 
 import java.util.ArrayList;
@@ -18,7 +17,12 @@ public class ProductMapper implements MapperService<Product, ProductDTO> {
         product.setName(dto.getName());
         product.setDescription(dto.getDescription());
         product.setCategories(new Categories(dto.getCategoriesId()));
-        product.setStructure(dto.getStructure());
+        product.setManufacturer(new Manufacturer(dto.getManufacturerId()));
+        product.setUser(new User(dto.getUserId()));
+        product.setStore(new Store(dto.getStoreId()));
+        if (product.getSupplies() != null) {
+            product.setSupplies(new Supplies(dto.getSuppliesId()));
+        }
         product.setUrlPhoto(dto.getUrlPhoto());
         product.setPrice(dto.getPrice());
         return product;
@@ -31,7 +35,12 @@ public class ProductMapper implements MapperService<Product, ProductDTO> {
         productDTO.setName(entity.getName());
         productDTO.setDescription(entity.getDescription());
         productDTO.setCategoriesId(entity.getCategories().getId());
-        productDTO.setStructure(entity.getStructure());
+        productDTO.setManufacturerId(entity.getManufacturer().getId());
+        productDTO.setUserId(entity.getUser().getId());
+        productDTO.setStoreId(entity.getStore().getId());
+        if (productDTO.getSuppliesId() != null) {
+            productDTO.setSuppliesId(entity.getSupplies().getId());
+        }
         productDTO.setUrlPhoto(entity.getUrlPhoto());
         productDTO.setPrice(entity.getPrice());
         return productDTO;

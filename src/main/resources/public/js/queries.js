@@ -34,6 +34,21 @@ submitUpdateUserById = (user_id) => {
     updateUserById(user_id, user);
 }
 
+submitCreateAndUpdateProvider = (provider_id) => {
+    if (provider_id == null) {
+        console.log("Нет id");
+    } else {
+        console.log("Есть id")
+    }
+    let createProvider = document.getElementById("createProvider");
+    user.name_firm = createProvider.querySelector("#nameFirm").value;
+    user.email = createProvider.querySelector("#email").value;
+    user.password = createProvider.querySelector("#passwordUser").value;
+    user.role = "PROVIDER";
+    console.log(user);
+    createNewUser(user);
+}
+
 submitCrateAndUpdateEmployees = (employee_id) => {
     let legacyEmployee;
     if (employee_id == null) {
@@ -70,25 +85,61 @@ submitCrateAndUpdateEmployees = (employee_id) => {
     console.log(employee);
     if (employee_id == null) {
         createNewEmployee(employee);
-    }  else {
+    } else {
         updateEmployeeById(employee_id, employee);
     }
 }
 
-submitCreateProduct = () => {
-    product.name = document.getElementById("name").value;
-    product.description = document.getElementById("description").value;
-    product.structure = document.getElementById("structure").value;
-    product.categories_id = document.getElementById("categories_id").value;
-    product.price = Number(document.getElementById("price").value);
-
-    let image_photo = document.getElementById("url_photo").files[0];
-
+submitCreateAndUpdateProduct = (product_id) => {
+    let legacyProduct;
+    if (product_id == null) {
+        legacyProduct = document.getElementById("createProduct");
+    } else {
+        legacyProduct = document.getElementById("updateProduct_" + product_id);
+    }
+    product.name = legacyProduct.querySelector("#name").value;
+    product.description = legacyProduct.querySelector("#description").value;
+    product.categories_id = legacyProduct.querySelector("#categories_id").value;
+    product.manufacturer_id = legacyProduct.querySelector("#manufacturer_id").value;
+    product.store_id = legacyProduct.querySelector("#store_id").value;
+    product.user_id = legacyProduct.querySelector("#user_id").value;
+    product.amount = legacyProduct.querySelector("#amount").value;
+    product.price = Number(legacyProduct.querySelector("#price").value);
+    let image_photo = legacyProduct.querySelector("#url_photo").files[0];
     let formData = new FormData();
     formData.append("file_test", image_photo, image_photo.name);
     formData.append("productDTO", JSON.stringify(product));
     console.log(formData.get("productDTO"));
-    createNewProduct(formData);
+    if (product_id == null) {
+        console.log(formData);
+        createNewProduct(formData);
+    } else {
+        updateProductById(product_id, formData);
+    }
+
+}
+
+submitCreateAndUpdateStore = (store_id) => {
+    let legacyStore;
+    if (store_id == null) {
+        legacyStore = document.getElementById("createStore");
+    } else {
+        legacyStore = document.getElementById("createStore_" + store_id);
+    }
+
+    store.name = legacyStore.querySelector("#name_store").value;
+    user.user_id = legacyStore.querySelector("#user_id").value;
+    store.users.push(JSON.parse(JSON.stringify(user)));
+    createNewStore(store);
+}
+
+submitNewManufacturer = () => {
+    if (document.getElementById("manufacturer_input").value !== "") {
+        manufacturer.name = document.getElementById("manufacturer_input").value;
+        createNewManufacturers(manufacturer);
+    } else {
+        alert("Введите название производителя!!!")
+    }
 }
 
 submitNewSubdivision = () => {
@@ -109,11 +160,59 @@ submitNewPosition = () => {
     }
 }
 
+const manufacturer = {
+    name: null
+}
+
+const store = {
+    name: null,
+    supplies_id: null,
+    is_provide: false,
+    products: null,
+    users: []
+}
+
+const passport = {
+    pas_id: null,
+    number_series: null,
+    passport_id: null,
+    issued_by: "",
+    date_issue: ""
+}
+
+const address = {
+    address_id: null,
+    city: "",
+    street: "",
+    house: "",
+    flat: ""
+}
+
+const position = {
+    position_id: null,
+    position_name_id: "",
+    date_receipt: "",
+    date_dismissal: ""
+}
+
 const user = {
-    email: "",
-    name: "",
-    password: "",
-    role: ""
+    user_id: null,
+    first_name: null,
+    last_name: null,
+    second_name: null,
+    name_firm: null,
+    password: null,
+    role: null,
+    passport: null,
+    email: null,
+    phone: null,
+    date_birth: null,
+    address: null,
+    number_inn: null,
+    gender: null,
+    subdivision_id: null,
+    store: null,
+    position: null
 }
 
 const employee = {
@@ -121,8 +220,8 @@ const employee = {
     last_name: "",
     passport: {
         pas_id: null,
-        number_series: -1,
-        passport_id: -1,
+        number_series: null,
+        passport_id: null,
         issued_by: "",
         date_issue: ""
     },
@@ -153,35 +252,22 @@ const subdivision = {
     name: ""
 }
 
-const position = {
-    name: ""
-}
-
 const vacation = {
     vacation_start: "",
     vacation_final: ""
 }
 
-const agreement = {
-    start: "",
-    finish: "",
-    payment: "",
-    price: -1,
-    sum_tax: -1,
-    deduction_code: "",
-    employee_id: -1
-}
-
 const product = {
     name: "",
     description: "",
-    categories_id: -1,
-    structure: -1,
+    categories_id: null,
+    manufacturer_id: null,
+    user_id: null,
+    store_id: null,
+    amount: null,
     url_photo: "",
-    image_photo: "",
     price: -1
 }
-
 
 sendRequest = (method, url, body) => {
     const headers = {
@@ -241,6 +327,28 @@ createNewProduct = (product) => {
     });
 }
 
+updateProductById = (product_id, product) => {
+    sendRequestWithFile('PUT', '/api/product/image/' + product_id, product).then(response => {
+        if (response.ok) {
+            console.log(response);
+            document.location.reload(true);
+        } else {
+            console.log(response);
+        }
+    });
+}
+
+deleteProductById = (product_id) => {
+    sendRequest('DELETE', '/api/products/' + product_id).then(response => {
+        if (response.ok) {
+            console.log(response);
+            document.location.reload(true);
+        } else {
+            console.log(response);
+        }
+    });
+}
+
 updateUserById = (user_id, user) => {
     sendRequest('PUT', '/api/users/' + user_id, user).then(response => {
         if (response.ok) {
@@ -263,6 +371,17 @@ deleteUserById = (user_id) => {
     });
 }
 
+createNewManufacturers = (manufacturers) => {
+    sendRequest('POST', '/api/manufacturers', manufacturers).then(response => {
+        if (response.ok) {
+            console.log(response);
+            document.location.reload(true);
+        } else {
+            console.log(response);
+        }
+    });
+}
+
 createNewSubdivision = (subdivision) => {
     sendRequest('POST', '/api/subdivisions', subdivision).then(response => {
         if (response.ok) {
@@ -276,6 +395,17 @@ createNewSubdivision = (subdivision) => {
 
 createNewPosition = (position) => {
     sendRequest('POST', '/api/positions/names', position).then(response => {
+        if (response.ok) {
+            console.log(response);
+            document.location.reload(true);
+        } else {
+            console.log(response);
+        }
+    });
+}
+
+createNewStore = (store) => {
+    sendRequest('POST', '/api/store', store).then(response => {
         if (response.ok) {
             console.log(response);
             document.location.reload(true);

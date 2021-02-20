@@ -7,5 +7,6 @@ import com.spring.base.CRUDService;
 import java.util.List;
 
 public interface UserService extends CRUDService<UserDTO, Long> {
-    List<UserDTO> findAll();
+//    List<UserDTO> findAll();
+    Long countUsers();
 }

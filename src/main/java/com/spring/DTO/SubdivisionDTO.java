@@ -4,14 +4,13 @@ import com.fasterxml.jackson.annotation.JsonProperty;
 import lombok.Data;
 import lombok.NoArgsConstructor;
 
-import javax.validation.constraints.NotBlank;
+import java.io.Serializable;
 
 @Data
 @NoArgsConstructor
-public class TablesDTO {
-    @JsonProperty("table_id")
+public class SubdivisionDTO implements Serializable {
+    @JsonProperty("subdivision_id")
     private Long id;
 
-    @NotBlank
     private String name;
 }

@@ -3,8 +3,8 @@ package com.spring.mapper;
 import com.spring.DTO.OrderHistoryDTO;
 import com.spring.base.MapperService;
 import com.spring.model.OrderHistory;
+import com.spring.model.Manufacturer;
 import com.spring.model.Status;
-import com.spring.model.Tables;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 
@@ -22,7 +22,6 @@ public class OrderHistoryMapper implements MapperService<OrderHistory, OrderHist
         orderHistory.setDateOrder(dto.getDateOrder());
         orderHistory.setProductList(productMapper.toEntities(dto.getProductList()));
         orderHistory.setStatus(new Status(dto.getStatusId()));
-        orderHistory.setTables(new Tables(dto.getTablesId()));
         orderHistory.setPrice(dto.getPrice());
         return orderHistory;
     }
@@ -34,7 +33,6 @@ public class OrderHistoryMapper implements MapperService<OrderHistory, OrderHist
         orderHistoryDTO.setDateOrder(entity.getDateOrder());
         orderHistoryDTO.setProductList(productMapper.toDtos(entity.getProductList()));
         orderHistoryDTO.setStatusId(entity.getStatus().getId());
-        orderHistoryDTO.setTablesId(entity.getTables().getId());
         orderHistoryDTO.setPrice(entity.getPrice());
         return orderHistoryDTO;
     }
