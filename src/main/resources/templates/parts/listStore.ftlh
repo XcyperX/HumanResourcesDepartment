@@ -1,4 +1,4 @@
-<#macro listStore stores user>
+<#macro listStore stores user bool=false>
     <form id="createStore" name="createStore">
         <div class="form-row mb-3">
             <div class="col-9">
@@ -8,7 +8,7 @@
             <div class="col">
                 <input id="user_id" type="text" name="user_id" class="form-control"
                        value="<#if user?has_content>${user.id}</#if>" hidden>
-                <input class="btn btn-primary btn-block" type="button" onclick="submitCreateAndUpdateStore()"
+                <input class="btn btn-primary btn-block" type="button" onclick="submitCreateAndUpdateStore(<#if bool>true<#else>false</#if>)"
                        value="Добавить склад">
             </div>
         </div>

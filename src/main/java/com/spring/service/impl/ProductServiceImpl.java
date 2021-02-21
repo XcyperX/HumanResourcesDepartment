@@ -4,10 +4,12 @@ import com.spring.DTO.ProductDTO;
 import com.spring.model.Product;
 import com.spring.repository.ProductRepository;
 import com.spring.service.ProductService;
+import com.spring.service.StoreService;
 import lombok.RequiredArgsConstructor;
 import ma.glasnost.orika.MapperFacade;
 import org.springframework.stereotype.Service;
 
+import java.util.ArrayList;
 import java.util.List;
 
 @Service
@@ -15,6 +17,7 @@ import java.util.List;
 public class ProductServiceImpl implements ProductService {
     private final MapperFacade mapperFacade;
     private final ProductRepository productRepository;
+    private final StoreService storeService;
 
     @Override
     public List<ProductDTO> findAll() {
@@ -58,12 +61,48 @@ public class ProductServiceImpl implements ProductService {
     }
 
     @Override
-    public Integer countAllByUserId(Long id) {
-        return productRepository.countAllByUserId(id);
+    public Integer countProductByUserId(Long id) {
+        return productRepository.countProductByUserId(id);
     }
 
     @Override
     public Long count() {
         return productRepository.count();
+    }
+
+    @Override
+    public List<ProductDTO> findAllProductsProviders() {
+        List<ProductDTO> products = new ArrayList<>();
+        storeService.findAllByIsProvide(true).forEach(storeDTO -> {
+            products.addAll(storeDTO.getProducts());
+        });
+        return mapperFacade.mapAsList(products, ProductDTO.class);
+    }
+
+    @Override
+    public List<ProductDTO> findAllProductsCompany() {
+        List<ProductDTO> products = new ArrayList<>();
+        storeService.findAllByIsProvide(false).forEach(storeDTO -> {
+            products.addAll(storeDTO.getProducts());
+        });
+        return mapperFacade.mapAsList(products, ProductDTO.class);
+    }
+
+    @Override
+    public Integer countProductsProviders() {
+        List<ProductDTO> products = new ArrayList<>();
+        storeService.findAllByIsProvide(true).forEach(storeDTO -> {
+            products.addAll(storeDTO.getProducts());
+        });
+        return products.size();
+    }
+
+    @Override
+    public Integer countProductsCompany() {
+        List<ProductDTO> products = new ArrayList<>();
+        storeService.findAllByIsProvide(false).forEach(storeDTO -> {
+            products.addAll(storeDTO.getProducts());
+        });
+        return products.size();
     }
 }

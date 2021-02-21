@@ -9,5 +9,5 @@ import java.util.List;
 public interface ProductRepository extends JpaRepository<Product, Long> {
     List<Product> findAllByUserId(Long id);
     Integer countAllByUserId(Long id);
-//    Long count();
+    Integer countProductByUserId(Long id);
 }

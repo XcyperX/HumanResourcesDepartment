@@ -73,7 +73,7 @@ public class UiController {
         model.addAttribute("categories", categoriesService.findAll());
         model.addAttribute("manufacturer", manufacturerService.findAll());
         model.addAttribute("products", productService.findAllByUserId(user.getId()));
-        model.addAttribute("countAllProduct", productService.countAllByUserId(user.getId()));
+        model.addAttribute("countAllProduct", productService.countProductByUserId(user.getId()));
         return "listProductsByProviderTable";
     }
 
@@ -84,18 +84,30 @@ public class UiController {
         model.addAttribute("categories", categoriesService.findAll());
         model.addAttribute("manufacturer", manufacturerService.findAll());
         model.addAttribute("products", productService.findAllByUserId(user.getId()));
-        model.addAttribute("countAllProduct", productService.countAllByUserId(user.getId()));
+        model.addAttribute("countAllProduct", productService.countProductByUserId(user.getId()));
         return "listProductsByProviderCard";
     }
 //
+    @GetMapping("/admin/providers/products")
+    public String adminTableProductsProviders(@AuthenticationPrincipal User user, Model model) {
+        model.addAttribute("user", user);
+        model.addAttribute("providers", userService.findAllProvider());
+        model.addAttribute("stores", storeService.findAllByIsProvide(true));
+        model.addAttribute("categories", categoriesService.findAll());
+        model.addAttribute("manufacturer", manufacturerService.findAll());
+        model.addAttribute("products", productService.findAllProductsProviders());
+        model.addAttribute("countAllProduct", productService.countProductsProviders());
+        return "listProductsProvidersByAdministratorTable";
+    }
+
     @GetMapping("/admin/table/products")
     public String adminTableProducts(@AuthenticationPrincipal User user, Model model) {
         model.addAttribute("user", user);
         model.addAttribute("stores", storeService.findAllByIsProvide(false));
         model.addAttribute("categories", categoriesService.findAll());
         model.addAttribute("manufacturer", manufacturerService.findAll());
-        model.addAttribute("products", productService.findAll());
-        model.addAttribute("countAllProduct", productService.count());
+        model.addAttribute("products", productService.findAllProductsCompany());
+        model.addAttribute("countAllProduct", productService.countProductsCompany());
         return "listProductsByAdministratorTable";
     }
 
@@ -117,7 +129,18 @@ public class UiController {
         model.addAttribute("subdivisions", subdivisionService.findAll());
         model.addAttribute("genders", gender);
         model.addAttribute("positionNames", positionNameService.findAll());
+        model.addAttribute("employees", userService.findAllEmployee());
         return "listEmployeesByAdministratorTable";
+    }
+
+    @GetMapping("/products")
+    public String allTableProducts(@AuthenticationPrincipal User user, Model model) {
+        model.addAttribute("user", user);
+        model.addAttribute("categories", categoriesService.findAll());
+        model.addAttribute("manufacturer", manufacturerService.findAll());
+        model.addAttribute("products", productService.findAllProductsCompany());
+        model.addAttribute("countAllProduct", productService.countProductsCompany());
+        return "listProductsByAllUser";
     }
 //
 //    @GetMapping("/employees/agreement")

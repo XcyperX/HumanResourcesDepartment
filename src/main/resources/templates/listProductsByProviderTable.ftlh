@@ -4,6 +4,7 @@
 <#import "parts/createProducts.ftlh" as p>
 <#import "parts/listStore.ftlh" as store>
 <#import "parts/listManufaturer.ftlh" as man>
+<#import "parts/listCategories.ftlh" as listCat>
 
 <@c.page>
     <div class="row">
@@ -63,7 +64,7 @@
                                     </button>
                                 </div>
                                 <div class="modal-body">
-                                    <@store.listStore stores=stores user=user/>
+                                    <@store.listStore stores=stores user=user bool=true/>
                                 </div>
                                 <div class="modal-footer">
                                     <button type="button" class="btn btn-secondary" data-dismiss="modal">Отмена</button>
@@ -95,6 +96,33 @@
                                 <div class="modal-footer">
                                     <button type="button" class="btn btn-secondary" data-dismiss="modal">Отмена</button>
                                 </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                <div class="row">
+                    <button type="button" class="btn btn-primary btn-block mb-2" data-toggle="modal"
+                            data-target="#createCategories">
+                        Список категорий
+                    </button>
+                </div>
+                <!-- Modal -->
+                <div class="modal fade" id="createCategories" tabindex="-1" role="dialog"
+                     aria-labelledby="exampleModalLabel"
+                     aria-hidden="true">
+                    <div class="modal-dialog modal-lg">
+                        <div class="modal-content">
+                            <div class="modal-header">
+                                <h5 class="modal-title" id="exampleModalLabel">Список категорий</h5>
+                                <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                                    <span aria-hidden="true">&times;</span>
+                                </button>
+                            </div>
+                            <div class="modal-body">
+                                <@listCat.listCategories categories=categories/>
+                            </div>
+                            <div class="modal-footer">
+                                <button type="button" class="btn btn-secondary" data-dismiss="modal">Отмена</button>
                             </div>
                         </div>
                     </div>

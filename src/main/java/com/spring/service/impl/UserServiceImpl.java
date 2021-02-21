@@ -60,4 +60,14 @@ public class UserServiceImpl implements UserService {
     public Long countUsers() {
         return userRepository.count();
     }
+
+    @Override
+    public List<UserDTO> findAllEmployee() {
+        return mapperFacade.mapAsList(userRepository.findAllByNameFirmIsNull(), UserDTO.class);
+    }
+
+    @Override
+    public List<UserDTO> findAllProvider() {
+        return mapperFacade.mapAsList(userRepository.findAllByNameFirmIsNotNull(), UserDTO.class);
+    }
 }

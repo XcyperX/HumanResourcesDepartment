@@ -1,9 +1,11 @@
 <#import "parts/common.ftlh" as c>
-<#import "parts/listProductsCard.ftlh" as lpc>
-<#import "parts/listProductsTable.ftlh" as lpt>
+<#import "parts/listEmployees.ftlh" as le>
+<#import "parts/listSubdivision.ftlh" as sb>
+<#import "parts/listPositionNames.ftlh" as pn>
 <#import "parts/createProducts.ftlh" as p>
 <#import "parts/listStore.ftlh" as store>
 <#import "parts/listManufaturer.ftlh" as man>
+<#import "parts/createEmployee.ftlh" as ce>
 
 <@c.page>
     <div class="row">
@@ -23,24 +25,16 @@
                          aria-hidden="true">
                         <div class="modal-dialog modal-lg">
                             <div class="modal-content">
-                                <div class="modal-header">
-                                    <h5 class="modal-title" id="exampleModalLabel">Добавить продукт</h5>
-                                    <button type="button" class="close" data-dismiss="modal" aria-label="Close">
-                                        <span aria-hidden="true">&times;</span>
+                                <div class="modal-body">
+                                    <@ce.employee employees="" subdivisions=subdivisions positionsNames=positionNames/>
+                                </div>
+                                <div class="modal-footer">
+                                    <button type="button" class="btn btn-secondary" data-dismiss="modal">Отмена
+                                    </button>
+                                    <button type="button" class="btn btn-primary"
+                                            onclick="submitCrateAndUpdateEmployees()">Добавить
                                     </button>
                                 </div>
-                                <form id="createProduct" name="createProduct" enctype="multipart/form-data">
-                                    <div class="modal-body">
-                                        <#--<@p.pruduct products="" categories=categories manufacturer=manufacturer stores=stores user=user/>-->
-                                    </div>
-                                    <div class="modal-footer">
-                                        <button type="button" class="btn btn-secondary" data-dismiss="modal">Отмена
-                                        </button>
-                                        <button type="button" class="btn btn-primary"
-                                                onclick="submitCreateAndUpdateProduct()">Добавить
-                                        </button>
-                                    </div>
-                                </form>
                             </div>
                         </div>
                     </div>
@@ -57,13 +51,13 @@
                         <div class="modal-dialog modal-lg">
                             <div class="modal-content">
                                 <div class="modal-header">
-                                    <h5 class="modal-title" id="exampleModalLabel">Список складов</h5>
+                                    <h5 class="modal-title" id="exampleModalLabel">Список подразделений</h5>
                                     <button type="button" class="close" data-dismiss="modal" aria-label="Close">
                                         <span aria-hidden="true">&times;</span>
                                     </button>
                                 </div>
                                 <div class="modal-body">
-                                    <#--<@store.listStore stores=stores user=user/>-->
+                                    <@sb.listSubdivision subdivisions=subdivisions/>
                                 </div>
                                 <div class="modal-footer">
                                     <button type="button" class="btn btn-secondary" data-dismiss="modal">Отмена</button>
@@ -84,13 +78,13 @@
                         <div class="modal-dialog modal-lg">
                             <div class="modal-content">
                                 <div class="modal-header">
-                                    <h5 class="modal-title" id="exampleModalLabel">Список производителей</h5>
+                                    <h5 class="modal-title" id="exampleModalLabel">Список должностей</h5>
                                     <button type="button" class="close" data-dismiss="modal" aria-label="Close">
                                         <span aria-hidden="true">&times;</span>
                                     </button>
                                 </div>
                                 <div class="modal-body">
-                                    <#--<@man.listManufacturer manufacturer=manufacturer/>-->
+                                    <@pn.listPositionNames positionNames=positionNames/>
                                 </div>
                                 <div class="modal-footer">
                                     <button type="button" class="btn btn-secondary" data-dismiss="modal">Отмена</button>
@@ -148,132 +142,11 @@
                         <button type="button" class="btn btn-light btn-sm">По алфавиту</button>
                         <button type="button" class="btn btn-light btn-sm">По дате приема на работу</button>
                     </div>
-                    <div class="col-auto pr-0">
-                        <a class="btn btn-primary" type="button" href="/provider/table/product">Таблица</a>
-                        <a class="btn btn-primary" type="button" href="/provider/card/product">Карточки</a>
-                    </div>
                 </div>
                 <div class="row">
-                    <@lpt.listProducts products=products categories=categories manufacturer=manufacturer stores=stores user=user/>
+                    <@le.listEmployees employees=employees subdivisions=subdivisions positionsNames=positionNames genders=genders/>
                 </div>
             </div>
         </div>
     </div>
-<#--<div class="row">-->
-<#--<div class="col">-->
-<#--<button type="button" class="btn btn-primary mb-2" data-toggle="modal" data-target="#createProduct">-->
-<#--Добавить продукт-->
-<#--</button>-->
-<#--<!-- Modal &ndash;&gt;-->
-<#--<div class="modal fade" id="createProduct" tabindex="-1" role="dialog" aria-labelledby="exampleModalLabel"-->
-<#--aria-hidden="true">-->
-<#--<div class="modal-dialog modal-lg">-->
-<#--<div class="modal-content">-->
-<#--<div class="modal-header">-->
-<#--<h5 class="modal-title" id="exampleModalLabel">Добавить продукт</h5>-->
-<#--<button type="button" class="close" data-dismiss="modal" aria-label="Close">-->
-<#--<span aria-hidden="true">&times;</span>-->
-<#--</button>-->
-<#--</div>-->
-<#--<form id="createProduct" name="createProduct" enctype="multipart/form-data">-->
-<#--<div class="modal-body">-->
-<#--<@p.pruduct products="" categories=categories manufacturer=manufacturer stores=stores user=user/>-->
-<#--</div>-->
-<#--<div class="modal-footer">-->
-<#--<button type="button" class="btn btn-secondary" data-dismiss="modal">Отмена</button>-->
-<#--<button type="button" class="btn btn-primary"-->
-<#--onclick="submitCreateAndUpdateProduct()">Добавить-->
-<#--</button>-->
-<#--</div>-->
-<#--</form>-->
-<#--</div>-->
-<#--</div>-->
-<#--</div>-->
-<#--<button type="button" class="btn btn-primary mb-2" data-toggle="modal" data-target="#createStore">-->
-<#--Список складов-->
-<#--</button>-->
-<#--<!-- Modal &ndash;&gt;-->
-<#--<div class="modal fade" id="createStore" tabindex="-1" role="dialog" aria-labelledby="exampleModalLabel"-->
-<#--aria-hidden="true">-->
-<#--<div class="modal-dialog modal-lg">-->
-<#--<div class="modal-content">-->
-<#--<div class="modal-header">-->
-<#--<h5 class="modal-title" id="exampleModalLabel">Список складов</h5>-->
-<#--<button type="button" class="close" data-dismiss="modal" aria-label="Close">-->
-<#--<span aria-hidden="true">&times;</span>-->
-<#--</button>-->
-<#--</div>-->
-<#--<div class="modal-body">-->
-<#--<@store.listStore stores=stores user=user/>-->
-<#--</div>-->
-<#--<div class="modal-footer">-->
-<#--<button type="button" class="btn btn-secondary" data-dismiss="modal">Отмена</button>-->
-<#--</div>-->
-<#--</div>-->
-<#--</div>-->
-<#--</div>-->
-<#--<button type="button" class="btn btn-primary mb-2" data-toggle="modal" data-target="#createManufacturer">-->
-<#--Список производителей-->
-<#--</button>-->
-<#--<!-- Modal &ndash;&gt;-->
-<#--<div class="modal fade" id="createManufacturer" tabindex="-1" role="dialog"-->
-<#--aria-labelledby="exampleModalLabel"-->
-<#--aria-hidden="true">-->
-<#--<div class="modal-dialog modal-lg">-->
-<#--<div class="modal-content">-->
-<#--<div class="modal-header">-->
-<#--<h5 class="modal-title" id="exampleModalLabel">Список производителей</h5>-->
-<#--<button type="button" class="close" data-dismiss="modal" aria-label="Close">-->
-<#--<span aria-hidden="true">&times;</span>-->
-<#--</button>-->
-<#--</div>-->
-<#--<div class="modal-body">-->
-<#--<@man.listManufacturer manufacturer=manufacturer/>-->
-<#--</div>-->
-<#--<div class="modal-footer">-->
-<#--<button type="button" class="btn btn-secondary" data-dismiss="modal">Отмена</button>-->
-<#--</div>-->
-<#--</div>-->
-<#--</div>-->
-<#--</div>-->
-<#--</div>-->
-<#--<div class="col-auto">-->
-<#--<a class="btn btn-primary mb-2" type="button" href="/provider/table/product">Таблица</a>-->
-<#--<a class="btn btn-primary mb-2" type="button" href="/provider/card/product">Карточки</a>-->
-<#--</div>-->
-<#--</div>-->
-<#--<div class="row mb-2">-->
-<#--<div class="col">-->
-<#--<label>Выберите категорию</label>-->
-<#--<select id="categories_id" class="form-control">-->
-<#--<option value="all">Все</option>-->
-<#--<#list categories as categori>-->
-<#--<option value="${categori.id}">${categori.name}</option>-->
-<#--</#list>-->
-<#--</select>-->
-<#--</div>-->
-<#--<div class="col">-->
-<#--<label>Выберите производителя</label>-->
-<#--<select id="manufacturer_id" class="form-control">-->
-<#--<option value="all">Все</option>-->
-<#--<#list manufacturer as manufacter>-->
-<#--<option value="${manufacter.id}">${manufacter.name}</option>-->
-<#--</#list>-->
-<#--</select>-->
-<#--</div>-->
-<#--<div class="col">-->
-<#--<label>Выберите склад</label>-->
-<#--<select id="store_id" class="form-control">-->
-<#--<option value="all">Все</option>-->
-<#--<#list stores as store>-->
-<#--<option value="${store.id}">${store.name}</option>-->
-<#--</#list>-->
-<#--</select>-->
-<#--</div>-->
-<#--</div>-->
-<#--<div class="row">-->
-<#--<div class="col">-->
-<#--<@lpt.listProducts products=products categories=categories manufacturer=manufacturer stores=stores user=user/>-->
-<#--</div>-->
-<#--</div>-->
 </@c.page>

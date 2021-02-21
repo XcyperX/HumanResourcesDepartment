@@ -49,44 +49,54 @@ submitCreateAndUpdateProvider = (provider_id) => {
     createNewUser(user);
 }
 
-submitCrateAndUpdateEmployees = (employee_id) => {
+submitCrateAndUpdateEmployees = (user_id) => {
     let legacyEmployee;
-    if (employee_id == null) {
+    if (user_id == null) {
         console.log("Нет id");
         legacyEmployee = document.getElementById("createEmployee");
     } else {
         console.log("Есть id");
-        legacyEmployee = document.getElementById("createEmployee_" + employee_id);
-        employee.position.date_dismissal = legacyEmployee.querySelector("#date_dismissal").value;
-        employee.status = legacyEmployee.querySelector("#status").value;
-        employee.passport.pas_id = Number(legacyEmployee.querySelector("#pas_id").value);
-        employee.address.address_id = Number(legacyEmployee.querySelector("#address_id").value);
-        employee.position.position_id = Number(legacyEmployee.querySelector("#position_id").value);
+        legacyEmployee = document.getElementById("createEmployee_" + user_id);
+        position.date_dismissal = legacyEmployee.querySelector("#date_dismissal").value;
+        passport.pas_id = Number(legacyEmployee.querySelector("#pas_id").value);
+        address.address_id = Number(legacyEmployee.querySelector("#address_id").value);
+        position.position_id = Number(legacyEmployee.querySelector("#position_id").value);
     }
-    employee.first_name = legacyEmployee.querySelector("#first_name").value;
-    employee.last_name = legacyEmployee.querySelector("#last_name").value;
-    employee.passport.number_series = Number(legacyEmployee.querySelector("#number_series").value);
-    employee.passport.passport_id = Number(legacyEmployee.querySelector("#passport_id").value);
-    employee.passport.issued_by = legacyEmployee.querySelector("#issued_by").value;
-    employee.passport.date_issue = legacyEmployee.querySelector("#date_issue").value;
-    employee.email = legacyEmployee.querySelector("#email").value;
-    employee.phone = legacyEmployee.querySelector("#phone").value;
-    employee.date_birth = legacyEmployee.querySelector("#date_birth").value;
-    employee.address.city = legacyEmployee.querySelector("#city").value;
-    employee.address.street = legacyEmployee.querySelector("#street").value;
-    employee.address.house = legacyEmployee.querySelector("#house").value;
-    employee.address.flat = legacyEmployee.querySelector("#flat").value;
-    employee.number_inn = Number(legacyEmployee.querySelector("#number_inn").value);
-    employee.gender = legacyEmployee.querySelector("#genders").value;
-    employee.subdivision_id = legacyEmployee.querySelector("#categories").value;
-    employee.position.position_name_id = legacyEmployee.querySelector("#positions").value;
-    employee.position.date_receipt = legacyEmployee.querySelector("#date_receipt").value;
-    employee.work_agreement = legacyEmployee.querySelector("#work_agreement").value;
-    console.log(employee);
-    if (employee_id == null) {
-        createNewEmployee(employee);
+    user.first_name = legacyEmployee.querySelector("#first_name").value;
+    user.last_name = legacyEmployee.querySelector("#last_name").value;
+    user.second_name = legacyEmployee.querySelector("#second_name").value;
+    user.role = legacyEmployee.querySelector("#role_id").value;
+    user.password = legacyEmployee.querySelector("#password").value;
+
+    passport.number_series = Number(legacyEmployee.querySelector("#number_series").value);
+    passport.passport_id = Number(legacyEmployee.querySelector("#passport_id").value);
+    passport.issued_by = legacyEmployee.querySelector("#issued_by").value;
+    passport.date_issue = legacyEmployee.querySelector("#date_issue").value;
+    user.passport = JSON.parse(JSON.stringify(passport));
+
+    user.email = legacyEmployee.querySelector("#email").value;
+    user.phone = legacyEmployee.querySelector("#phone").value;
+    user.date_birth = legacyEmployee.querySelector("#date_birth").value;
+
+    address.city = legacyEmployee.querySelector("#city").value;
+    address.street = legacyEmployee.querySelector("#street").value;
+    address.house = legacyEmployee.querySelector("#house").value;
+    address.flat = legacyEmployee.querySelector("#flat").value;
+    user.address = JSON.parse(JSON.stringify(address));
+
+    user.number_inn = Number(legacyEmployee.querySelector("#number_inn").value);
+    user.gender = legacyEmployee.querySelector("#genders").value;
+    user.subdivision_id = legacyEmployee.querySelector("#subdivision_id").value;
+
+    position.position_name_id = legacyEmployee.querySelector("#positions_id").value;
+    position.date_receipt = legacyEmployee.querySelector("#date_receipt").value;
+    user.position = JSON.parse(JSON.stringify(position));
+
+    console.log(user);
+    if (user_id == null) {
+        createNewEmployee(user);
     } else {
-        updateEmployeeById(employee_id, employee);
+        updateEmployeeById(user_id, user);
     }
 }
 
@@ -119,7 +129,7 @@ submitCreateAndUpdateProduct = (product_id) => {
 
 }
 
-submitCreateAndUpdateStore = (store_id) => {
+submitCreateAndUpdateStore = (bool, store_id) => {
     let legacyStore;
     if (store_id == null) {
         legacyStore = document.getElementById("createStore");
@@ -128,6 +138,7 @@ submitCreateAndUpdateStore = (store_id) => {
     }
 
     store.name = legacyStore.querySelector("#name_store").value;
+    store.is_provide = bool;
     user.user_id = legacyStore.querySelector("#user_id").value;
     store.users.push(JSON.parse(JSON.stringify(user)));
     createNewStore(store);
@@ -151,6 +162,15 @@ submitNewSubdivision = () => {
     }
 }
 
+submitNewCategories = () => {
+    if (document.getElementById("categories_input").value !== "") {
+        subdivision.name = document.getElementById("categories_input").value;
+        createNewCategories(subdivision);
+    } else {
+        alert("Введите название категории!!!")
+    }
+}
+
 submitNewPosition = () => {
     if (document.getElementById("position_input").value !== "") {
         position.name = document.getElementById("position_input").value;
@@ -165,6 +185,7 @@ const manufacturer = {
 }
 
 const store = {
+    store_id: null,
     name: null,
     supplies_id: null,
     is_provide: false,
@@ -215,38 +236,38 @@ const user = {
     position: null
 }
 
-const employee = {
-    first_name: "",
-    last_name: "",
-    passport: {
-        pas_id: null,
-        number_series: null,
-        passport_id: null,
-        issued_by: "",
-        date_issue: ""
-    },
-    email: "",
-    phone: "",
-    date_birth: "",
-    address: {
-        address_id: null,
-        city: "",
-        street: "",
-        house: "",
-        flat: ""
-    },
-    number_inn: -1,
-    gender: "",
-    subdivision_id: -1,
-    position: {
-        position_id: null,
-        position_name_id: "",
-        date_receipt: "",
-        date_dismissal: ""
-    },
-    status: "",
-    work_agreement: false
-}
+// const employee = {
+//     first_name: "",
+//     last_name: "",
+//     passport: {
+//         pas_id: null,
+//         number_series: null,
+//         passport_id: null,
+//         issued_by: "",
+//         date_issue: ""
+//     },
+//     email: "",
+//     phone: "",
+//     date_birth: "",
+//     address: {
+//         address_id: null,
+//         city: "",
+//         street: "",
+//         house: "",
+//         flat: ""
+//     },
+//     number_inn: -1,
+//     gender: "",
+//     subdivision_id: -1,
+//     position: {
+//         position_id: null,
+//         position_name_id: "",
+//         date_receipt: "",
+//         date_dismissal: ""
+//     },
+//     status: "",
+//     work_agreement: false
+// }
 
 const subdivision = {
     name: ""
@@ -393,6 +414,17 @@ createNewSubdivision = (subdivision) => {
     });
 }
 
+createNewCategories = (categories) => {
+    sendRequest('POST', '/api/categories', categories).then(response => {
+        if (response.ok) {
+            console.log(response);
+            document.location.reload(true);
+        } else {
+            console.log(response);
+        }
+    });
+}
+
 createNewPosition = (position) => {
     sendRequest('POST', '/api/positions/names', position).then(response => {
         if (response.ok) {
@@ -416,7 +448,7 @@ createNewStore = (store) => {
 }
 
 createNewEmployee = (employee) => {
-    sendRequest('POST', '/api/products', employee).then(response => {
+    sendRequest('POST', '/api/registrations', employee).then(response => {
         if (response.ok) {
             console.log(response);
             document.location.reload(true);
@@ -427,10 +459,10 @@ createNewEmployee = (employee) => {
 }
 
 updateEmployeeById = (employee_id, employee) => {
-    sendRequest('PUT', '/api/products/' + employee_id, employee).then(response => {
+    sendRequest('PUT', '/api/users/' + employee_id, employee).then(response => {
         if (response.ok) {
             console.log(response);
-            document.location.href = "http://localhost:8080/products";
+            document.location.reload(true);
         } else {
             console.log(response);
         }
@@ -463,7 +495,7 @@ getEmployeeById = (employee_id) => {
 }
 
 deleteEmployeeById = (employee_id) => {
-    sendRequest('DELETE', '/api/products/' + employee_id).then(response => {
+    sendRequest('DELETE', '/api/users/' + employee_id).then(response => {
         if (response.ok) {
             console.log(response);
             document.location.reload(true);

@@ -23,24 +23,38 @@
                     <a class="nav-link" href="/admin/order/history">Журнал продаж</a>
                 </li>
                 <li class="nav-item">
-                    <a class="nav-link" href="/admin/providers">Поставщики</a>
+                    <a class="nav-link" href="/admin/providers/products">Поставщики</a>
                 </li>
-            </#if>
-            <#if isProvider>
+            <#elseif isProvider>
                 <li class="nav-item">
                     <a class="nav-link" href="/provider/table/product">Продукты</a>
                 </li>
                 <li class="nav-item">
                     <a class="nav-link" href="/products/agreement">Поставки</a>
                 </li>
+            <#else>
+                <li class="nav-item">
+                    <a class="nav-link" href="/products">Каталог товаров</a>
+                </li>
+                <li class="nav-item">
+                    <a class="nav-link" href="/basket">Корзина</a>
+                </li>
             </#if>
+            <#--            <#if isProvider>-->
+            <#--                <li class="nav-item">-->
+            <#--                    <a class="nav-link" href="/provider/table/product">Продукты</a>-->
+            <#--                </li>-->
+            <#--                <li class="nav-item">-->
+            <#--                    <a class="nav-link" href="/products/agreement">Поставки</a>-->
+            <#--                </li>-->
+            <#--            </#if>-->
         </ul>
 
         <div class="navbar-text mr-3">${name}</div>
         <div class="navbar-text mr-3">${role}</div>
-<!--        <#if isAdmin>-->
-<!--            <a href="/users" class="btn btn-primary mr-3" type="button">Сотрудники системы</a>-->
-<!--        </#if>-->
+        <!--        <#if isAdmin>-->
+        <!--            <a href="/users" class="btn btn-primary mr-3" type="button">Сотрудники системы</a>-->
+        <!--        </#if>-->
         <form action="/logout" method="post">
             <#if isAdmin || isProvider || isSeller || isStorekeeper>
                 <input type="submit" class="btn btn-primary" value="Выйти"/>

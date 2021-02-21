@@ -2,30 +2,33 @@ package com.spring.service.impl;
 
 import com.spring.DTO.PositionDTO;
 import com.spring.mapper.PositionMapper;
+import com.spring.model.Position;
 import com.spring.repository.PositionRepository;
 import com.spring.service.PositionService;
+import lombok.RequiredArgsConstructor;
+import ma.glasnost.orika.MapperFacade;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
 import java.util.List;
 
 @Service
+@RequiredArgsConstructor
 public class PositionServiceImpl implements PositionService {
-    @Autowired
-    private PositionMapper positionMapper;
-    @Autowired
-    private PositionRepository positionRepository;
+    private final MapperFacade mapperFacade;
+    private final PositionRepository positionRepository;
     @Override
     public PositionDTO getById(Long id) {
         if (positionRepository.findById(id).isEmpty()) {
             throw new RuntimeException("Ошибка, нет такогой должности!");
         }
-        return positionMapper.toDto(positionRepository.findById(id).get());
+        return mapperFacade.map(positionRepository.findById(id).get(), PositionDTO.class);
     }
 
     @Override
     public PositionDTO save(PositionDTO positionDTO) {
-        return positionMapper.toDto(positionRepository.save(positionMapper.toEntity(positionDTO)));
+        Position position = positionRepository.save(mapperFacade.map(positionDTO, Position.class));
+        return mapperFacade.map(position, PositionDTO.class);
     }
 
     @Override
@@ -40,6 +43,6 @@ public class PositionServiceImpl implements PositionService {
 
     @Override
     public List<PositionDTO> findAll() {
-        return positionMapper.toDtos(positionRepository.findAll());
+        return mapperFacade.mapAsList(positionRepository.findAll(), PositionDTO.class);
     }
 }

@@ -1,23 +1,12 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <project version="4">
   <component name="DataSourceManagerImpl" format="xml" multifile-model="true">
-    <data-source source="LOCAL" name="PostgreSQL - human_resources_department@localhost" uuid="9cb7e913-ccdb-4a09-956b-9288e88999b8">
+    <data-source source="LOCAL" name="human_resources_department@localhost" uuid="7561ac3a-3000-478b-a3c2-08b6ceca7152">
       <driver-ref>postgresql</driver-ref>
       <synchronize>true</synchronize>
       <jdbc-driver>org.postgresql.Driver</jdbc-driver>
       <jdbc-url>jdbc:postgresql://localhost:5432/human_resources_department</jdbc-url>
-    </data-source>
-    <data-source source="LOCAL" name="human_resources_department@localhost" uuid="4b4baa09-1a31-44a2-9218-6372bbea3219">
-      <driver-ref>postgresql</driver-ref>
-      <synchronize>true</synchronize>
-      <jdbc-driver>org.postgresql.Driver</jdbc-driver>
-      <jdbc-url>jdbc:postgresql://localhost:5432/human_resources_department</jdbc-url>
-    </data-source>
-    <data-source source="LOCAL" name="human_resources_department@localhost [2]" uuid="1ffaaf1e-37c0-4281-8242-964217a9fafc">
-      <driver-ref>postgresql</driver-ref>
-      <synchronize>true</synchronize>
-      <jdbc-driver>org.postgresql.Driver</jdbc-driver>
-      <jdbc-url>jdbc:postgresql://localhost:5432/human_resources_department</jdbc-url>
+      <working-dir>$ProjectFileDir$</working-dir>
     </data-source>
   </component>
 </project>
