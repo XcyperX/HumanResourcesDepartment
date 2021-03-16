@@ -21,7 +21,6 @@ public class OrderHistoryMapper implements MapperService<OrderHistory, OrderHist
         orderHistory.setId(dto.getId());
         orderHistory.setDateOrder(dto.getDateOrder());
         orderHistory.setProductList(productMapper.toEntities(dto.getProductList()));
-        orderHistory.setStatus(new Status(dto.getStatusId()));
         orderHistory.setPrice(dto.getPrice());
         return orderHistory;
     }
@@ -32,7 +31,6 @@ public class OrderHistoryMapper implements MapperService<OrderHistory, OrderHist
         orderHistoryDTO.setId(entity.getId());
         orderHistoryDTO.setDateOrder(entity.getDateOrder());
         orderHistoryDTO.setProductList(productMapper.toDtos(entity.getProductList()));
-        orderHistoryDTO.setStatusId(entity.getStatus().getId());
         orderHistoryDTO.setPrice(entity.getPrice());
         return orderHistoryDTO;
     }

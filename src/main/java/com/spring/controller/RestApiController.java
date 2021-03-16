@@ -11,8 +11,10 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.multipart.MultipartFile;
 
+import javax.servlet.http.HttpServletResponse;
 import javax.validation.Valid;
 import java.io.*;
+import java.util.List;
 import java.util.UUID;
 
 @RestController
@@ -21,7 +23,6 @@ import java.util.UUID;
 public class RestApiController {
     private final UserService userService;
     private final ProductService productService;
-    private final StatusService statusService;
     private final SuppliesService suppliesService;
     private final OrderHistoryService orderHistoryService;
     private final AddressService addressService;
@@ -31,9 +32,15 @@ public class RestApiController {
     private final SubdivisionService subdivisionService;
     private final StoreService storeService;
     private final ManufacturerService manufacturerService;
+    private final CustomerService customerService;
 
     @Value("${upload.path}")
     private String uploadPath;
+
+    @GetMapping("/get/price/basket")
+    public ResponseEntity<Float> getPriceBasket(@RequestParam List<String> products_id) {
+        return ResponseEntity.ok(productService.getPriceProducts(products_id));
+    }
 
     @PostMapping("/registrations")
     public UserDTO registrationUser(@RequestBody @Valid UserDTO userDTO) {
@@ -54,6 +61,11 @@ public class RestApiController {
     @GetMapping("/user")
     public ResponseEntity<?> getUser() {
         return ResponseEntity.ok(userService.findAll());
+    }
+
+    @GetMapping("/users/{id}")
+    public ResponseEntity<?> getUser(@PathVariable("id") Long id) {
+        return ResponseEntity.ok(userService.getById(id));
     }
 
     @PostMapping(value = "/product/image", consumes = {"multipart/form-data"})
@@ -101,11 +113,16 @@ public class RestApiController {
         productService.delete(id);
     }
 
-
-    @PostMapping("/status")
-    public StatusDTO createService(@RequestBody @Valid StatusDTO statusDTO) {
-        return statusService.save(statusDTO);
+    @GetMapping("/products/{id}")
+    public ResponseEntity<?> getProduct(@PathVariable("id") Long id) {
+        return ResponseEntity.ok(productService.getById(id));
     }
+
+
+//    @PostMapping("/status")
+//    public StatusDTO createService(@RequestBody @Valid StatusDTO statusDTO) {
+//        return statusService.save(statusDTO);
+//    }
 
     @PostMapping("/tables")
     public SuppliesDTO createTable(@RequestBody @Valid SuppliesDTO suppliesDTO) {
@@ -167,4 +184,25 @@ public class RestApiController {
     public ResponseEntity<?> getStore() {
         return ResponseEntity.ok(storeService.findAll());
     }
+
+    @GetMapping("/customer/order")
+    public ResponseEntity<?> getAllOrder() {
+        return ResponseEntity.ok(customerService.findAll());
+    }
+
+    @PostMapping("/customer/order")
+    public CustomerDTO createOrder(@RequestBody @Valid CustomerDTO customerDTO) {
+        return customerService.save(customerDTO);
+    }
+
+    @PostMapping("/new/customer/order")
+    public OrderHistoryDTO createOrderCustomer(@RequestBody @Valid OrderHistoryDTO orderHistoryDTO) {
+        return orderHistoryService.save(orderHistoryDTO);
+    }
+
+    @GetMapping("/new/customer/order")
+    public ResponseEntity<?> getAllOrderCustomer() {
+        return ResponseEntity.ok(orderHistoryService.findAll());
+    }
+
 }

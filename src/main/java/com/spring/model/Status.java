@@ -1,37 +1,30 @@
 package com.spring.model;
 
-import lombok.Data;
-
-import javax.persistence.*;
 import java.io.Serializable;
-import java.util.ArrayList;
-import java.util.List;
 
-@Entity
-@Table(name = "statuses")
-@Data
-public class Status implements Serializable {
-    @Id
-    @GeneratedValue(strategy = GenerationType.IDENTITY)
-    private Long id;
+public enum Status implements Serializable {
+    ACCEPTED("Принят"),
+    APPLICATION_SENT("Заявка отправлена"),
+    DELIVERED("Доставляется"),
+    ISSUED_BY("Выдан"),
+    CANCELED("Отменен");
 
-    @Column(nullable = false)
-    private String name;
+    private final String status;
 
-    @OneToMany(mappedBy = "status")
-    private List<OrderHistory> orderHistories = new ArrayList<>();
-
-    public Status() {
+    Status(String status) {
+        this.status = status;
     }
 
-    public Status(Long id) {
-        this.id = id;
+    public String getNameStatus() {
+        return status;
     }
 
-    @Override
-    public String toString() {
-        return "Status{" +
-                "id=" + id +
-                '}';
+    public static String getById(Long id) {
+        for (Status status : values()) {
+            if (status.ordinal() == id) {
+                return status.getNameStatus();
+            }
+        }
+        return "UNKNOWN";
     }
 }

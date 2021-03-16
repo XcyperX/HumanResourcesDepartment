@@ -11,4 +11,5 @@ public interface UserService extends CRUDService<UserDTO, Long> {
     Long countUsers();
     List<UserDTO> findAllEmployee();
     List<UserDTO> findAllProvider();
+    List<UserDTO> findAllCustomer();
 }

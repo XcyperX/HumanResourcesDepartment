@@ -4,6 +4,7 @@ isAdmin = false
 isProvider = false
 isSeller = false
 isStorekeeper = false
+isCustomer = false
 name = ""
 role = ""
 >
@@ -36,6 +37,12 @@ role = ""
         name = user.getUserName()
         role = user.getUserRole()
         >
+    <#elseif user.isCustomer()>
+        <#assign
+        isCustomer = user.isCustomer()
+        name = user.getUserName()
+        role = user.getUserRole()
+        >
     </#if>
 <#else>
     <#assign
@@ -44,63 +51,3 @@ role = ""
     isAdmin = false
     >
 </#if>
-
-<#--<#if known>-->
-<#--<#assign-->
-<#--user = Session.SPRING_SECURITY_CONTEXT.authentication.principal-->
-<#--isAdmin = user.isAdmin()-->
-<#--name = user.getUserName()-->
-<#--role = user.getUserRole()-->
-<#-->-->
-<#--<#else>-->
-<#--<#assign-->
-<#--name = ""-->
-<#--role = ""-->
-<#--isAdmin = false-->
-<#-->-->
-<#--</#if>-->
-
-<#--<#if known>-->
-<#--<#assign-->
-<#--user = Session.SPRING_SECURITY_CONTEXT.authentication.principal-->
-<#--isProvider = user.isProvider()-->
-<#--name = user.getNameFirm()-->
-<#--role = user.getUserRole()-->
-<#-->-->
-<#--<#else>-->
-<#--<#assign-->
-<#--name = ""-->
-<#--role = ""-->
-<#--isProvider = false-->
-<#-->-->
-<#--</#if>-->
-
-<#--<#if known>-->
-<#--<#assign-->
-<#--user = Session.SPRING_SECURITY_CONTEXT.authentication.principal-->
-<#--isSeller = user.isSeller()-->
-<#--name = user.getUserName()-->
-<#--role = user.getUserRole()-->
-<#-->-->
-<#--<#else>-->
-<#--<#assign-->
-<#--name = ""-->
-<#--role = ""-->
-<#--isSeller = false-->
-<#-->-->
-<#--</#if>-->
-
-<#--<#if known>-->
-<#--<#assign-->
-<#--user = Session.SPRING_SECURITY_CONTEXT.authentication.principal-->
-<#--isStorekeeper = user.isStorekeeper()-->
-<#--name = user.getUserName()-->
-<#--role = user.getUserRole()-->
-<#-->-->
-<#--<#else>-->
-<#--<#assign-->
-<#--name = ""-->
-<#--role = ""-->
-<#--isStorekeeper = false-->
-<#-->-->
-<#--</#if>-->

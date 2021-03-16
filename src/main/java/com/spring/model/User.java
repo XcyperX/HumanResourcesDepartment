@@ -27,7 +27,7 @@ public class User implements UserDetails, Serializable {
 
     private String secondName;
 
-    @OneToOne(cascade = CascadeType.PERSIST)
+    @OneToOne(cascade = CascadeType.ALL)
     @JoinColumn(name = "address_id")
     private Address address;
 
@@ -110,6 +110,10 @@ public class User implements UserDetails, Serializable {
 
     public Boolean isStorekeeper() {
         return role.name().contains("STOREKEEPER");
+    }
+
+    public Boolean isCustomer() {
+        return role.name().contains("CUSTOMER");
     }
 
     @Override

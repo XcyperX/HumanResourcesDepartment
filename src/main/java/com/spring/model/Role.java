@@ -8,6 +8,7 @@ public enum Role implements GrantedAuthority, Serializable {
     ADMIN("Администратор"),
     PROVIDER("Поставщик"),
     SELLER("Продавец"),
+    CUSTOMER("Покупатель"),
     STOREKEEPER("Кладовщик");
 
     private String role;

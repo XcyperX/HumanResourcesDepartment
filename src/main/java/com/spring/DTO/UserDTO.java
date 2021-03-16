@@ -45,9 +45,6 @@ public class UserDTO implements Serializable {
     @JsonProperty("subdivision_id")
     private Long subdivisionId;
 
-//    @JsonProperty("store_id")
-//    private Long storeId;
-
     private List<StoreDTO> stores = new ArrayList<>();
 
     private PassportDTO passport;

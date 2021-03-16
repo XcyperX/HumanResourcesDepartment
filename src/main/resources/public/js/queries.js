@@ -126,7 +126,6 @@ submitCreateAndUpdateProduct = (product_id) => {
     } else {
         updateProductById(product_id, formData);
     }
-
 }
 
 submitCreateAndUpdateStore = (bool, store_id) => {
@@ -142,6 +141,89 @@ submitCreateAndUpdateStore = (bool, store_id) => {
     user.user_id = legacyStore.querySelector("#user_id").value;
     store.users.push(JSON.parse(JSON.stringify(user)));
     createNewStore(store);
+}
+
+submitCrateOrder = (user_id) => {
+    let legacyEmployee = document.getElementById("createOrder");
+    if (user_id != null) {
+        order_history.user_id = Number(legacyEmployee.querySelector("#user_id").value);
+    } else {
+        customer.first_name = legacyEmployee.querySelector("#first_name").value;
+        customer.last_name = legacyEmployee.querySelector("#last_name").value;
+        customer.second_name = legacyEmployee.querySelector("#second_name").value;
+
+        customer.email = legacyEmployee.querySelector("#email").value;
+        customer.phone = legacyEmployee.querySelector("#phone").value;
+
+        address.city = legacyEmployee.querySelector("#city").value;
+        address.street = legacyEmployee.querySelector("#street").value;
+        address.house = legacyEmployee.querySelector("#house").value;
+        address.flat = legacyEmployee.querySelector("#flat").value;
+        customer.address = JSON.parse(JSON.stringify(address));
+        order_history.customer = JSON.parse(JSON.stringify(customer));
+    }
+
+    for (let product_id = 0; product_id < document.getElementsByClassName("product_id_order").length; product_id++) {
+        product.product_id = document.getElementsByClassName("product_id_order")[product_id].innerHTML;
+        // product_info.product.product_id = document.getElementsByClassName("product_id_order")[product_id].innerHTML;
+        console.log(document.getElementsByClassName("product_id_order")[product_id].innerHTML);
+        console.log(product);
+        order_history.product_list.push(JSON.parse(JSON.stringify(product)));
+        product.product_id = null;
+    }
+    try {
+        order_history.date_reception = legacyEmployee.querySelector("#date_reception").value;
+        order_history.status = legacyEmployee.querySelector("#status_order").value;
+    } catch (e) {
+        order_history.status = "ACCEPTED";
+        order_history.date_reception = null;
+    }
+
+    order_history.price = document.getElementById("price_order").innerHTML.split(" ")[2];
+
+    console.log(order_history);
+    if (user_id == null) {
+        createNewOrder(order_history);
+    } else {
+        console.log("Писос")
+    }
+}
+
+submitCreateDeliveries = (user_id, product_id) => {
+    order_history.user_id = user_id;
+    order_history.status = "APPLICATION_SENT";
+}
+
+submitCrateCustomer = (user_id) => {
+    let legacyEmployee;
+    if (user_id == null) {
+        legacyEmployee = document.getElementById("createCustomer");
+    } else {
+        legacyEmployee = document.getElementById("updateEmployee_" + user_id);
+        user.user_id = user_id;
+        address.address_id = legacyEmployee.querySelector("#address_id").value;
+    }
+    user.first_name = legacyEmployee.querySelector("#first_name").value;
+    user.last_name = legacyEmployee.querySelector("#last_name").value;
+    user.second_name = legacyEmployee.querySelector("#second_name").value;
+    user.role = "CUSTOMER"
+    user.password = legacyEmployee.querySelector("#password").value;
+
+    user.email = legacyEmployee.querySelector("#email").value;
+    user.phone = legacyEmployee.querySelector("#phone").value;
+
+    address.city = legacyEmployee.querySelector("#city").value;
+    address.street = legacyEmployee.querySelector("#street").value;
+    address.house = legacyEmployee.querySelector("#house").value;
+    address.flat = legacyEmployee.querySelector("#flat").value;
+    user.address = JSON.parse(JSON.stringify(address));
+
+    console.log(user);
+    if (user_id == null) {
+        createNewEmployee(user);
+    } else {
+        updateEmployeeById(user_id, user);
+    }
 }
 
 submitNewManufacturer = () => {
@@ -236,38 +318,35 @@ const user = {
     position: null
 }
 
-// const employee = {
-//     first_name: "",
-//     last_name: "",
-//     passport: {
-//         pas_id: null,
-//         number_series: null,
-//         passport_id: null,
-//         issued_by: "",
-//         date_issue: ""
-//     },
-//     email: "",
-//     phone: "",
-//     date_birth: "",
-//     address: {
-//         address_id: null,
-//         city: "",
-//         street: "",
-//         house: "",
-//         flat: ""
-//     },
-//     number_inn: -1,
-//     gender: "",
-//     subdivision_id: -1,
-//     position: {
-//         position_id: null,
-//         position_name_id: "",
-//         date_receipt: "",
-//         date_dismissal: ""
-//     },
-//     status: "",
-//     work_agreement: false
-// }
+const order_history = {
+    order_history_id: null,
+    customer: null,
+    user_id: null,
+    date_order: null,
+    date_reception: null,
+    product_list: [],
+    product_info_list: [],
+    status: null,
+    price: null
+}
+
+const product_info = {
+    product: {
+        product_id: null
+    },
+    amount: null
+}
+
+const customer = {
+    user_id: null,
+    first_name: null,
+    last_name: null,
+    second_name: null,
+    email: null,
+    phone: null,
+    address: null,
+    order_histories: null
+}
 
 const subdivision = {
     name: ""
@@ -279,6 +358,7 @@ const vacation = {
 }
 
 const product = {
+    product_id: null,
     name: "",
     description: "",
     categories_id: null,
@@ -294,7 +374,6 @@ sendRequest = (method, url, body) => {
     const headers = {
         'Content-Type': 'application/json'
     }
-    console.log(body);
     if (body !== null) {
         return fetch(url, {
             method: method,
@@ -324,6 +403,40 @@ sendRequestWithFile = (method, url, body) => {
             headers: headers
         });
     }
+}
+
+getUsers = (user_id) => {
+    return sendRequest('GET', '/api/users/' + user_id, null).then(response => {
+        if (response.ok) {
+            return response.json();
+        } else {
+            console.log(response);
+        }
+    });
+}
+
+getProduct = (product_id) => {
+    return sendRequest('GET', '/api/products/' + product_id, null).then(response => {
+        if (response.ok) {
+            return response.json();
+        } else {
+            console.log(response);
+        }
+    });
+}
+
+createNewOrder = (order) => {
+    sendRequest('POST', '/api/new/customer/order', order).then(response => {
+        if (response.ok) {
+            console.log(response);
+            document.location.reload(true);
+            alert("Ваш заказ принят! )");
+            deleteCookie();
+        } else {
+            console.log(response);
+        }
+    });
+
 }
 
 createNewUser = (user) => {
@@ -503,4 +616,307 @@ deleteEmployeeById = (employee_id) => {
             console.log(response);
         }
     });
+}
+
+filteredProductsByParams = () => {
+    let manufacturer_id;
+    let categories_id;
+    let name;
+    let provider_id;
+    let store_id;
+    let newUrl = window.location.href.toString().split("?")[0];
+    try {
+        name = "?name=" + document.getElementById("searchProduct").value;
+    } catch (e) {
+        name = ""
+    }
+    try {
+        manufacturer_id = "&manufacturer_id=" + document.getElementById("filter_manufacturer_id").value;
+    } catch (e) {
+        manufacturer_id = ""
+    }
+    try {
+        categories_id = "&categories_id=" + document.getElementById("filter_categories_id").value;
+    } catch (e) {
+        categories_id = ""
+    }
+    try {
+        store_id = "&store_id=" + document.getElementById("filter_store_id").value;
+    } catch (e) {
+        store_id = ""
+    }
+    try {
+        provider_id = "&provider_id=" + document.getElementById("filter_provider_id").value;
+    } catch (e) {
+        provider_id = ""
+    }
+    document.location.href = newUrl
+        + name
+        + store_id
+        + manufacturer_id
+        + categories_id
+        + provider_id;
+}
+
+startScript = () => {
+    getAmountProductInBasket();
+    getPriceProductsBasket();
+    getAmountDeliveries();
+}
+
+getAmountProductInBasket = () => {
+    try {
+        let amount = getCookie("product").split(",");
+        document.getElementById("productsInBasket").innerHTML = amount.length.toString();
+    } catch (e) {
+        console.log("Нет корзины");
+    }
+}
+
+getPriceProductsBasket = () => {
+    try {
+        sendRequest('GET', '/api/get/price/basket?products_id=' + getCookie("product").split(",")).then(response => {
+            if (response.ok) {
+                response.text().then(function (fulfilde) {
+                    document.getElementById("priceProductBasket").innerHTML = "Сумма заказа: " + fulfilde.toString() + " р.";
+                });
+            } else {
+                console.log(response);
+            }
+        });
+    } catch (e) {
+        console.log("Нет товаров");
+    }
+
+}
+
+let deliveriesUsers = {
+    users: []
+}
+
+const deliveriesUserId = {
+    user_id: null,
+    products: []
+}
+
+addProductInDeliveries = (user_id, product_id) => {
+    if (document.getElementById("amount_product_" + product_id).value === "" || document.getElementById("amount_product_" + product_id).value == null) {
+        alert("Введите необходимое количество!!!")
+    } else {
+        if (getCookie("providers") == null || getCookie("providers") === "") {
+            console.log("Cookie нет");
+            deliveriesUserId.user_id = user_id;
+            product_info.product.product_id = product_id;
+            product_info.amount = document.getElementById("amount_product_" + product_id).value;
+            deliveriesUserId.products.push(JSON.parse(JSON.stringify(product_info)));
+            deliveriesUsers.users.push(JSON.parse(JSON.stringify(deliveriesUserId)));
+            setCookie("providers", JSON.stringify(deliveriesUsers));
+            getAmountDeliveries();
+            console.log(JSON.parse(getCookie("providers")));
+        } else {
+            console.log("Cookie есть");
+            deliveriesUsers = JSON.parse(getCookie("providers"));
+            deliveriesUserId.products = [];
+            let user = deliveriesUsers.users.find(user => user.user_id === user_id);
+            if (user !== undefined) {
+                let product = user.products.find(productX => productX.product.product_id === product_id);
+                if (product !== undefined) {
+                    product.amount = document.getElementById("amount_product_" + product_id).value;
+                    deliveriesUsers.users
+                        .find(user => user.user_id === user_id).products
+                        .find(productX => productX.product.product_id === product_id)
+                        .amount = document.getElementById("amount_product_" + product_id).value;
+                    setCookie("providers", JSON.stringify(deliveriesUsers));
+                } else {
+                    product_info.product.product_id = product_id;
+                    product_info.amount = document.getElementById("amount_product_" + product_id).value;
+                    deliveriesUsers.users
+                        .find(user => user.user_id === user_id).products.push(JSON.parse(JSON.stringify(product_info)));
+                    setCookie("providers", JSON.stringify(deliveriesUsers));
+                    getAmountDeliveries();
+                }
+            } else {
+                deliveriesUserId.user_id = user_id;
+                product_info.product.product_id = product_id;
+                product_info.amount = document.getElementById("amount_product_" + product_id).value;
+                deliveriesUserId.products.push(JSON.parse(JSON.stringify(product_info)));
+                deliveriesUsers.users.push(JSON.parse(JSON.stringify(deliveriesUserId)));
+                setCookie("providers", JSON.stringify(deliveriesUsers));
+                getAmountDeliveries();
+            }
+            console.log(deliveriesUsers);
+        }
+    }
+}
+
+setDeliveriesInTable = () => {
+    let listTables = document.getElementsByClassName("list_deliveries")[0];
+    while (listTables.hasChildNodes()) {
+        listTables.removeChild(listTables.lastChild);
+    }
+    if (listTables !== undefined) {
+        let deliveries = JSON.parse(getCookie("providers"));
+        for (let i = 0; i < deliveries.users.length; i++) {
+            getUsers(deliveries.users[i].user_id).then(user => {
+                let table = `<table class="table table-bordered mb-2">
+                                <thead>
+                                <tr>
+                                    <th scope="col">Поставщик</th>
+                                    <th scope="col">Товар</th>
+                                    <th scope="col">Категория</th>
+                                    <th scope="col">Производитель</th>
+                                    <th scope="col">Заказано</th>
+                                    <th scope="col">Стоимость</th>
+                                </tr>
+                                </thead>
+                                <tbody id="listProducts">                                    
+                            </table>
+                            <div class="row col-auto mb-3">
+                                <button type="button" class="btn btn-primary mr-2" onclick="deleteDeliveries(${user.user_id})">
+                                    Отменить поставку
+                                </button>
+                                <button type="button" class="btn btn-primary" onclick="createNewOrderDeliveries(${user.user_id})">
+                                    Оформить поставку
+                                </button>
+                            </div>`;
+                table = document.createRange().createContextualFragment(table);
+                let listProduct = table.getElementById("listProducts");
+                for (let j = 0; j < deliveries.users[i].products.length; j++) {
+                    let row = listProduct.insertRow(-1);
+                    getProduct(deliveries.users[i].products[j].product.product_id).then(product => {
+                        row.insertCell(-1).innerHTML = user.name_firm;
+                        row.insertCell(-1).innerHTML = product.name;
+                        row.insertCell(-1).innerHTML = product.categories_id;
+                        row.insertCell(-1).innerHTML = product.manufacturer_id;
+                        row.insertCell(-1).innerHTML = deliveries.users[i].products[j].amount;
+                        row.insertCell(-1).innerHTML = (Number(deliveries.users[i].products[j].amount) * Number(product.price)).toString();
+                    });
+                    table.getElementById("listProducts").appendChild(row);
+                }
+
+                document.getElementsByClassName("list_deliveries")[0].appendChild(table);
+            });
+        }
+    }
+}
+
+$(document).ready(function () {
+    setDeliveriesInTable();
+});
+
+createNewOrderDeliveries = (user_id) => {
+    let deliveries = JSON.parse(getCookie("providers"));
+    for (let i = 0; i < deliveries.users.length; i++) {
+        if (deliveries.users[i].user_id === user_id) {
+            order_history.user_id = user_id;
+            let sum = 0;
+            for (let j = 0; j < deliveries.users[i].products.length; j++) {
+                getProduct(deliveries.users[i].products[j].product.product_id).then(product => {
+                    order_history.price += (Number(deliveries.users[i].products[j].amount) * Number(product.price))
+                    order_history.price = order_history.price.toString();
+                });
+                product_info.product.product_id = deliveries.users[i].products[j].product.product_id;
+                product_info.amount = deliveries.users[i].products[j].amount;
+                order_history.product_info_list.push(JSON.parse(JSON.stringify(product_info)));
+            }
+
+            order_history.status = "APPLICATION_SENT";
+            console.log(order_history);
+            createNewOrder(order_history);
+            deleteDeliveries(user_id);
+        }
+    }
+}
+
+deleteDeliveries = (user_id) => {
+    let deliveries = JSON.parse(getCookie("providers"));
+    for (let i = 0; i < deliveries.users.length; i++) {
+        if (deliveries.users[i].user_id === user_id) {
+            deliveries.users.splice(i, 1);
+        }
+    }
+    setCookie("providers", JSON.stringify(deliveries));
+    setDeliveriesInTable();
+}
+
+getAmountDeliveries = () => {
+    let amount = 0;
+    let deliveries = JSON.parse(getCookie("providers"));
+    for (let i = 0; i < deliveries.users.length; i++) {
+        amount += deliveries.users[i].products.length;
+    }
+    try {
+        document.getElementById("productsInDeliveries").innerHTML = amount.toString();
+    } catch (e) {
+
+    }
+
+}
+
+addProductsInBasket = (product_id) => {
+    if (getCookie("product") == null || getCookie("product") === "") {
+        console.log("Cookie нет");
+        document.cookie = "product=" + product_id;
+        console.log(getCookie("product"));
+    } else {
+        console.log("Cookie есть");
+        setCookie("product", getCookie("product") + "," + product_id);
+        getCookie("product");
+    }
+    let amount = getCookie("product").split(",").length;
+    document.getElementById("productsInBasket").innerHTML = amount.toString();
+}
+
+getCookie = (name) => {
+    let matches = document.cookie.match(new RegExp(
+        "(?:^|; )" + name.replace(/([\.$?*|{}\(\)\[\]\\\/\+^])/g, '\\$1') + "=([^;]*)"
+    ));
+    return matches ? decodeURIComponent(matches[1]) : null;
+}
+
+getProductsByBasket = () => {
+    if (getCookie("product") != null) {
+        document.location.href = "http://localhost:8080/products/basket?products_id=" + getCookie("product");
+    } else {
+        document.location.href = "http://localhost:8080/products/basket?products_id=";
+    }
+
+}
+
+getDeliveries = () => {
+    document.location.href = "http://localhost:8080/admin/products/deliveries";
+}
+setCookie = (name, value, options = {}) => {
+
+    options = {
+        path: '/',
+        // при необходимости добавьте другие значения по умолчанию
+        ...options
+    };
+
+    if (options.expires instanceof Date) {
+        options.expires = options.expires.toUTCString();
+    }
+
+    let updatedCookie = encodeURIComponent(name) + "=" + encodeURIComponent(value);
+
+    for (let optionKey in options) {
+        updatedCookie += "; " + optionKey;
+        let optionValue = options[optionKey];
+        if (optionValue !== true) {
+            updatedCookie += "=" + optionValue;
+        }
+    }
+
+    document.cookie = updatedCookie;
+}
+
+// Пример использования:
+// setCookie('user', 'John', {secure: true, 'max-age': 3600});
+
+deleteCookie = () => {
+    setCookie("product", "", {
+        'max-age': -1
+    })
+    document.location.href = "http://localhost:8080/products";
 }

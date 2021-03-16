@@ -7,5 +7,7 @@ import com.spring.base.CRUDService;
 import java.util.List;
 
 public interface OrderHistoryService extends CRUDService<OrderHistoryDTO, Long> {
+    List<OrderHistoryDTO> getListByCustomer();
+    List<OrderHistoryDTO> getListByProvider();
 //    List<OrderHistoryDTO> findAll();
 }

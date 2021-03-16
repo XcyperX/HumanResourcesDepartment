@@ -81,13 +81,10 @@
                     <div class="form-group col-md-6">
                         <label class="custom-label">Введите пароль</label>
                         <input id="password" type="text" name="password" class="form-control"
-                               placeholder="Введите телефон"
+                               placeholder="Введите пароль"
                                value="<#if employees?has_content && employees.password?has_content>${employees.password}</#if>">
                     </div>
                 </div>
-                <#--                <div class="row">-->
-                <#--                    <h3>Адрес сотрудника</h3>-->
-                <#--                </div>-->
                 <div class="modal-header pl-0 pb-0 pt-0 mb-2">
                     <h5 class="modal-title" id="exampleModalLabel">Данные паспорта</h5>
                 </div>
@@ -216,32 +213,7 @@
                        value="<#if employees?has_content && employees.address?has_content>${employees.address.id}</#if>" hidden>
                 <input id="position_id" type="text"
                        value="<#if employees?has_content && employees.position?has_content>${employees.position.id}</#if>" hidden>
-                <#--<#if employees?has_content>-->
-                <#--<div class="form-row">-->
-                <#--<input class="btn btn-primary  mb-4" type="button"-->
-                <#--onclick="submitUpdateEmployees(${employees.id})"-->
-                <#--value="Изменить сотрудника">-->
-                <#--</div>-->
-                <#--&lt;#&ndash;<#else>&ndash;&gt;-->
-                <#--&lt;#&ndash;<div class="form-row">&ndash;&gt;-->
-                <#--&lt;#&ndash;<input class="btn btn-primary  mb-4" type="button" onclick="submitNewEmployees()"&ndash;&gt;-->
-                <#--&lt;#&ndash;value="Добавить сотрудника">&ndash;&gt;-->
-                <#--&lt;#&ndash;</div>&ndash;&gt;-->
-                <#--</#if>-->
-                <#--                        <div class="form-row mb-2">-->
-                <#--                            <div class="form-group col-md-6 pl-0 ml-0">-->
-                <#--                                <label>Дата начала отпуска</label>-->
-                <#--                                <input id="vacation_start" type="date" name="vacation_start" class="form-control"-->
-                <#--                                       value="<#if employees?has_content && employees.vacationStart?has_content>${employees.vacationStart}</#if>">-->
-                <#--                            </div>-->
-                <#--                            <div class="form-group col-md-6 pr-0 mr-0">-->
-                <#--                                <label>Дата окончания отпуска</label>-->
-                <#--                                <input id="vacation_final" type="date" name="vacation_final" class="form-control"-->
-                <#--                                       value="<#if employees?has_content && employees.vacationFinal?has_content>${employees.vacationFinal}</#if>">-->
-                <#--                            </div>-->
-                <#--                        </div>-->
             </form>
         </div>
-        <#--</div>-->
     </div>
 </#macro>

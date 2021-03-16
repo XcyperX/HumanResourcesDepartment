@@ -5,6 +5,8 @@
 <#import "parts/listStore.ftlh" as store>
 <#import "parts/listManufaturer.ftlh" as man>
 <#import "parts/listCategories.ftlh" as listCat>
+<#import "parts/filteredBlock.ftlh" as fb>
+<#import "parts/searchBlock.ftlh" as sb>
 
 <@c.page>
     <div class="row">
@@ -127,45 +129,20 @@
                         </div>
                     </div>
                 </div>
-                <div class="row mb-2">
-                    <label>Выберите категорию</label>
-                    <select id="categories_id" class="form-control">
-                        <option value="all">Все</option>
-                        <#list categories as categori>
-                            <option value="${categori.id}">${categori.name}</option>
-                        </#list>
-                    </select>
-                </div>
-                <div class="row mb-2">
-                    <label>Выберите производителя</label>
-                    <select id="manufacturer_id" class="form-control">
-                        <option value="all">Все</option>
-                        <#list manufacturer as manufacter>
-                            <option value="${manufacter.id}">${manufacter.name}</option>
-                        </#list>
-                    </select>
-                </div>
-                <div class="row mb-2">
-                    <label>Выберите склад</label>
-                    <select id="store_id" class="form-control">
-                        <option value="all">Все</option>
-                        <#list stores as store>
-                            <option value="${store.id}">${store.name}</option>
-                        </#list>
-                    </select>
-                </div>
+                <@fb.filteredBlock categories=categories manufacturer=manufacturer stores=stores providers=""/>
             </div>
         </div>
         <div class="col-sm-10">
             <div class="container-fluid">
-                <div class="row mb-2">
-                    <div class="col pl-0">
-                        <input id="searchProduct" type="text" name="searchProduct" class="form-control">
-                    </div>
-                    <div class="col-auto pr-0">
-                        <button type="button" class="btn btn-light">Найти</button>
-                    </div>
-                </div>
+                <@sb.searchBlock />
+<#--                <div class="row mb-2">-->
+<#--                    <div class="col pl-0">-->
+<#--                        <input id="searchProduct" type="text" name="searchProduct" class="form-control">-->
+<#--                    </div>-->
+<#--                    <div class="col-auto pr-0">-->
+<#--                        <button type="button" class="btn btn-light" onclick="filteredProductsByParams()">Найти</button>-->
+<#--                    </div>-->
+<#--                </div>-->
                 <div class="row mb-2">
                     <div class="col pl-0">
                         <span>Сортировать: </span>

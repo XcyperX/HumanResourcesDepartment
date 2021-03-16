@@ -4,7 +4,6 @@ import lombok.Data;
 
 import javax.persistence.*;
 import java.io.Serializable;
-import java.time.LocalDate;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -52,6 +51,9 @@ public class Product implements Serializable {
 
     @ManyToMany(fetch = FetchType.LAZY, cascade = {CascadeType.MERGE}, mappedBy = "productList")
     private List<OrderHistory> orderHistories = new ArrayList<>();
+
+    @OneToMany(mappedBy = "product")
+    private List<OrderProductInfo> orderProductInfos;
 
     public Product() {
     }

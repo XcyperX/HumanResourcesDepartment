@@ -16,27 +16,27 @@ public class OrderHistoryDTO implements Serializable {
     @JsonProperty("order_history_id")
     private Long id;
 
-    @JsonProperty("customer_id")
-    private Long customerId;
+//    @JsonProperty("customer_id")
+//    private Long customerId;
+
+    private CustomerDTO customer;
 
     @JsonProperty("user_id")
     private Long userId;
 
-    @NotNull
     @JsonProperty("date_order")
     private LocalDate dateOrder;
 
     @JsonProperty("date_reception")
     private LocalDate dateReception;
 
-    @NotNull
     @JsonProperty("product_list")
     private List<ProductDTO> productList = new ArrayList<>();
 
-    @NotNull
-    @JsonProperty("status_id")
-    private Long statusId;
+    @JsonProperty("product_info_list")
+    private List<OrderProductInfoDTO> orderProductInfoDTOS = new ArrayList<>();
 
-    @NotNull
+    private String status;
+
     private Float price;
 }

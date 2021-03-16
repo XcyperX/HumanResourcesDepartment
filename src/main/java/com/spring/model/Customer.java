@@ -6,6 +6,7 @@ import javax.persistence.*;
 import java.io.Serializable;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.UUID;
 
 @Entity
 @Table(name = "customers")
@@ -25,10 +26,22 @@ public class Customer implements Serializable {
 
     private String phone;
 
-    @OneToOne(cascade = CascadeType.PERSIST)
+    @OneToOne(cascade = CascadeType.ALL)
     @JoinColumn(name = "address_id")
     private Address address;
 
-    @OneToMany(mappedBy = "customer", cascade = CascadeType.ALL)
-    private List<OrderHistory> orderHistories = new ArrayList<>();
+//    @OneToMany(mappedBy = "customer")
+//    private List<OrderHistory> orderHistories;
+
+
+//    @OneToMany(mappedBy = "customer", cascade = CascadeType.ALL)
+    @OneToOne(mappedBy = "customer")
+    private OrderHistory orderHistories;
+
+    public Customer() {
+    }
+
+    public Customer(Long id) {
+        this.id = id;
+    }
 }

@@ -5,6 +5,8 @@
 <#import "parts/listStore.ftlh" as store>
 <#import "parts/listManufaturer.ftlh" as man>
 <#import "parts/listCategories.ftlh" as listCat>
+<#import "parts/filteredBlock.ftlh" as fb>
+<#import "parts/searchBlock.ftlh" as sb>
 
 <@c.page>
     <div class="row">
@@ -42,6 +44,33 @@
                                         </button>
                                     </div>
                                 </form>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                <div class="row">
+                    <button type="button" class="btn btn-primary btn-block mb-2" data-toggle="modal"
+                            data-target="#createManufacturer">
+                        Список производителей
+                    </button>
+                    <!-- Modal -->
+                    <div class="modal fade" id="createManufacturer" tabindex="-1" role="dialog"
+                         aria-labelledby="exampleModalLabel"
+                         aria-hidden="true">
+                        <div class="modal-dialog modal-lg">
+                            <div class="modal-content">
+                                <div class="modal-header">
+                                    <h5 class="modal-title" id="exampleModalLabel">Список производителей</h5>
+                                    <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                                        <span aria-hidden="true">&times;</span>
+                                    </button>
+                                </div>
+                                <div class="modal-body">
+                                    <@man.listManufacturer manufacturer=manufacturer/>
+                                </div>
+                                <div class="modal-footer">
+                                    <button type="button" class="btn btn-secondary" data-dismiss="modal">Отмена</button>
+                                </div>
                             </div>
                         </div>
                     </div>
@@ -100,55 +129,18 @@
                         </div>
                     </div>
                 </div>
-                <div class="row mb-2">
-                    <label>Выберите категорию</label>
-                    <select id="categories_id" class="form-control">
-                        <option value="all">Все</option>
-                        <#list categories as categori>
-                            <option value="${categori.id}">${categori.name}</option>
-                        </#list>
-                    </select>
-                </div>
-                <div class="row mb-2">
-                    <label>Выберите производителя</label>
-                    <select id="manufacturer_id" class="form-control">
-                        <option value="all">Все</option>
-                        <#list manufacturer as manufacter>
-                            <option value="${manufacter.id}">${manufacter.name}</option>
-                        </#list>
-                    </select>
-                </div>
-                <div class="row mb-2">
-                    <label>Выберите склад</label>
-                    <select id="store_id" class="form-control">
-                        <option value="all">Все</option>
-                        <#list stores as store>
-                            <option value="${store.id}">${store.name}</option>
-                        </#list>
-                    </select>
-                </div>
+                <@fb.filteredBlock categories=categories manufacturer=manufacturer stores=stores providers=""/>
             </div>
         </div>
         <div class="col-sm-10">
             <div class="container-fluid">
-                <div class="row mb-2">
-                    <div class="col pl-0">
-                        <input id="searchProduct" type="text" name="searchProduct" class="form-control">
-                    </div>
-                    <div class="col-auto pr-0">
-                        <button type="button" class="btn btn-light">Найти</button>
-                    </div>
-                </div>
+                <@sb.searchBlock />
                 <div class="row mb-2">
                     <div class="col pl-0">
                         <span>Сортировать: </span>
                         <button type="button" class="btn btn-light btn-sm">По цене</button>
                         <button type="button" class="btn btn-light btn-sm">По колчеству заказов</button>
                         <button type="button" class="btn btn-light btn-sm">По новизне</button>
-                    </div>
-                    <div class="col-auto pr-0">
-                        <a class="btn btn-primary" type="button" href="/provider/table/product">Таблица</a>
-                        <a class="btn btn-primary" type="button" href="/provider/card/product">Карточки</a>
                     </div>
                 </div>
                 <div class="row">

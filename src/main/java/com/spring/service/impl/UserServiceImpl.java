@@ -1,6 +1,7 @@
 package com.spring.service.impl;
 
 import com.spring.DTO.UserDTO;
+import com.spring.model.Role;
 import com.spring.model.User;
 import com.spring.repository.UserRepository;
 import com.spring.service.UserService;
@@ -16,6 +17,7 @@ import java.util.List;
 public class UserServiceImpl implements UserService {
     private final UserRepository userRepository;
     private final MapperFacade mapperFacade;
+
 
     @Override
     public UserDTO getById(Long id) {
@@ -63,11 +65,16 @@ public class UserServiceImpl implements UserService {
 
     @Override
     public List<UserDTO> findAllEmployee() {
-        return mapperFacade.mapAsList(userRepository.findAllByNameFirmIsNull(), UserDTO.class);
+        return mapperFacade.mapAsList(userRepository.findAllByNameFirmIsNullAndGenderIsNotNull(), UserDTO.class);
     }
 
     @Override
     public List<UserDTO> findAllProvider() {
         return mapperFacade.mapAsList(userRepository.findAllByNameFirmIsNotNull(), UserDTO.class);
+    }
+
+    @Override
+    public List<UserDTO> findAllCustomer() {
+        return mapperFacade.mapAsList(userRepository.findAllByRole(Role.CUSTOMER), UserDTO.class);
     }
 }

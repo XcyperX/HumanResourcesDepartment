@@ -128,14 +128,15 @@
         </div>
         <div class="col-sm-10">
             <div class="container-fluid">
-                <div class="row mb-2">
-                    <div class="col pl-0">
-                        <input id="searchUser" type="text" name="searchUser" class="form-control">
-                    </div>
-                    <div class="col-auto pr-0">
-                        <button type="button" class="btn btn-light">Найти</button>
-                    </div>
-                </div>
+
+<#--                <div class="row mb-2">-->
+<#--                    <div class="col pl-0">-->
+<#--                        <input id="searchUser" type="text" name="searchUser" class="form-control">-->
+<#--                    </div>-->
+<#--                    <div class="col-auto pr-0">-->
+<#--                        <button type="button" class="btn btn-light">Найти</button>-->
+<#--                    </div>-->
+<#--                </div>-->
                 <div class="row mb-2">
                     <div class="col pl-0">
                         <span>Сортировать: </span>

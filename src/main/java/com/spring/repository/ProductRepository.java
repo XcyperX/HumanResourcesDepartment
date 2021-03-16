@@ -8,6 +8,7 @@ import java.util.List;
 
 public interface ProductRepository extends JpaRepository<Product, Long> {
     List<Product> findAllByUserId(Long id);
+    List<Product> findAllByStoreId(Long id);
     Integer countAllByUserId(Long id);
     Integer countProductByUserId(Long id);
 }

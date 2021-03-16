@@ -11,6 +11,7 @@ import org.springframework.stereotype.Service;
 
 import java.util.ArrayList;
 import java.util.List;
+import java.util.stream.Collectors;
 
 @Service
 @RequiredArgsConstructor
@@ -104,5 +105,53 @@ public class ProductServiceImpl implements ProductService {
             products.addAll(storeDTO.getProducts());
         });
         return products.size();
+    }
+
+    @Override
+    public List<ProductDTO> findByParams(List<ProductDTO> list, Long user_id, Long store_id, Long manufacturer_id, Long categories_id, String name) {
+//        List<ProductDTO> productFiltered = mapperFacade.mapAsList(productRepository.findAllByUserId(user_id), ProductDTO.class);
+        List<ProductDTO> productFiltered = list;
+        if (user_id != null) {
+            productFiltered = mapperFacade.mapAsList(productRepository.findAllByUserId(user_id), ProductDTO.class);
+        }
+        if (store_id != 0) {
+            productFiltered = productFiltered.stream().filter(productDTO -> productDTO.getStoreId().equals(store_id)).collect(Collectors.toList());
+        }
+        if (manufacturer_id != 0) {
+            productFiltered = productFiltered.stream().filter(productDTO -> productDTO.getManufacturerId().equals(manufacturer_id)).collect(Collectors.toList());
+        }
+        if (categories_id != 0) {
+            productFiltered = productFiltered.stream().filter(productDTO -> productDTO.getCategoriesId().equals(categories_id)).collect(Collectors.toList());
+        }
+        if (!name.isEmpty()) {
+            productFiltered = productFiltered.stream().filter(productDTO -> productDTO.getName().toLowerCase().contains(name.toLowerCase())).collect(Collectors.toList());
+        }
+        return productFiltered;
+    }
+
+    @Override
+    public List<ProductDTO> findProductsByListId(List<String> product_id) {
+        List<ProductDTO> products = new ArrayList<>();
+        if (!product_id.isEmpty()) {
+            product_id.forEach(p -> {
+                products.add(getById(Long.valueOf(p)));
+            });
+        } else {
+            return products;
+        }
+        return products;
+    }
+
+    @Override
+    public Float getPriceProducts(List<String> product_id) {
+        Float price = 0F;
+        if (!product_id.isEmpty()) {
+            for (String p : product_id) {
+                price += getById(Long.valueOf(p)).getPrice();
+            }
+        } else {
+            return 0F;
+        }
+        return price;
     }
 }

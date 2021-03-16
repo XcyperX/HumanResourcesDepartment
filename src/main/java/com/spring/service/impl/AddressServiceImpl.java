@@ -29,12 +29,19 @@ public class AddressServiceImpl implements AddressService {
 
     @Override
     public AddressDTO update(AddressDTO addressDTO) {
-        return null;
+        if (addressRepository.findById(addressDTO.getId()).isEmpty()) {
+            throw new RuntimeException("Ошибка, нет такого адреса!");
+        }
+        Address address = addressRepository.save(mapperFacade.map(addressDTO, Address.class));
+        return mapperFacade.map(address, AddressDTO.class);
     }
 
     @Override
-    public void delete(Long aLong) {
-
+    public void delete(Long id) {
+        if (addressRepository.findById(id).isEmpty()) {
+            throw new RuntimeException("Ошибка, нет такого адреса!");
+        }
+        addressRepository.deleteById(id);
     }
 
     @Override
