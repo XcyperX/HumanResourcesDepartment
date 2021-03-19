@@ -5,6 +5,7 @@ import com.spring.DTO.ProductDTO;
 import com.spring.mapper.OrderHistoryMapper;
 import com.spring.model.OrderHistory;
 import com.spring.model.Product;
+import com.spring.model.Role;
 import com.spring.repository.OrderHistoryRepository;
 import com.spring.repository.ProductRepository;
 import com.spring.service.OrderHistoryService;
@@ -13,6 +14,7 @@ import ma.glasnost.orika.MapperFacade;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
+import java.util.ArrayList;
 import java.util.List;
 
 @Service
@@ -39,15 +41,15 @@ public class OrderHistoryServiceImpl implements OrderHistoryService {
     @Override
     public OrderHistoryDTO save(OrderHistoryDTO orderHistoryDTO) {
         Float sum = 0F;
-        List<ProductDTO> products = orderHistoryDTO.getProductList();
-        products.forEach(productDTO -> {
-            ProductDTO productLegacy = productService.getById(productDTO.getId());
-            productLegacy.setAmount(productLegacy.getAmount() - 1);
-            if (productLegacy.getAmount() < 0) {
-                throw new RuntimeException("Ошибка, товар закончился!");
-            }
-            productRepository.save(mapperFacade.map(productLegacy, Product.class));
-        });
+//        List<ProductDTO> products = orderHistoryDTO.getProductList();
+//        products.forEach(productDTO -> {
+//            ProductDTO productLegacy = productService.getById(productDTO.getId());
+//            productLegacy.setAmount(productLegacy.getAmount() - 1);
+//            if (productLegacy.getAmount() < 0) {
+//                throw new RuntimeException("Ошибка, товар закончился!");
+//            }
+//            productRepository.save(mapperFacade.map(productLegacy, Product.class));
+//        });
         for (int i = 0; i < orderHistoryDTO.getOrderProductInfoDTOS().size(); i++) {
             sum += orderHistoryDTO.getOrderProductInfoDTOS().get(i).getAmount() * productService.getById(orderHistoryDTO.getOrderProductInfoDTOS().get(i).getProduct().getId()).getPrice();
         }
@@ -71,13 +73,16 @@ public class OrderHistoryServiceImpl implements OrderHistoryService {
 
     @Override
     public List<OrderHistoryDTO> getListByCustomer() {
-        List<OrderHistory> orderHistory = mapperFacade.mapAsList(orderHistoryRepository.findAllByCustomerNotNull(), OrderHistory.class);
-        return mapperFacade.mapAsList(orderHistory, OrderHistoryDTO.class);
+//        List<OrderHistory> orderHistory = mapperFacade.mapAsList(orderHistoryRepository.findAllByCustomerNotNullOrUserRole(Role.CUSTOMER), OrderHistory.class);
+        return mapperFacade.mapAsList(orderHistoryRepository.findAllByCustomerNotNullOrUserRole(Role.CUSTOMER), OrderHistoryDTO.class);
     }
 
     @Override
     public List<OrderHistoryDTO> getListByProvider() {
-        List<OrderHistory> orderHistory = mapperFacade.mapAsList(orderHistoryRepository.findAllByUserNotNull(), OrderHistory.class);
-        return mapperFacade.mapAsList(orderHistory, OrderHistoryDTO.class);
+        List<OrderHistory> orderHistories = new ArrayList<>();
+        orderHistories.addAll(orderHistoryRepository.findAllByUserRole(Role.ADMIN));
+        orderHistories.addAll(orderHistoryRepository.findAllByUserRole(Role.STOREKEEPER));
+//        List<OrderHistory> orderHistory = mapperFacade.mapAsList(orderHistories, OrderHistory.class);
+        return mapperFacade.mapAsList(orderHistories, OrderHistoryDTO.class);
     }
 }

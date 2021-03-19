@@ -1,16 +1,12 @@
 <#import "parts/common.ftlh" as c>
-<#import "parts/listProductsCard.ftlh" as lpc>
-<#import "parts/listProductsTable.ftlh" as lpt>
-<#import "parts/createProducts.ftlh" as p>
-<#import "parts/listStore.ftlh" as store>
-<#import "parts/listManufaturer.ftlh" as man>
-<#import "parts/filteredBlock.ftlh" as fb>
-<#import "parts/searchBlock.ftlh" as sb>
-<#import "parts/listProductsTableDeliveries.ftlh" as lptd>
+<#import "parts/listOrderHistory.ftlh" as loh>
 
 
 <@c.page>
-    <div class="container">
-        <@lptd.listProducts providers=providers products=products categories=categories manufacturer=manufacturer/>
+    <div class="container-fluid">
+<#--        <@sb.searchBlock />-->
+        <div class="row">
+            <@loh.listOrders users=users stores=stores orderHistories=orderHistories manufacturer=manufacturer categories=categories products=products deliveries=true/>
+        </div>
     </div>
 </@c.page>

@@ -7,29 +7,31 @@
             <th scope="col">Название</th>
             <th scope="col">Категория</th>
             <th scope="col">Производитель</th>
+            <th scope="col">Количество</th>
             <th scope="col">Цена</th>
         </tr>
         </thead>
         <tbody>
             <#list products as product>
                 <tr>
-                    <td class="product_id_order">${product.id}</td>
-                    <td>${product.name}</td>
+                    <td class="product_id_order">${product.product.id}</td>
+                    <td>${product.product.name}</td>
                     <td>
                         <#list categories as catigori>
-                            <#if catigori.id == product.categoriesId>
+                            <#if catigori.id == product.product.categoriesId>
                                 ${catigori.name}
                             </#if>
                         </#list>
                     </td>
                     <td>
                         <#list manufacturer as manufactur>
-                            <#if manufactur.id == product.manufacturerId>
+                            <#if manufactur.id == product.product.manufacturerId>
                                 ${manufactur.name}
                             </#if>
                         </#list>
                     </td>
-                    <td>${product.price}</td>
+                    <td>${product.amount}</td>
+                    <td>${product.product.price}</td>
                 </tr>
             </#list>
     </table>

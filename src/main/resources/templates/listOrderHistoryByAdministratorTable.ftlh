@@ -32,7 +32,7 @@
             <div class="container-fluid">
                 <@sb.searchBlock />
                 <div class="row">
-                    <@loh.listOrders orderHistories=orderHistories manufacturer=manufacturer categories=categories products=products />
+                    <@loh.listOrders users=users stores="" orderHistories=orderHistories manufacturer=manufacturer categories=categories products=products />
                 </div>
             </div>
         </div>

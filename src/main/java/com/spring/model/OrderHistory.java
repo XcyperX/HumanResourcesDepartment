@@ -27,9 +27,13 @@ public class OrderHistory implements Serializable {
     @JoinColumn(name = "user_id", referencedColumnName = "id")
     private User user;
 
-    @ManyToMany(fetch = FetchType.LAZY, cascade = {CascadeType.MERGE})
-    @JoinTable(name = "order_product", joinColumns = {@JoinColumn(name = "order_id")}, inverseJoinColumns = {@JoinColumn(name = "product_id")})
-    private List<Product> productList = new ArrayList<>();
+    @ManyToOne
+    @JoinColumn(name = "provider_id", referencedColumnName = "id")
+    private User provider;
+
+//    @ManyToMany(fetch = FetchType.LAZY, cascade = {CascadeType.MERGE})
+//    @JoinTable(name = "order_product", joinColumns = {@JoinColumn(name = "order_id")}, inverseJoinColumns = {@JoinColumn(name = "product_id")})
+//    private List<Product> productList = new ArrayList<>();
 
     @OneToMany(mappedBy = "orderHistory", cascade = CascadeType.ALL)
     private List<OrderProductInfo> orderProductInfos = new ArrayList<>();

@@ -81,6 +81,9 @@ public class User implements UserDetails, Serializable {
     @OneToMany(mappedBy = "user", cascade = CascadeType.ALL)
     private List<OrderHistory> orderHistories = new ArrayList<>();
 
+    @OneToMany(mappedBy = "provider", cascade = CascadeType.ALL)
+    private List<OrderHistory> orderHistoriesProvider = new ArrayList<>();
+
     public User() {
     }
 

@@ -145,6 +145,7 @@ submitCreateAndUpdateStore = (bool, store_id) => {
 
 submitCrateOrder = (user_id) => {
     let legacyEmployee = document.getElementById("createOrder");
+    let deliveries = JSON.parse(getCookie("customerBasket"));
     if (user_id != null) {
         order_history.user_id = Number(legacyEmployee.querySelector("#user_id").value);
     } else {
@@ -163,13 +164,15 @@ submitCrateOrder = (user_id) => {
         order_history.customer = JSON.parse(JSON.stringify(customer));
     }
 
-    for (let product_id = 0; product_id < document.getElementsByClassName("product_id_order").length; product_id++) {
-        product.product_id = document.getElementsByClassName("product_id_order")[product_id].innerHTML;
-        // product_info.product.product_id = document.getElementsByClassName("product_id_order")[product_id].innerHTML;
-        console.log(document.getElementsByClassName("product_id_order")[product_id].innerHTML);
-        console.log(product);
-        order_history.product_list.push(JSON.parse(JSON.stringify(product)));
-        product.product_id = null;
+    for (let i = 0; i < deliveries.users.length; i++) {
+        for (let j = 0; j < deliveries.users[i].products.length; j++) {
+            getProduct(deliveries.users[i].products[j].product.product_id).then(product => {
+                order_history.price += (Number(deliveries.users[i].products[j].amount) * Number(product.price))
+            });
+            product_info.product.product_id = deliveries.users[i].products[j].product.product_id;
+            product_info.amount = deliveries.users[i].products[j].amount;
+            order_history.product_info_list.push(JSON.parse(JSON.stringify(product_info)));
+        }
     }
     try {
         order_history.date_reception = legacyEmployee.querySelector("#date_reception").value;
@@ -179,11 +182,12 @@ submitCrateOrder = (user_id) => {
         order_history.date_reception = null;
     }
 
-    order_history.price = document.getElementById("price_order").innerHTML.split(" ")[2];
+    // order_history.price = document.getElementById("price_order").innerHTML.split(" ")[2];
 
     console.log(order_history);
     if (user_id == null) {
         createNewOrder(order_history);
+        deleteCookie();
     } else {
         console.log("Писос")
     }
@@ -322,9 +326,9 @@ const order_history = {
     order_history_id: null,
     customer: null,
     user_id: null,
+    provider_id: null,
     date_order: null,
     date_reception: null,
-    product_list: [],
     product_info_list: [],
     status: null,
     price: null
@@ -660,7 +664,6 @@ filteredProductsByParams = () => {
 
 startScript = () => {
     getAmountProductInBasket();
-    getPriceProductsBasket();
     getAmountDeliveries();
 }
 
@@ -673,22 +676,22 @@ getAmountProductInBasket = () => {
     }
 }
 
-getPriceProductsBasket = () => {
-    try {
-        sendRequest('GET', '/api/get/price/basket?products_id=' + getCookie("product").split(",")).then(response => {
-            if (response.ok) {
-                response.text().then(function (fulfilde) {
-                    document.getElementById("priceProductBasket").innerHTML = "Сумма заказа: " + fulfilde.toString() + " р.";
-                });
-            } else {
-                console.log(response);
-            }
-        });
-    } catch (e) {
-        console.log("Нет товаров");
-    }
-
-}
+// getPriceProductsBasket = () => {
+//     try {
+//         sendRequest('GET', '/api/get/price/basket?products_id=' + getCookie("product").split(",")).then(response => {
+//             if (response.ok) {
+//                 response.text().then(function (fulfilde) {
+//                     document.getElementById("priceProductBasket").innerHTML = "Сумма заказа: " + fulfilde.toString() + " р.";
+//                 });
+//             } else {
+//                 console.log(response);
+//             }
+//         });
+//     } catch (e) {
+//         console.log("Нет товаров");
+//     }
+//
+// }
 
 let deliveriesUsers = {
     users: []
@@ -699,23 +702,27 @@ const deliveriesUserId = {
     products: []
 }
 
-addProductInDeliveries = (user_id, product_id) => {
+addProductInDeliveries = (user_id, product_id, nameCookie) => {
     if (document.getElementById("amount_product_" + product_id).value === "" || document.getElementById("amount_product_" + product_id).value == null) {
         alert("Введите необходимое количество!!!")
     } else {
-        if (getCookie("providers") == null || getCookie("providers") === "") {
+        if (getCookie(nameCookie) == null || getCookie(nameCookie) === "") {
             console.log("Cookie нет");
             deliveriesUserId.user_id = user_id;
             product_info.product.product_id = product_id;
             product_info.amount = document.getElementById("amount_product_" + product_id).value;
             deliveriesUserId.products.push(JSON.parse(JSON.stringify(product_info)));
             deliveriesUsers.users.push(JSON.parse(JSON.stringify(deliveriesUserId)));
-            setCookie("providers", JSON.stringify(deliveriesUsers));
-            getAmountDeliveries();
-            console.log(JSON.parse(getCookie("providers")));
+            setCookie(nameCookie, JSON.stringify(deliveriesUsers));
+            if (nameCookie === "providers") {
+                getAmountDeliveries();
+            } else {
+                getAmountCustomerBasket();
+            }
+            console.log(JSON.parse(getCookie(nameCookie)));
         } else {
             console.log("Cookie есть");
-            deliveriesUsers = JSON.parse(getCookie("providers"));
+            deliveriesUsers = JSON.parse(getCookie(nameCookie));
             deliveriesUserId.products = [];
             let user = deliveriesUsers.users.find(user => user.user_id === user_id);
             if (user !== undefined) {
@@ -726,14 +733,18 @@ addProductInDeliveries = (user_id, product_id) => {
                         .find(user => user.user_id === user_id).products
                         .find(productX => productX.product.product_id === product_id)
                         .amount = document.getElementById("amount_product_" + product_id).value;
-                    setCookie("providers", JSON.stringify(deliveriesUsers));
+                    setCookie(nameCookie, JSON.stringify(deliveriesUsers));
                 } else {
                     product_info.product.product_id = product_id;
                     product_info.amount = document.getElementById("amount_product_" + product_id).value;
                     deliveriesUsers.users
                         .find(user => user.user_id === user_id).products.push(JSON.parse(JSON.stringify(product_info)));
-                    setCookie("providers", JSON.stringify(deliveriesUsers));
-                    getAmountDeliveries();
+                    setCookie(nameCookie, JSON.stringify(deliveriesUsers));
+                    if (nameCookie === "providers") {
+                        getAmountDeliveries();
+                    } else {
+                        getAmountCustomerBasket();
+                    }
                 }
             } else {
                 deliveriesUserId.user_id = user_id;
@@ -741,8 +752,12 @@ addProductInDeliveries = (user_id, product_id) => {
                 product_info.amount = document.getElementById("amount_product_" + product_id).value;
                 deliveriesUserId.products.push(JSON.parse(JSON.stringify(product_info)));
                 deliveriesUsers.users.push(JSON.parse(JSON.stringify(deliveriesUserId)));
-                setCookie("providers", JSON.stringify(deliveriesUsers));
-                getAmountDeliveries();
+                setCookie(nameCookie, JSON.stringify(deliveriesUsers));
+                if (nameCookie === "providers") {
+                    getAmountDeliveries();
+                } else {
+                    getAmountCustomerBasket();
+                }
             }
             console.log(deliveriesUsers);
         }
@@ -751,10 +766,10 @@ addProductInDeliveries = (user_id, product_id) => {
 
 setDeliveriesInTable = () => {
     let listTables = document.getElementsByClassName("list_deliveries")[0];
-    while (listTables.hasChildNodes()) {
-        listTables.removeChild(listTables.lastChild);
-    }
     if (listTables !== undefined) {
+        while (listTables.hasChildNodes()) {
+            listTables.removeChild(listTables.lastChild);
+        }
         let deliveries = JSON.parse(getCookie("providers"));
         for (let i = 0; i < deliveries.users.length; i++) {
             getUsers(deliveries.users[i].user_id).then(user => {
@@ -800,15 +815,66 @@ setDeliveriesInTable = () => {
     }
 }
 
+setProductsInCustomerBasket = () => {
+    let sum = 0;
+    let listTables = document.getElementsByClassName("listProducts")[0];
+    if (listTables !== undefined) {
+        while (listTables.hasChildNodes()) {
+            listTables.removeChild(listTables.lastChild);
+        }
+        let deliveries = JSON.parse(getCookie("customerBasket"));
+        for (let i = 0; i < deliveries.users.length; i++) {
+            getUsers(deliveries.users[i].user_id).then(user => {
+                for (let j = 0; j < deliveries.users[i].products.length; j++) {
+                    getProduct(deliveries.users[i].products[j].product.product_id).then(product => {
+                        let product_html = `<div class="col mb-4" id="product_${product.product_id}">
+                                            <div class="card h-100">
+                                                <div class="card-body pb-0">
+                                                    <img src="/img/${product.url_photo}" class="card-img-top rounded mx-auto d-block" alt="..."
+                                                         style="width: 60%;">
+                                                </div>
+                                                <div class="card-body">
+                                                    <h6 class="card-title mb-0">${product.name}</h6>
+                                                </div>
+                                                <div class="card-footer">
+                                                    <h5 class="modal-title mb-2">${(Number(deliveries.users[i].products[j].amount) * Number(product.price)).toString()} р.</h5>
+                                                    <div class="row">
+                                                        <input id="amount_product_${product.product_id}" type="text" name="amount_product_${product.product_id}" class="form-control col-7 mr-2"
+                                                               placeholder="Количество"
+                                                               value="${deliveries.users[i].products[j].amount}">
+                                                        <button class="btn btn-primary btn-block col" onclick="addProductInDeliveries(${product.user_id}, ${product.product_id}, 'customerBasket')">
+                                                            Добавить
+                                                        </button>
+                                                    </div>
+                            
+                                                </div>
+                                            </div>
+                                        </div>`
+                        sum += (Number(deliveries.users[i].products[j].amount) * Number(product.price));
+                        product_html = document.createRange().createContextualFragment(product_html);
+                        listTables.appendChild(product_html);
+                        document.getElementById("priceProductBasket").innerHTML = "Сумма заказа: " + sum.toString();
+                    });
+                }
+            });
+        }
+
+    }
+}
+
 $(document).ready(function () {
     setDeliveriesInTable();
+    setProductsInCustomerBasket()
+    getAmountCustomerBasket();
+    getAmountDeliveries();
 });
 
 createNewOrderDeliveries = (user_id) => {
     let deliveries = JSON.parse(getCookie("providers"));
     for (let i = 0; i < deliveries.users.length; i++) {
         if (deliveries.users[i].user_id === user_id) {
-            order_history.user_id = user_id;
+            order_history.provider_id = user_id;
+            order_history.user_id = document.getElementById("user_id").value;
             let sum = 0;
             for (let j = 0; j < deliveries.users[i].products.length; j++) {
                 getProduct(deliveries.users[i].products[j].product.product_id).then(product => {
@@ -850,21 +916,19 @@ getAmountDeliveries = () => {
     } catch (e) {
 
     }
-
 }
 
-addProductsInBasket = (product_id) => {
-    if (getCookie("product") == null || getCookie("product") === "") {
-        console.log("Cookie нет");
-        document.cookie = "product=" + product_id;
-        console.log(getCookie("product"));
-    } else {
-        console.log("Cookie есть");
-        setCookie("product", getCookie("product") + "," + product_id);
-        getCookie("product");
+getAmountCustomerBasket = () => {
+    let amount = 0;
+    let deliveries = JSON.parse(getCookie("customerBasket"));
+    for (let i = 0; i < deliveries.users.length; i++) {
+        amount += deliveries.users[i].products.length;
     }
-    let amount = getCookie("product").split(",").length;
-    document.getElementById("productsInBasket").innerHTML = amount.toString();
+    try {
+        document.getElementById("productsInBasket").innerHTML = amount.toString();
+    } catch (e) {
+
+    }
 }
 
 getCookie = (name) => {
@@ -915,7 +979,7 @@ setCookie = (name, value, options = {}) => {
 // setCookie('user', 'John', {secure: true, 'max-age': 3600});
 
 deleteCookie = () => {
-    setCookie("product", "", {
+    setCookie("customerBasket", "", {
         'max-age': -1
     })
     document.location.href = "http://localhost:8080/products";

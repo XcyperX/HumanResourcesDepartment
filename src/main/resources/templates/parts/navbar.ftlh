@@ -31,7 +31,7 @@
                     </a>
                     <ul class="dropdown-menu">
                         <li><a class="dropdown-item" href="/admin/products/deliveries">Заказы <span id="productsInDeliveries" class="badge badge-primary"></span></a></li>
-                        <li><a class="dropdown-item" href="#">Поставки</a></li>
+                        <li><a class="dropdown-item" href="/admin/products/deliveries/order">Поставки</a></li>
                     </ul>
                 </li>
 <#--                <div class="dropdown">-->
@@ -87,20 +87,14 @@
                     <a class="nav-link" href="/products">Каталог товаров</a>
                 </li>
                 <li class="nav-item">
-                    <button class="nav-link btn btn-light" onclick="getProductsByBasket()">
-                        Корзина
-                        <span id="productsInBasket" class="badge badge-primary"></span>
-                    </button>
+                    <a class="nav-link" href="/products/basket">Корзина <span id="productsInBasket" class="badge badge-primary"></span></a>
                 </li>
             <#else>
                 <li class="nav-item">
                     <a class="nav-link" href="/products">Каталог товаров</a>
                 </li>
                 <li class="nav-item">
-                    <button class="nav-link btn btn-light" onclick="getProductsByBasket()">
-                        Корзина
-                        <span id="productsInBasket" class="badge badge-primary"></span>
-                    </button>
+                    <a class="nav-link" href="/products/basket">Корзина <span id="productsInBasket" class="badge badge-primary"></span></a>
                 </li>
             </#if>
         </ul>

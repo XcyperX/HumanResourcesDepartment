@@ -49,8 +49,8 @@ public class Product implements Serializable {
     @Column(nullable = false)
     private Float price;
 
-    @ManyToMany(fetch = FetchType.LAZY, cascade = {CascadeType.MERGE}, mappedBy = "productList")
-    private List<OrderHistory> orderHistories = new ArrayList<>();
+//    @ManyToMany(fetch = FetchType.LAZY, cascade = {CascadeType.MERGE}, mappedBy = "productList")
+//    private List<OrderHistory> orderHistories = new ArrayList<>();
 
     @OneToMany(mappedBy = "product")
     private List<OrderProductInfo> orderProductInfos;

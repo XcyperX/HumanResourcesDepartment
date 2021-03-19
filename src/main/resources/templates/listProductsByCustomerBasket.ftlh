@@ -2,14 +2,14 @@
 <#import "parts/listProductsCardByAll.ftlh" as lpc>
 <#import "parts/filteredBlock.ftlh" as fb>
 <#import "parts/searchBlock.ftlh" as sb>
-<#import "parts/createOrderCustomer.ftlh" as coc>
+<#import "parts/dataOrder.ftlh" as coc>
 
 <@c.page>
     <div class="row">
         <div class="col-sm-9">
             <div class="container-fluid">
-                <div class="row row-cols-1 row-cols-md-4">
-                    <@lpc.listPruduct products=products categories=categories/>
+                <div id="listProducts" class="row row-cols-1 row-cols-md-4 listProducts">
+<#--                    <@lpc.listPruduct products=products categories=categories/>-->
                 </div>
             </div>
         </div>
@@ -36,7 +36,8 @@
                                     </div>
                                     <form id="createOrder" name="createOrder">
                                         <div class="modal-body">
-                                            <@coc.employee employees=user!"" products=products categories=categories manufacturer=manufacturer subdivisions=subdivisions/>
+                                            <@coc.employee employees=user!"" products="" categories=categories manufacturer=manufacturer subdivisions="" list=false/>
+<#--                                            <@coc.employee employees=user!"" products=products categories=categories manufacturer=manufacturer subdivisions=subdivisions/>-->
                                         </div>
                                         <div class="modal-footer">
                                             <button type="button" class="btn btn-secondary" data-dismiss="modal">Отмена

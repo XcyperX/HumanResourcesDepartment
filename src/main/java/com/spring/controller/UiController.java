@@ -180,13 +180,14 @@ public class UiController {
         TemplateHashModel statuses = BeansWrapper.getDefaultInstance().getEnumModels();
         statuses = (TemplateHashModel) statuses.get("com.spring.model.Status");
         model.addAttribute("user", user);
+        model.addAttribute("users", userService.findAllCustomer());
         model.addAttribute("categories", categoriesService.findAll());
         model.addAttribute("statuses", statuses);
         model.addAttribute("manufacturer", manufacturerService.findAll());
         model.addAttribute("products", productService.findAll());
         model.addAttribute("subdivisions", subdivisionService.findAll());
         model.addAttribute("orderHistories", orderHistoryService.getListByCustomer());
-        model.addAttribute("countOrder", orderHistoryService.findAll().size());
+        model.addAttribute("countOrder", orderHistoryService.getListByCustomer().size());
         return "listOrderHistoryByAdministratorTable";
     }
 
@@ -197,9 +198,20 @@ public class UiController {
     }
 
     @GetMapping("/admin/products/deliveries/order")
-    public String adminTableDeliveriesOrder(@AuthenticationPrincipal User user, Model model) {
+    public String adminTableDeliveriesOrder(@AuthenticationPrincipal User user, Model model) throws TemplateModelException {
+        TemplateHashModel statuses = BeansWrapper.getDefaultInstance().getEnumModels();
+        statuses = (TemplateHashModel) statuses.get("com.spring.model.Status");
         model.addAttribute("user", user);
-        return "listDeliveriesByAdministratorTable";
+        model.addAttribute("users", userService.findAll());
+        model.addAttribute("stores", storeService.findAllByIsProvide(false));
+        model.addAttribute("categories", categoriesService.findAll());
+        model.addAttribute("statuses", statuses);
+        model.addAttribute("manufacturer", manufacturerService.findAll());
+        model.addAttribute("products", productService.findAll());
+        model.addAttribute("subdivisions", subdivisionService.findAll());
+        model.addAttribute("orderHistories", orderHistoryService.getListByProvider());
+        model.addAttribute("countOrder", orderHistoryService.getListByProvider().size());
+        return "listProductsProvidersOrderByAdministratorTable";
     }
 
     @GetMapping("/products")
@@ -216,11 +228,11 @@ public class UiController {
     }
 
     @GetMapping("/products/basket")
-    public String allProductsInBasket(@AuthenticationPrincipal User user, Model model, @RequestParam List<String> products_id) {
+    public String allProductsInBasket(@AuthenticationPrincipal User user, Model model) {
         model.addAttribute("user", user);
         model.addAttribute("categories", categoriesService.findAll());
         model.addAttribute("manufacturer", manufacturerService.findAll());
-        model.addAttribute("products", productService.findProductsByListId(products_id));
+        model.addAttribute("products", productService.findAll());
         model.addAttribute("subdivisions", subdivisionService.findAll());
         return "listProductsByCustomerBasket";
     }

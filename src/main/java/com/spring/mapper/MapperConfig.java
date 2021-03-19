@@ -110,26 +110,41 @@ public class MapperConfig extends ConfigurableMapper {
 
         factory.classMap(OrderHistory.class, OrderHistoryDTO.class)
                 .field("user.id", "userId")
+                .field("provider.id", "providerId")
                 .byDefault()
                 .customize(new CustomMapper<>() {
                     @Override
                     public void mapAtoB(OrderHistory orderHistory, OrderHistoryDTO orderHistoryDTO, MappingContext context) {
-                        if (orderHistory.getProductList() != null) {
-                            orderHistory.getProductList().forEach(product -> {
-                                product.setStore(null);
-                                product.setSupplies(null);
-                                product.setUser(null);
-                                product.setOrderHistories(null);
-                            });
-                            if (orderHistoryDTO.getCustomer() != null) {
-                                orderHistoryDTO.getCustomer().setOrderHistories(null);
-                            }
-                            orderHistoryDTO.setProductList(mapperFacade.mapAsList(orderHistory.getProductList(), ProductDTO.class));
-                        }
+//                        if (orderHistory.getProductList() != null) {
+//                            orderHistory.getProductList().forEach(product -> {
+//                                product.setStore(null);
+//                                product.setSupplies(null);
+//                                product.setUser(null);
+//                                product.setOrderHistories(null);
+//                            });
+//                            if (orderHistoryDTO.getCustomer() != null) {
+//                                orderHistoryDTO.getCustomer().setOrderHistories(null);
+//                            }
+//                            orderHistoryDTO.setProductList(mapperFacade.mapAsList(orderHistory.getProductList(), ProductDTO.class));
+//                        }
+                        OrderHistory test = new OrderHistory();
+                        test.setId(orderHistory.getId());
+
                         if (orderHistory.getOrderProductInfos() != null) {
+                            orderHistory.getOrderProductInfos().forEach(orderProductInfo -> {
+                                orderProductInfo.setOrderHistory(test);
+                            });
                             orderHistoryDTO.getOrderProductInfoDTOS().forEach(orderProductInfoDTO -> {
                                 orderProductInfoDTO.setOrderHistoryId(orderHistory.getId());
                             });
+                            if (orderHistory.getUser() != null) {
+                                orderHistory.getUser().setOrderHistories(null);
+                                orderHistory.getUser().setProducts(null);
+                                orderHistory.getUser().setStores(null);
+                            }
+                            if (orderHistory.getCustomer() != null) {
+                                orderHistory.getCustomer().setOrderHistories(null);
+                            }
                             orderHistoryDTO.setOrderProductInfoDTOS(mapperFacade.mapAsList(orderHistory.getOrderProductInfos(), OrderProductInfoDTO.class));
                         }
                         super.mapAtoB(orderHistory, orderHistoryDTO, context);
@@ -137,25 +152,23 @@ public class MapperConfig extends ConfigurableMapper {
 
                     @Override
                     public void mapBtoA(OrderHistoryDTO orderHistoryDTO, OrderHistory orderHistory, MappingContext context) {
-                        if (orderHistoryDTO.getProductList() != null) {
+                        if (orderHistoryDTO.getOrderProductInfoDTOS() != null) {
                             if (orderHistoryDTO.getUserId() != null) {
                                 orderHistory.setUser(new User(orderHistoryDTO.getUserId()));
                             }
                             orderHistory.setDateOrder(LocalDate.now());
-                            orderHistory.setProductList(mapperFacade.mapAsList(orderHistoryDTO.getProductList(), Product.class));
 
+                            List<OrderProductInfo> orderProductInfos = new ArrayList<>();
+                            orderHistoryDTO.getOrderProductInfoDTOS().forEach(orderProductInfoDTO -> {
+                                OrderProductInfo orderProductInfo = new OrderProductInfo();
+                                orderProductInfo.setProduct(mapperFacade.map(orderProductInfoDTO.getProduct(), Product.class));
+                                orderProductInfo.setAmount(orderProductInfoDTO.getAmount());
+                                orderProductInfo.setOrderHistory(orderHistory);
+                                orderProductInfos.add(orderProductInfo);
 
-//                            List<OrderProductInfo> orderProductInfos = new ArrayList<>();
-//                            orderHistoryDTO.getOrderProductInfoDTOS().forEach(orderProductInfoDTO -> {
-//                                OrderProductInfo orderProductInfo = new OrderProductInfo();
-//                                orderProductInfo.setProduct(mapperFacade.map(orderProductInfoDTO.getProduct(), Product.class));
-//                                orderProductInfo.setAmount(orderProductInfoDTO.getAmount());
-//                                orderProductInfo.setOrderHistory(orderHistory);
-//                                orderProductInfos.add(orderProductInfo);
-//
-//                            });
-//
-//                            orderHistory.setOrderProductInfos(orderProductInfos);
+                            });
+
+                            orderHistory.setOrderProductInfos(orderProductInfos);
                         }
                         super.mapBtoA(orderHistoryDTO, orderHistory, context);
                     }
@@ -220,19 +233,7 @@ public class MapperConfig extends ConfigurableMapper {
 
         //    TODO хуйня какая-то
         factory.classMap(OrderProductInfo.class, OrderProductInfoDTO.class)
-//                .field("product.id", "productId")
                 .field("orderHistory.id", "orderHistoryId")
-                .customize(new CustomMapper<>() {
-                    @Override
-                    public void mapAtoB(OrderProductInfo orderProductInfo, OrderProductInfoDTO orderProductInfoDTO, MappingContext context) {
-                        super.mapAtoB(orderProductInfo, orderProductInfoDTO, context);
-                    }
-
-                    @Override
-                    public void mapBtoA(OrderProductInfoDTO orderProductInfoDTO, OrderProductInfo orderProductInfo, MappingContext context) {
-                        super.mapBtoA(orderProductInfoDTO, orderProductInfo, context);
-                    }
-                })
                 .byDefault()
                 .register();
     }

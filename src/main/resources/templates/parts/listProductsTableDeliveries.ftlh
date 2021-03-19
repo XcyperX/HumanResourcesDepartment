@@ -47,7 +47,7 @@
                            placeholder="Введите необходимое количество">
                 </td>
                 <td>
-                    <button type="button" class="btn btn-primary" onclick="addProductInDeliveries(${product.userId}, ${product.id})">
+                    <button type="button" class="btn btn-primary" onclick="addProductInDeliveries(${product.userId}, ${product.id}, 'providers')">
                         Добавить в заказ
                     </button>
                 </td>

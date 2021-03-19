@@ -8,6 +8,7 @@
 <#import "parts/createEmployee.ftlh" as ce>
 
 <@c.page>
+    <input id="user_id" type="text" name="user_id" value="${user.id}" hidden>
     <div id="list_deliveries" class="container list_deliveries">
 
     </div>

@@ -1,5 +1,5 @@
 <#import "listProductsBasketCustomerTable.ftlh" as lpb>
-<#macro employee employees subdivisions products categories manufacturer sumPrice=0>
+<#macro employee employees subdivisions products categories manufacturer sumPrice=0 list=true>
 <#--<div class="container pl-5 pr-5">-->
     <div class="row">
         <div class="col-sm">
@@ -72,17 +72,21 @@
                                value="<#if employees?has_content && employees.address?has_content>${employees.address.flat}</#if>">
                     </div>
                 </div>
-                <div class="modal-header pl-0 pb-0 pt-0 mb-2">
-                    <h5 class="modal-title" id="exampleModalLabel">Список товаров</h5>
-                </div>
-                <@lpb.listProducts products=products categories=categories manufacturer=manufacturer/>
+                <#if list>
+                    <div class="modal-header pl-0 pb-0 pt-0 mb-2">
+                        <h5 class="modal-title" id="exampleModalLabel">Список товаров</h5>
+                    </div>
+                    <@lpb.listProducts products=products.orderProductInfoDTOS categories=categories manufacturer=manufacturer/>
+
+                    <div class="pl-0 pb-0 pt-0 mb-1 mt-2">
+                        <h5 id="price_order">Общая стоимость: ${products.price} р.</h5>
+                    </div>
+                </#if>
+
 
                 <input id="address_id" type="text" name="address_id"
                        value="<#if employees?has_content && employees.address?has_content>${employees.address.id}</#if>" hidden>
 
-                <div class="pl-0 pb-0 pt-0 mb-1 mt-2">
-                    <h5 id="price_order">Общая стоимость: <#list products as product><#local sumPrice += product.price></#list>${sumPrice?c} р.</h5>
-                </div>
             </form>
         </div>
     </div>
