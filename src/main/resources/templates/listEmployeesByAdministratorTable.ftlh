@@ -124,6 +124,10 @@
                     <label>Выберите дату отпуска</label>
                     <input id="vacationEmployee" type="date" name="vacationEmployee" class="form-control">
                 </div>
+                <div class="row mb-2">
+                    <a type="button" href="/pdf/request/sales" class="btn btn-primary btn-block mt-3 mb-3">Отчет по сотрудникам
+                    </a>
+                </div>
             </div>
         </div>
         <div class="col-sm-10">

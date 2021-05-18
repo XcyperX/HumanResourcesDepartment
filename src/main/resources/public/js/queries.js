@@ -465,6 +465,18 @@ createNewProduct = (product) => {
     });
 }
 
+addProductsByOrder = (orderId, elem) => {
+    let storeId = elem.parentNode.parentNode;
+    sendRequestWithFile('POST', '/api/add/products/orders/' + orderId + '/stock/' + storeId.querySelector("#store_id").value).then(response => {
+        if (response.ok) {
+            console.log(response);
+            document.location.reload(true);
+        } else {
+            console.log(response);
+        }
+    });
+}
+
 updateProductById = (product_id, product) => {
     sendRequestWithFile('PUT', '/api/product/image/' + product_id, product).then(response => {
         if (response.ok) {

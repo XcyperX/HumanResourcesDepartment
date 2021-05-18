@@ -90,6 +90,20 @@ public class ProductServiceImpl implements ProductService {
     }
 
     @Override
+    public ProductDTO findAllProductsCompanyAndId(Long id) {
+        List<ProductDTO> products = new ArrayList<>();
+        storeService.findAllByIsProvide(false).forEach(storeDTO -> {
+            products.addAll(storeDTO.getProducts());
+        });
+        for (ProductDTO product : products) {
+            if (product.getId().equals(id)) {
+                return product;
+            }
+        }
+        return null;
+    }
+
+    @Override
     public Integer countProductsProviders() {
         List<ProductDTO> products = new ArrayList<>();
         storeService.findAllByIsProvide(true).forEach(storeDTO -> {

@@ -50,7 +50,7 @@
                     <div class="form-group col-md-6">
                         <label class="custom-label">Дата рождения</label>
                         <input id="date_birth" type="date" name="date_birth" class="form-control"
-                               value="<#if employees?has_content>${employees.dateBirth}</#if>">
+                               value="<#if employees?has_content && employees.dateBirth?has_content>${employees.dateBirth}</#if>">
                     </div>
                 </div>
                 <div class="form-row">

@@ -17,4 +17,5 @@ public interface ProductService extends CRUDService<ProductDTO, Long> {
     Integer countProductsCompany();
     Integer countProductByUserId(Long id);
     Long count();
+    ProductDTO findAllProductsCompanyAndId(Long id);
 }

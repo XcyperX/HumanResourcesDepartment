@@ -16,9 +16,6 @@ public class OrderHistory implements Serializable {
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
 
-    //    @ManyToOne
-//    @JoinColumn(name = "customer_id", referencedColumnName = "id")
-//    private Customer customer;
     @OneToOne(cascade = {CascadeType.ALL})
     @JoinColumn(name = "customer_id", referencedColumnName = "id")
     private Customer customer;
@@ -30,10 +27,6 @@ public class OrderHistory implements Serializable {
     @ManyToOne
     @JoinColumn(name = "provider_id", referencedColumnName = "id")
     private User provider;
-
-//    @ManyToMany(fetch = FetchType.LAZY, cascade = {CascadeType.MERGE})
-//    @JoinTable(name = "order_product", joinColumns = {@JoinColumn(name = "order_id")}, inverseJoinColumns = {@JoinColumn(name = "product_id")})
-//    private List<Product> productList = new ArrayList<>();
 
     @OneToMany(mappedBy = "orderHistory", cascade = CascadeType.ALL)
     private List<OrderProductInfo> orderProductInfos = new ArrayList<>();

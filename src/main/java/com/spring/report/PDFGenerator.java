@@ -1,36 +1,63 @@
-//package com.spring.report;
-//
-//import com.itextpdf.text.*;
-//import com.itextpdf.text.pdf.BaseFont;
-//import com.itextpdf.text.pdf.PdfPCell;
-//import com.itextpdf.text.pdf.PdfPTable;
-//import com.itextpdf.text.pdf.PdfWriter;
-//import com.spring.DTO.*;
-//import com.spring.model.User;
-//
-//import java.io.ByteArrayInputStream;
-//import java.io.ByteArrayOutputStream;
-//import java.io.IOException;
-//import java.util.List;
-//import java.util.stream.Stream;
-//
-//public class PDFGenerator {
-//    private static BaseFont baseFont = loadBaseFont();
-//
-//    private static Font fontHeader = new Font(baseFont, 16, Font.BOLD, BaseColor.BLACK);
-//
-//    private static Font fontNormal = new Font(baseFont, 10, Font.NORMAL, BaseColor.BLACK);
-//
-//    private static BaseFont loadBaseFont() {
-//        BaseFont baseFont = null;
-//        try {
-//            baseFont = BaseFont.createFont("asset/times-roman.ttf", BaseFont.IDENTITY_H, BaseFont.EMBEDDED);
-//        } catch (DocumentException | IOException e) {
-//            e.printStackTrace();
-//        }
-//        return baseFont;
-//    }
-//
+package com.spring.report;
+
+import com.itextpdf.text.*;
+import com.itextpdf.text.pdf.BaseFont;
+import com.itextpdf.text.pdf.PdfPCell;
+import com.itextpdf.text.pdf.PdfPTable;
+import com.itextpdf.text.pdf.PdfWriter;
+import com.spring.DTO.*;
+import com.spring.model.Manufacturer;
+import com.spring.model.User;
+import com.spring.service.*;
+import lombok.RequiredArgsConstructor;
+import org.jfree.chart.ChartFactory;
+import org.jfree.chart.JFreeChart;
+import org.jfree.data.category.CategoryDataset;
+import org.jfree.data.category.DefaultCategoryDataset;
+import org.jfree.data.general.DefaultPieDataset;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.stereotype.Component;
+
+import java.awt.image.BufferedImage;
+import java.io.ByteArrayInputStream;
+import java.io.ByteArrayOutputStream;
+import java.io.IOException;
+import java.time.LocalDate;
+import java.util.ArrayList;
+import java.util.List;
+import java.util.stream.Stream;
+
+//@Component
+public class PDFGenerator {
+//    @Autowired
+//    private StoreService storeService;
+//    @Autowired
+//    private ManufacturerService manufacturerService;
+//    @Autowired
+//    private PositionService positionService;
+//    @Autowired
+//    private CategoriesService categoriesService;
+//    @Autowired
+//    private PositionNameService positionNameService;
+//    @Autowired
+//    private SubdivisionService subdivisionService;
+
+    private static BaseFont baseFont = loadBaseFont();
+
+    private static Font fontHeader = new Font(baseFont, 16, Font.BOLD, BaseColor.BLACK);
+
+    private static Font fontNormal = new Font(baseFont, 10, Font.NORMAL, BaseColor.BLACK);
+
+    private static BaseFont loadBaseFont() {
+        BaseFont baseFont = null;
+        try {
+            baseFont = BaseFont.createFont("asset/times-roman.ttf", BaseFont.IDENTITY_H, BaseFont.EMBEDDED);
+        } catch (DocumentException | IOException e) {
+            e.printStackTrace();
+        }
+        return baseFont;
+    }
+
 //    public ByteArrayInputStream PDFReport(List<ProductDTO> productDTOList, User user, List<PositionNameDTO> positionNameDTOList, List<CategoriesDTO> categoriesDTOList) {
 //        Document document = new Document();
 //        ByteArrayOutputStream out = new ByteArrayOutputStream();
@@ -95,59 +122,94 @@
 //        }
 //        return new ByteArrayInputStream(out.toByteArray());
 //    }
-//
-//    public ByteArrayInputStream PDFReportAgreement(List<ProductDTO> productDTOList, User user, List<AgreementDataDTO> agreementDataDTOS, List<CategoriesDTO> categoriesDTOList) {
-//        Document document = new Document();
-//        ByteArrayOutputStream out = new ByteArrayOutputStream();
-//
-//        try {
-//            PdfWriter.getInstance(document, out);
-//            document.open();
-//            document.setPageSize(PageSize.A4.rotate());
-//            document.newPage();
-//
-//            Paragraph para = new Paragraph("Договор подряда", fontHeader);
-//            para.setAlignment(Element.ALIGN_CENTER);
-//            document.add(para);
-//            document.add(Chunk.NEWLINE);
-//
-//            PdfPTable table = new PdfPTable(10);
-//            Stream.of("Имя", "Фамилия", "Телефон", "Подразделение", "Дата начала", "Дата окончания", "Сумма по договору", "Оплата", "Код вычета", "Сумма вычета")
-//                    .forEach(headerTitle -> {
-//                        PdfPCell header = new PdfPCell();
-//                        header.setBackgroundColor(BaseColor.LIGHT_GRAY);
-//                        header.setHorizontalAlignment(Element.ALIGN_CENTER);
-//                        header.setBorderWidth(2);
-//                        header.setPhrase(new Phrase(headerTitle, fontNormal));
-//                        table.addCell(header);
-//                    });
-//
-//            for (AgreementDataDTO agreementDataDTO : agreementDataDTOS) {
-//                ProductDTO productDTO = productDTOList.stream().filter(i -> i.getId().equals(agreementDataDTO.getEmployeeId())).findFirst().orElseThrow();
-//                table.addCell(new Phrase(productDTO.getFirstName(), fontNormal));
-//                table.addCell(new Phrase(productDTO.getLastName(), fontNormal));
-//                table.addCell(new Phrase(productDTO.getPhone(), fontNormal));
-//                table.addCell(new Phrase(categoriesDTOList.stream().filter(i -> i.getId().equals(productDTO.getSubdivisionId())).findFirst().orElseThrow().getName(), fontNormal));
-//                table.addCell(new Phrase(agreementDataDTO.getStart().toString(), fontNormal));
-//                table.addCell(new Phrase(agreementDataDTO.getFinish().toString(), fontNormal));
-//                table.addCell(new Phrase(agreementDataDTO.getPrice().toString(), fontNormal));
-//                table.addCell(new Phrase(agreementDataDTO.getPayment(), fontNormal));
-//                table.addCell(new Phrase(agreementDataDTO.getDeductionCode(), fontNormal));
-//                table.addCell(new Phrase(agreementDataDTO.getSumTax().toString(), fontNormal));
-//            }
-//
+
+    public ByteArrayInputStream PDFReportSales(List<OrderHistoryDTO> orderHistoryDTOS, User user, List<StoreDTO> storeDTOS,
+                                               List<ManufacturerDTO> manufacturerDTOS, List<CategoriesDTO> categoriesDTOS) {
+        Document document = new Document();
+        ByteArrayOutputStream out = new ByteArrayOutputStream();
+        PdfWriter writer = null;
+
+        try {
+            writer = PdfWriter.getInstance(document, out);
+            document.open();
+            document.setPageSize(PageSize.A4.rotate());
+            document.newPage();
+
+            Paragraph para = new Paragraph("Отчет по продажам", fontHeader);
+            para.setAlignment(Element.ALIGN_CENTER);
+            document.add(para);
+            document.add(Chunk.NEWLINE);
+
+            PdfPTable table = new PdfPTable(6);
+            Stream.of("Название", "Склад", "Категория", "Производитель", "Количество", "Цена")
+                    .forEach(headerTitle -> {
+                        PdfPCell header = new PdfPCell();
+                        header.setBackgroundColor(BaseColor.LIGHT_GRAY);
+                        header.setHorizontalAlignment(Element.ALIGN_CENTER);
+                        header.setBorderWidth(2);
+                        header.setPhrase(new Phrase(headerTitle, fontNormal));
+                        table.addCell(header);
+                    });
+
+            float sum = 0;
+
+            for (OrderHistoryDTO orderHistoryDTO : orderHistoryDTOS) {
+                for (OrderProductInfoDTO orderProductInfoDTO : orderHistoryDTO.getOrderProductInfoDTOS()) {
+                    table.addCell(new Phrase(orderProductInfoDTO.getProduct().getName(), fontNormal));
+                    table.addCell(new Phrase(storeDTOS.stream().filter(i -> i.getId().equals(orderProductInfoDTO.getProduct().getStoreId())).findFirst().get().getName(), fontNormal));
+                    table.addCell(new Phrase(categoriesDTOS.stream().filter(i -> i.getId().equals(orderProductInfoDTO.getProduct().getCategoriesId())).findFirst().get().getName(), fontNormal));
+                    table.addCell(new Phrase(manufacturerDTOS.stream().filter(i -> i.getId().equals(orderProductInfoDTO.getProduct().getManufacturerId())).findFirst().get().getName(), fontNormal));
+                    table.addCell(new Phrase(orderProductInfoDTO.getAmount().toString(), fontNormal));
+                    table.addCell(new Phrase(String.valueOf(orderProductInfoDTO.getAmount() * orderProductInfoDTO.getProduct().getPrice()), fontNormal));
+                    sum += (orderProductInfoDTO.getAmount() * orderProductInfoDTO.getProduct().getPrice());
+                }
+            }
+
+
 //            table.setTotalWidth(PageSize.A4.rotate().getWidth());
 //            table.setLockedWidth(true);
-//            document.add(table);
-//
-//            Paragraph manager = new Paragraph("Отчет сформировал: " + user.getName(), fontHeader);
-//            document.add(manager);
-//            document.add(Chunk.NEWLINE);
-//
-//            document.close();
-//        } catch (DocumentException e) {
-//            e.printStackTrace();
-//        }
-//        return new ByteArrayInputStream(out.toByteArray());
-//    }
-//}
+            document.add(table);
+
+            Paragraph endSales = new Paragraph("Продажи на сумму: " + sum, fontHeader);
+            document.add(endSales);
+
+            JFreeChart chart = createChart(orderHistoryDTOS, categoriesDTOS);
+            BufferedImage bufferedImage = chart.createBufferedImage(500, 500);
+            Image image = Image.getInstance(writer, bufferedImage, 1.0f);
+            document.add(image);
+
+            Paragraph userParag = new Paragraph("Отчет сформировал: " + user.getLastName() + " " + user.getFirstName() +
+                    " " + user.getSecondName(), fontHeader);
+            Paragraph dateParag = new Paragraph("Дата формирования отчета: " + LocalDate.now(), fontHeader);
+            document.add(userParag);
+            document.add(dateParag);
+            document.add(Chunk.NEWLINE);
+
+            document.close();
+        } catch (DocumentException | IOException e) {
+            e.printStackTrace();
+        }
+        return new ByteArrayInputStream(out.toByteArray());
+    }
+
+    private JFreeChart createChart(List<OrderHistoryDTO> orderHistoryDTOS, List<CategoriesDTO> categoriesDTOS) {
+        DefaultPieDataset dataset = new DefaultPieDataset();
+
+        for (CategoriesDTO categoriesDTO : categoriesDTOS) {
+            Float number = 0F;
+            for (OrderHistoryDTO orderHistoryDTO : orderHistoryDTOS) {
+                for (OrderProductInfoDTO orderProductInfoDTO : orderHistoryDTO.getOrderProductInfoDTOS()) {
+                    if (orderProductInfoDTO.getProduct().getCategoriesId().equals(categoriesDTO.getId())) {
+                        number += orderProductInfoDTO.getProduct().getPrice();
+                    }
+                }
+            }
+            if (number != 0) {
+                dataset.setValue(categoriesDTO.getName(), number);
+            }
+        }
+
+        return ChartFactory.createPieChart("Продажи по категориям", dataset, true, true,
+                false);
+    }
+}

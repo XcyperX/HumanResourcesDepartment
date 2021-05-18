@@ -9,5 +9,6 @@ import java.util.List;
 public interface OrderHistoryService extends CRUDService<OrderHistoryDTO, Long> {
     List<OrderHistoryDTO> getListByCustomer();
     List<OrderHistoryDTO> getListByProvider();
+    void addProductsInStock(Long orderId, Long stockId);
 //    List<OrderHistoryDTO> findAll();
 }

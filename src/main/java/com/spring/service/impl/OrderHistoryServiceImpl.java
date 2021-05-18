@@ -6,12 +6,14 @@ import com.spring.mapper.OrderHistoryMapper;
 import com.spring.model.OrderHistory;
 import com.spring.model.Product;
 import com.spring.model.Role;
+import com.spring.model.Store;
 import com.spring.repository.OrderHistoryRepository;
 import com.spring.repository.ProductRepository;
 import com.spring.service.OrderHistoryService;
 import lombok.RequiredArgsConstructor;
 import ma.glasnost.orika.MapperFacade;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.security.core.parameters.P;
 import org.springframework.stereotype.Service;
 
 import java.util.ArrayList;
@@ -41,15 +43,6 @@ public class OrderHistoryServiceImpl implements OrderHistoryService {
     @Override
     public OrderHistoryDTO save(OrderHistoryDTO orderHistoryDTO) {
         Float sum = 0F;
-//        List<ProductDTO> products = orderHistoryDTO.getProductList();
-//        products.forEach(productDTO -> {
-//            ProductDTO productLegacy = productService.getById(productDTO.getId());
-//            productLegacy.setAmount(productLegacy.getAmount() - 1);
-//            if (productLegacy.getAmount() < 0) {
-//                throw new RuntimeException("Ошибка, товар закончился!");
-//            }
-//            productRepository.save(mapperFacade.map(productLegacy, Product.class));
-//        });
         for (int i = 0; i < orderHistoryDTO.getOrderProductInfoDTOS().size(); i++) {
             sum += orderHistoryDTO.getOrderProductInfoDTOS().get(i).getAmount() * productService.getById(orderHistoryDTO.getOrderProductInfoDTOS().get(i).getProduct().getId()).getPrice();
         }
@@ -84,5 +77,31 @@ public class OrderHistoryServiceImpl implements OrderHistoryService {
         orderHistories.addAll(orderHistoryRepository.findAllByUserRole(Role.STOREKEEPER));
 //        List<OrderHistory> orderHistory = mapperFacade.mapAsList(orderHistories, OrderHistory.class);
         return mapperFacade.mapAsList(orderHistories, OrderHistoryDTO.class);
+    }
+
+    @Override
+    public void addProductsInStock(Long orderId, Long stockId) {
+        if (orderHistoryRepository.findById(orderId).isEmpty()) {
+            throw new RuntimeException("Ошибка, нет такого заказа!");
+        }
+        OrderHistory orderHistory = orderHistoryRepository.findById(orderId).get();
+        orderHistory.getOrderProductInfos().forEach(orderProductInfo -> {
+            Product product = productRepository.findById(orderProductInfo.getProduct().getId()).get();
+            Product test = new Product();
+            test.setStore(new Store(stockId));
+            test.setPrice(product.getPrice());
+            test.setAmount(orderProductInfo.getAmount());
+            test.setOrderProductInfos(null);
+            test.setCategories(product.getCategories());
+            test.setDescription(product.getDescription());
+            test.setManufacturer(product.getManufacturer());
+            test.setName(product.getName());
+            test.setSupplies(product.getSupplies());
+            test.setUrlPhoto(product.getUrlPhoto());
+            test.setUser(product.getUser());
+
+            productRepository.save(test);
+        });
+        orderHistoryRepository.deleteById(orderId);
     }
 }

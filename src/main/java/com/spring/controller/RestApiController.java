@@ -118,12 +118,6 @@ public class RestApiController {
         return ResponseEntity.ok(productService.getById(id));
     }
 
-
-//    @PostMapping("/status")
-//    public StatusDTO createService(@RequestBody @Valid StatusDTO statusDTO) {
-//        return statusService.save(statusDTO);
-//    }
-
     @PostMapping("/tables")
     public SuppliesDTO createTable(@RequestBody @Valid SuppliesDTO suppliesDTO) {
         return suppliesService.save(suppliesDTO);
@@ -205,4 +199,8 @@ public class RestApiController {
         return ResponseEntity.ok(orderHistoryService.findAll());
     }
 
+    @PostMapping("add/products/orders/{orderId}/stock/{stockId}")
+    public void addProductsInStockByOrder(@PathVariable("orderId") Long orderId, @PathVariable("stockId") Long stockId) {
+        orderHistoryService.addProductsInStock(orderId, stockId);
+    }
 }

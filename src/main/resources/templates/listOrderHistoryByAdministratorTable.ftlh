@@ -26,6 +26,10 @@
                     <input id="date_start" type="date" name="date_start" class="form-control mb-1">
                     <input id="date_final" type="date" name="date_final" class="form-control">
                 </div>
+                <div class="row mb-2">
+                    <a type="button" href="/pdf/request/sales" class="btn btn-primary btn-block mt-3 mb-3">Отчет по продажам
+                    </a>
+                </div>
             </div>
         </div>
         <div class="col-sm-10">
