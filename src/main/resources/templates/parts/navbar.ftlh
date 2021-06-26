@@ -75,6 +75,15 @@
                 <li class="nav-item">
                     <a class="nav-link" href="/admin/providers/products">Поставщики</a>
                 </li>
+                <li class="nav-item dropdown">
+                    <a class="nav-link dropdown-toggle" data-toggle="dropdown" href="#">
+                        Поставки
+                    </a>
+                    <ul class="dropdown-menu">
+                        <li><a class="dropdown-item" href="/admin/products/deliveries">Заказы <span id="productsInDeliveries" class="badge badge-primary"></span></a></li>
+                        <li><a class="dropdown-item" href="/admin/products/deliveries/order">Поставки</a></li>
+                    </ul>
+                </li>
             <#elseif isProvider>
                 <li class="nav-item">
                     <a class="nav-link" href="/provider/table/product">Продукты</a>

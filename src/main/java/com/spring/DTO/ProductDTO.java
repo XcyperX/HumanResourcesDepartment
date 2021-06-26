@@ -43,3 +43,4 @@ public class ProductDTO implements Serializable {
 
     private Float price;
 }
+

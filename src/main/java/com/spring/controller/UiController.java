@@ -99,7 +99,7 @@ public class UiController {
         model.addAttribute("stores", storeService.findAllByUsersId(user.getId()));
         model.addAttribute("categories", categoriesService.findAll());
         model.addAttribute("manufacturer", manufacturerService.findAll());
-        model.addAttribute("products", productService.findByParams(null, user.getId(), store_id, manufacturer_id, categories_id, nameProduct));
+        model.addAttribute("products", productService.findByParams(null, user, store_id, manufacturer_id, categories_id, nameProduct));
         model.addAttribute("countAllProduct", productService.countProductByUserId(user.getId()));
         return "listProductsByProviderTable";
     }
@@ -114,7 +114,7 @@ public class UiController {
         model.addAttribute("stores", storeService.findAllByUsersId(user.getId()));
         model.addAttribute("categories", categoriesService.findAll());
         model.addAttribute("manufacturer", manufacturerService.findAll());
-        model.addAttribute("products", productService.findByParams(null, user.getId(), store_id, manufacturer_id, categories_id, nameProduct));
+        model.addAttribute("products", productService.findByParams(null, user, store_id, manufacturer_id, categories_id, nameProduct));
         model.addAttribute("countAllProduct", productService.countProductByUserId(user.getId()));
         return "listProductsByProviderCard";
     }
@@ -131,7 +131,7 @@ public class UiController {
         model.addAttribute("stores", storeService.findAllByIsProvide(true));
         model.addAttribute("categories", categoriesService.findAll());
         model.addAttribute("manufacturer", manufacturerService.findAll());
-        model.addAttribute("products", productService.findByParams(productService.findAllProductsProviders(), providers_id, 0L, manufacturer_id, categories_id, nameProduct));
+        model.addAttribute("products", productService.findByParams(productService.findAllProductsProviders(), new User(providers_id), 0L, manufacturer_id, categories_id, nameProduct));
         model.addAttribute("countAllProduct", productService.countProductsProviders());
         return "listProductsProvidersByAdministratorTable";
     }
@@ -275,18 +275,18 @@ public class UiController {
                 .body(new InputStreamResource(bis));
     }
 //
-//    @GetMapping(value = "/pdf/request/agreement", produces = MediaType.APPLICATION_PDF_VALUE)
-//    public ResponseEntity<InputStreamResource> profitReport(@AuthenticationPrincipal User user){
-//        PDFGenerator pdfGenerator = new PDFGenerator();
-//        ByteArrayInputStream bis = pdfGenerator.PDFReportAgreement(employeeService.findAll(), user, agreementDataService.findAll(), categoriesService.findAll());
-//
-//        HttpHeaders headers = new HttpHeaders();
-//        headers.add("Content-Disposition", "inline; filename=Договор подряда.pdf");
-//
-//        return ResponseEntity
-//                .ok()
-//                .headers(headers)
-//                .contentType(MediaType.APPLICATION_PDF)
-//                .body(new InputStreamResource(bis));
-//    }
+    @GetMapping(value = "/pdf/request/users", produces = MediaType.APPLICATION_PDF_VALUE)
+    public ResponseEntity<InputStreamResource> profitReport(@AuthenticationPrincipal User user){
+        PDFGenerator pdfGenerator = new PDFGenerator();
+        ByteArrayInputStream bis = pdfGenerator.PDFReport(user, userService.findAllEmployee(), positionNameService.findAll(), subdivisionService.findAll());
+
+        HttpHeaders headers = new HttpHeaders();
+        headers.add("Content-Disposition", "inline; filename=Отчет по сотрудникам.pdf");
+
+        return ResponseEntity
+                .ok()
+                .headers(headers)
+                .contentType(MediaType.APPLICATION_PDF)
+                .body(new InputStreamResource(bis));
+    }
 }

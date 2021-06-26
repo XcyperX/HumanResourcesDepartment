@@ -702,7 +702,6 @@ getAmountProductInBasket = () => {
 //     } catch (e) {
 //         console.log("Нет товаров");
 //     }
-//
 // }
 
 let deliveriesUsers = {

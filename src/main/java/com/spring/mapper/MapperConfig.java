@@ -82,10 +82,6 @@ public class MapperConfig extends ConfigurableMapper {
                 .byDefault()
                 .register();
 
-//        factory.classMap(Status.class, StatusDTO.class)
-//                .byDefault()
-//                .register();
-
         factory.classMap(Product.class, ProductDTO.class)
                 .field("categories.id", "categoriesId")
                 .field("manufacturer.id", "manufacturerId")
@@ -115,18 +111,6 @@ public class MapperConfig extends ConfigurableMapper {
                 .customize(new CustomMapper<>() {
                     @Override
                     public void mapAtoB(OrderHistory orderHistory, OrderHistoryDTO orderHistoryDTO, MappingContext context) {
-//                        if (orderHistory.getProductList() != null) {
-//                            orderHistory.getProductList().forEach(product -> {
-//                                product.setStore(null);
-//                                product.setSupplies(null);
-//                                product.setUser(null);
-//                                product.setOrderHistories(null);
-//                            });
-//                            if (orderHistoryDTO.getCustomer() != null) {
-//                                orderHistoryDTO.getCustomer().setOrderHistories(null);
-//                            }
-//                            orderHistoryDTO.setProductList(mapperFacade.mapAsList(orderHistory.getProductList(), ProductDTO.class));
-//                        }
                         OrderHistory test = new OrderHistory();
                         test.setId(orderHistory.getId());
 
@@ -181,46 +165,6 @@ public class MapperConfig extends ConfigurableMapper {
 
         factory.classMap(Customer.class, CustomerDTO.class)
                 .byDefault()
-//                .customize(new CustomMapper<>() {
-//                    @Override
-//                    public void mapAtoB(Customer customer, CustomerDTO customerDTO, MappingContext context) {
-//                        if (customer.getOrderHistories() != null) {
-//                            List<Product> products = new ArrayList<>();
-//                            customer.getOrderHistories().forEach(orderHistory -> {
-//                                orderHistory.getProductList().forEach(product -> {
-//                                    product.setUser(null);
-//                                    product.setSupplies(null);
-//                                    product.setOrderHistories(null);
-//                                    product.setStore(null);
-//                                    products.add(product);
-//                                });
-//                                orderHistory.setProductList(mapperFacade.mapAsList(products, Product.class));
-//                                orderHistory.setCustomer(mapperFacade.map(customer, Customer.class));
-//                                products.clear();
-//                            });
-////                            customerDTO.getOrderHistories().forEach(orderHistoryDTO -> {
-////                                orderHistoryDTO.setCustomerId(customer.getId());
-////                            });
-//                            customerDTO.setOrderHistories(mapperFacade.mapAsList(customer.getOrderHistories(), OrderHistoryDTO.class));
-//                        }
-//                        super.mapAtoB(customer, customerDTO, context);
-//                    }
-//
-//                    @Override
-//                    public void mapBtoA(CustomerDTO customerDTO, Customer customer, MappingContext context) {
-//                        if (customerDTO.getOrderHistories() != null) {
-//                            String idCustomer = UUID.randomUUID().toString();
-//                            customerDTO.getOrderHistories().forEach(orderHistoryDTO -> {
-//                                orderHistoryDTO.setCustomerId(idCustomer);
-//                            });
-//                            customer.setOrderHistories(mapperFacade.mapAsList(customerDTO.getOrderHistories(), OrderHistory.class));
-//                            for (OrderHistory orderHistory : customer.getOrderHistories()) {
-//                                orderHistory.setCustomer(new Customer());
-//                            }
-//                        }
-//                        super.mapBtoA(customerDTO, customer, context);
-//                    }
-//                })
                 .register();
 
         factory.classMap(Categories.class, CategoriesDTO.class)
@@ -231,7 +175,6 @@ public class MapperConfig extends ConfigurableMapper {
                 .byDefault()
                 .register();
 
-        //    TODO хуйня какая-то
         factory.classMap(OrderProductInfo.class, OrderProductInfoDTO.class)
                 .field("orderHistory.id", "orderHistoryId")
                 .byDefault()

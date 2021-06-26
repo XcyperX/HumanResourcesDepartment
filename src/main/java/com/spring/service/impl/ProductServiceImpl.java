@@ -2,6 +2,8 @@ package com.spring.service.impl;
 
 import com.spring.DTO.ProductDTO;
 import com.spring.model.Product;
+import com.spring.model.Role;
+import com.spring.model.User;
 import com.spring.repository.ProductRepository;
 import com.spring.service.ProductService;
 import com.spring.service.StoreService;
@@ -122,12 +124,16 @@ public class ProductServiceImpl implements ProductService {
     }
 
     @Override
-    public List<ProductDTO> findByParams(List<ProductDTO> list, Long user_id, Long store_id, Long manufacturer_id, Long categories_id, String name) {
-//        List<ProductDTO> productFiltered = mapperFacade.mapAsList(productRepository.findAllByUserId(user_id), ProductDTO.class);
+    public List<ProductDTO> findByParams(List<ProductDTO> list, User user, Long store_id, Long manufacturer_id, Long categories_id, String name) {
         List<ProductDTO> productFiltered = list;
-        if (user_id != null) {
-            productFiltered = mapperFacade.mapAsList(productRepository.findAllByUserId(user_id), ProductDTO.class);
+        if (user != null && user.getId() != null && user.getId() != 0) {
+            productFiltered = mapperFacade.mapAsList(productRepository.findAllByUserId(user.getId()), ProductDTO.class);
+            if (user.getRole() != null && !user.getRole().equals(Role.STOREKEEPER))
+            productFiltered = mapperFacade.mapAsList(productRepository.findAllByUserId(user.getId()), ProductDTO.class);
         }
+//        if (user.getId() != null) {
+//            productFiltered = mapperFacade.mapAsList(productRepository.findAllByUserId(user.getId()), ProductDTO.class);
+//        }
         if (store_id != 0) {
             productFiltered = productFiltered.stream().filter(productDTO -> productDTO.getStoreId().equals(store_id)).collect(Collectors.toList());
         }

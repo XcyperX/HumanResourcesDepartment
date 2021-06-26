@@ -58,70 +58,85 @@ public class PDFGenerator {
         return baseFont;
     }
 
-//    public ByteArrayInputStream PDFReport(List<ProductDTO> productDTOList, User user, List<PositionNameDTO> positionNameDTOList, List<CategoriesDTO> categoriesDTOList) {
-//        Document document = new Document();
-//        ByteArrayOutputStream out = new ByteArrayOutputStream();
-//
-//        try {
-//            PdfWriter.getInstance(document, out);
-//            document.open();
-//            document.setPageSize(PageSize.A4.rotate());
-//            document.newPage();
-//
-//            Paragraph para = new Paragraph("Список сотрудников", fontHeader);
-//            para.setAlignment(Element.ALIGN_CENTER);
-//            document.add(para);
-//            document.add(Chunk.NEWLINE);
-//
-//            PdfPTable table = new PdfPTable(13);
-//            Stream.of("Имя", "Фамилия", "Адресс", "Телефон", "Email", "Паспорт", "Дата рождения", "Пол", "Статус", "Должность", "Дата приема", "Дата увольнения", "Подразделение")
-//                    .forEach(headerTitle -> {
-//                        PdfPCell header = new PdfPCell();
-//                        header.setBackgroundColor(BaseColor.LIGHT_GRAY);
-//                        header.setHorizontalAlignment(Element.ALIGN_CENTER);
-//                        header.setBorderWidth(2);
-//                        header.setPhrase(new Phrase(headerTitle, fontNormal));
-//                        table.addCell(header);
-//                    });
-//
-//            for (ProductDTO productDTO : productDTOList) {
-//                table.addCell(new Phrase(productDTO.getFirstName(), fontNormal));
-//                table.addCell(new Phrase(productDTO.getLastName(), fontNormal));
-//                table.addCell(new Phrase(productDTO.getAddress().toString(), fontNormal));
-//                table.addCell(new Phrase(productDTO.getPhone(), fontNormal));
-//                table.addCell(new Phrase(productDTO.getEmail(), fontNormal));
-//                table.addCell(new Phrase(productDTO.getPassport().toString(), fontNormal));
-//                table.addCell(new Phrase(productDTO.getDateBirth().toString(), fontNormal));
-//                table.addCell(new Phrase(productDTO.getGender(), fontNormal));
-//                table.addCell(new Phrase(productDTO.getStatus(), fontNormal));
-//                for (PositionNameDTO positionNameDTO : positionNameDTOList) {
-//                    if (positionNameDTO.getId().equals(productDTO.getPosition().getPositionNameId())) {
-//                        table.addCell(new Phrase(positionNameDTO.getName(), fontNormal));
-//                    }
-//                }
-//                table.addCell(new Phrase(productDTO.getPosition().getDateReceipt() != null ? productDTO.getPosition().getDateReceipt().toString() : "null", fontNormal));
-//                table.addCell(new Phrase(productDTO.getPosition().getDateDismissal() != null ? productDTO.getPosition().getDateDismissal().toString() : "null", fontNormal));
-//                for (CategoriesDTO categoriesDTO : categoriesDTOList) {
-//                    if (categoriesDTO.getId().equals(productDTO.getSubdivisionId())) {
-//                        table.addCell(new Phrase(categoriesDTO.getName(), fontNormal));
-//                    }
-//                }
-//            }
-//
-//            table.setTotalWidth(PageSize.A4.rotate().getWidth());
-//            table.setLockedWidth(true);
-//            document.add(table);
-//
-//            Paragraph manager = new Paragraph("Отчет сформировал: " + user.getName(), fontHeader);
-//            document.add(manager);
-//            document.add(Chunk.NEWLINE);
-//
-//            document.close();
-//        } catch (DocumentException e) {
-//            e.printStackTrace();
-//        }
-//        return new ByteArrayInputStream(out.toByteArray());
-//    }
+    public ByteArrayInputStream PDFReport(User user, List<UserDTO> userDTOList, List<PositionNameDTO> positionNameDTOList, List<SubdivisionDTO> subdivisionDTOList) {
+        Document document = new Document();
+        ByteArrayOutputStream out = new ByteArrayOutputStream();
+
+        try {
+            PdfWriter.getInstance(document, out);
+            document.open();
+            document.setPageSize(PageSize.A4.rotate());
+            document.newPage();
+
+            Paragraph para = new Paragraph("Список сотрудников", fontHeader);
+            para.setAlignment(Element.ALIGN_CENTER);
+            document.add(para);
+            document.add(Chunk.NEWLINE);
+
+            PdfPTable table = new PdfPTable(12);
+            Stream.of("Фамилия", "Имя", "Отчество", "Пол", "Адресс", "Телефон", "Email", "Паспорт", "Должность", "Дата приема", "Дата увольнения", "Подразделение")
+                    .forEach(headerTitle -> {
+                        PdfPCell header = new PdfPCell();
+                        header.setBackgroundColor(BaseColor.LIGHT_GRAY);
+                        header.setHorizontalAlignment(Element.ALIGN_CENTER);
+                        header.setBorderWidth(2);
+                        header.setPhrase(new Phrase(headerTitle, fontNormal));
+                        table.addCell(header);
+                    });
+
+            for (UserDTO userDTO : userDTOList) {
+                table.addCell(new Phrase(userDTO.getLastName(), fontNormal));
+                table.addCell(new Phrase(userDTO.getFirstName(), fontNormal));
+                table.addCell(new Phrase(userDTO.getSecondName(), fontNormal));
+                table.addCell(new Phrase(userDTO.getGender(), fontNormal));
+                table.addCell(new Phrase(userDTO.getAddress().toString(), fontNormal));
+                table.addCell(new Phrase(userDTO.getPhone(), fontNormal));
+                table.addCell(new Phrase(userDTO.getEmail(), fontNormal));
+                table.addCell(new Phrase(userDTO.getPassport() != null ? userDTO.getPassport().toString() : "null", fontNormal));
+                if (userDTO.getPosition() != null) {
+                    for (PositionNameDTO positionNameDTO : positionNameDTOList) {
+                        if (positionNameDTO.getId().equals(userDTO.getPosition().getPositionNameId())) {
+                            table.addCell(new Phrase(positionNameDTO.getName(), fontNormal));
+                        }
+                    }
+                } else {
+                    table.addCell(new Phrase("null", fontNormal));
+                }
+                if (userDTO.getPosition() != null) {
+                    table.addCell(new Phrase(userDTO.getPosition().getDateReceipt() != null ? userDTO.getPosition().getDateReceipt().toString() : "null", fontNormal));
+                    table.addCell(new Phrase(userDTO.getPosition().getDateDismissal() != null ? userDTO.getPosition().getDateDismissal().toString() : "null", fontNormal));
+                } else {
+                    table.addCell(new Phrase("null", fontNormal));
+                    table.addCell(new Phrase("null", fontNormal));
+                }
+                if (userDTO.getSubdivisionId() != null) {
+                    for (SubdivisionDTO subdivisionDTO : subdivisionDTOList) {
+                        if (subdivisionDTO.getId().equals(userDTO.getSubdivisionId())) {
+                            table.addCell(new Phrase(subdivisionDTO.getName(), fontNormal));
+                        }
+                    }
+                } else {
+                    table.addCell(new Phrase("null", fontNormal));
+                }
+            }
+
+            table.setTotalWidth(PageSize.A4.rotate().getWidth());
+            table.setLockedWidth(true);
+            document.add(table);
+
+            Paragraph userParag = new Paragraph("Отчет сформировал: " + user.getLastName() + " " + user.getFirstName() +
+                    " " + user.getSecondName(), fontHeader);
+            Paragraph dateParag = new Paragraph("Дата формирования отчета: " + LocalDate.now(), fontHeader);
+            document.add(userParag);
+            document.add(dateParag);
+            document.add(Chunk.NEWLINE);
+
+            document.close();
+        } catch (DocumentException e) {
+            e.printStackTrace();
+        }
+        return new ByteArrayInputStream(out.toByteArray());
+    }
 
     public ByteArrayInputStream PDFReportSales(List<OrderHistoryDTO> orderHistoryDTOS, User user, List<StoreDTO> storeDTOS,
                                                List<ManufacturerDTO> manufacturerDTOS, List<CategoriesDTO> categoriesDTOS) {
