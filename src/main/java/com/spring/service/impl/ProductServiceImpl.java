@@ -27,7 +27,7 @@ public class ProductServiceImpl implements ProductService {
     @Override
     public List<ProductDTO> findAll() {
 
-        return convertImage(mapperFacade.mapAsList(productRepository.findAll(), ProductDTO.class));
+        return mapperFacade.mapAsList(productRepository.findAll(), ProductDTO.class);
     }
 
     @Override
@@ -35,9 +35,9 @@ public class ProductServiceImpl implements ProductService {
         if (productRepository.findById(id).isEmpty()) {
             throw new RuntimeException("Ошибка, нет такого продукта!");
         }
-        Product product = productRepository.findById(id).get();
-        product.setBase64Image(Base64.getEncoder().encodeToString(product.getImage()));
-        return mapperFacade.map(product, ProductDTO.class);
+        ProductDTO productDTO = mapperFacade.map(productRepository.findById(id).get(), ProductDTO.class);
+        productDTO.setBase64Image(Base64.getEncoder().encodeToString(productDTO.getImage()));
+        return productDTO;
     }
 
     @Override

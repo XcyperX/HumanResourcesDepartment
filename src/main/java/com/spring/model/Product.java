@@ -18,7 +18,7 @@ public class Product implements Serializable {
     @Column(name = "image_blob")
     private byte[] image;
 
-    private String base64Image;
+//    private String base64Image;
 
     @Column(nullable = false)
     private String name;

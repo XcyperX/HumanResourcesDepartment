@@ -39,7 +39,7 @@ public class OrderHistoryServiceImpl implements OrderHistoryService {
 
     @Override
     public OrderHistoryDTO save(OrderHistoryDTO orderHistoryDTO) {
-        Float sum = 0F;
+        Double sum = 0D;
         for (int i = 0; i < orderHistoryDTO.getOrderProductInfoDTOS().size(); i++) {
             sum += orderHistoryDTO.getOrderProductInfoDTOS().get(i).getAmount() * productService.getById(orderHistoryDTO.getOrderProductInfoDTOS().get(i).getProduct().getId()).getPrice();
         }
@@ -86,6 +86,7 @@ public class OrderHistoryServiceImpl implements OrderHistoryService {
             Product product = productRepository.findById(orderProductInfo.getProduct().getId()).get();
             Product test = new Product();
             test.setId(null);
+            test.setImage(product.getImage());
             test.setStore(new Store(stockId));
             test.setPrice(product.getPrice());
             test.setAmount(orderProductInfo.getAmount());

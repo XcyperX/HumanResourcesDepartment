@@ -41,5 +41,5 @@ public class OrderHistoryDTO implements Serializable {
 
     private String status;
 
-    private Float price;
+    private Double price;
 }

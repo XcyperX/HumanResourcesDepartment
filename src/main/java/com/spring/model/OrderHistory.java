@@ -4,6 +4,7 @@ import lombok.Data;
 
 import javax.persistence.*;
 import java.io.Serializable;
+import java.math.BigInteger;
 import java.time.LocalDate;
 import java.util.ArrayList;
 import java.util.List;
@@ -33,7 +34,7 @@ public class OrderHistory implements Serializable {
 
     private Status status;
 
-    private Float price;
+    private Double price;
 
     private LocalDate dateOrder;
 
