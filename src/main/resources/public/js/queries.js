@@ -433,9 +433,10 @@ createNewOrder = (order) => {
     sendRequest('POST', '/api/new/customer/order', order).then(response => {
         if (response.ok) {
             console.log(response);
-            document.location.reload(true);
+
             alert("Ваш заказ принят! )");
             deleteCookie();
+            document.location.reload(true);
         } else {
             console.log(response);
         }
@@ -993,5 +994,6 @@ deleteCookie = () => {
     setCookie("customerBasket", "", {
         'max-age': -1
     })
-    document.location.href = "http://localhost:8080/products";
+    document.location.reload(true);
+    // document.location.href = "http://localhost:8080/products";
 }
