@@ -15,6 +15,11 @@ public class Product implements Serializable {
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
 
+    @Column(name = "image_blob")
+    private byte[] image;
+
+    private String base64Image;
+
     @Column(nullable = false)
     private String name;
 

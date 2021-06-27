@@ -11,7 +11,9 @@ import lombok.RequiredArgsConstructor;
 import ma.glasnost.orika.MapperFacade;
 import org.springframework.stereotype.Service;
 
+import java.io.IOException;
 import java.util.ArrayList;
+import java.util.Base64;
 import java.util.List;
 import java.util.stream.Collectors;
 
@@ -24,7 +26,8 @@ public class ProductServiceImpl implements ProductService {
 
     @Override
     public List<ProductDTO> findAll() {
-        return mapperFacade.mapAsList(productRepository.findAll(), ProductDTO.class);
+
+        return convertImage(mapperFacade.mapAsList(productRepository.findAll(), ProductDTO.class));
     }
 
     @Override
@@ -32,13 +35,26 @@ public class ProductServiceImpl implements ProductService {
         if (productRepository.findById(id).isEmpty()) {
             throw new RuntimeException("Ошибка, нет такого продукта!");
         }
-        return mapperFacade.map(productRepository.findById(id).get(), ProductDTO.class);
+        Product product = productRepository.findById(id).get();
+        product.setBase64Image(Base64.getEncoder().encodeToString(product.getImage()));
+        return mapperFacade.map(product, ProductDTO.class);
     }
 
     @Override
     public ProductDTO save(ProductDTO productDTO) {
-        Product product = productRepository.save(mapperFacade.map(productDTO, Product.class));
+        Product product = mapperFacade.map(productDTO, Product.class);
+        product.setImage(productDTO.getImage());
+//        product.setBase64Image(Base64.getEncoder().encodeToString(productDTO.getImage()));
+        productRepository.save(product);
         return mapperFacade.map(product, ProductDTO.class);
+    }
+
+    @Override
+    public List<ProductDTO> convertImage(List<ProductDTO> productDTOS) {
+        productDTOS.forEach(productDTO -> {
+            productDTO.setBase64Image(Base64.getEncoder().encodeToString(productDTO.getImage()));
+        });
+        return productDTOS;
     }
 
     @Override
@@ -46,7 +62,9 @@ public class ProductServiceImpl implements ProductService {
         if (productRepository.findById(productDTO.getId()).isEmpty()) {
             throw new RuntimeException("Ошибка, нет такого продукта!");
         }
-        Product product = productRepository.save(mapperFacade.map(productDTO, Product.class));
+        Product product = mapperFacade.map(productDTO, Product.class);
+        product.setImage(productDTO.getImage());
+        productRepository.save(product);
         return mapperFacade.map(product, ProductDTO.class);
     }
 
@@ -60,7 +78,7 @@ public class ProductServiceImpl implements ProductService {
 
     @Override
     public List<ProductDTO> findAllByUserId(Long id) {
-        return mapperFacade.mapAsList(productRepository.findAllByUserId(id), ProductDTO.class);
+        return convertImage(mapperFacade.mapAsList(productRepository.findAllByUserId(id), ProductDTO.class));
     }
 
     @Override
@@ -79,7 +97,7 @@ public class ProductServiceImpl implements ProductService {
         storeService.findAllByIsProvide(true).forEach(storeDTO -> {
             products.addAll(storeDTO.getProducts());
         });
-        return mapperFacade.mapAsList(products, ProductDTO.class);
+        return convertImage(mapperFacade.mapAsList(products, ProductDTO.class));
     }
 
     @Override
@@ -88,7 +106,7 @@ public class ProductServiceImpl implements ProductService {
         storeService.findAllByIsProvide(false).forEach(storeDTO -> {
             products.addAll(storeDTO.getProducts());
         });
-        return mapperFacade.mapAsList(products, ProductDTO.class);
+        return convertImage(mapperFacade.mapAsList(products, ProductDTO.class));
     }
 
     @Override
@@ -146,7 +164,7 @@ public class ProductServiceImpl implements ProductService {
         if (!name.isEmpty()) {
             productFiltered = productFiltered.stream().filter(productDTO -> productDTO.getName().toLowerCase().contains(name.toLowerCase())).collect(Collectors.toList());
         }
-        return productFiltered;
+        return convertImage(productFiltered);
     }
 
     @Override
@@ -157,9 +175,9 @@ public class ProductServiceImpl implements ProductService {
                 products.add(getById(Long.valueOf(p)));
             });
         } else {
-            return products;
+            return convertImage(products);
         }
-        return products;
+        return convertImage(products);
     }
 
     @Override

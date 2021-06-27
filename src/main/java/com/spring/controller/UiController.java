@@ -1,5 +1,7 @@
 package com.spring.controller;
 
+import com.spring.DTO.ProductDTO;
+import com.spring.model.Product;
 import com.spring.model.User;
 import com.spring.report.PDFGenerator;
 import com.spring.service.*;
@@ -18,7 +20,12 @@ import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.RequestParam;
 
+import javax.imageio.ImageIO;
+import java.awt.image.BufferedImage;
 import java.io.ByteArrayInputStream;
+import java.io.IOException;
+import java.util.ArrayList;
+import java.util.Base64;
 import java.util.List;
 
 @Controller
@@ -95,6 +102,7 @@ public class UiController {
                                                @RequestParam(name = "manufacturer_id", defaultValue = "0") Long manufacturer_id,
                                                @RequestParam(name = "categories_id", defaultValue = "0") Long categories_id,
                                                @RequestParam(name = "name", defaultValue = "") String nameProduct) {
+
         model.addAttribute("user", user);
         model.addAttribute("stores", storeService.findAllByUsersId(user.getId()));
         model.addAttribute("categories", categoriesService.findAll());
@@ -110,11 +118,25 @@ public class UiController {
                                       @RequestParam(name = "manufacturer_id", defaultValue = "0") Long manufacturer_id,
                                       @RequestParam(name = "categories_id", defaultValue = "0") Long categories_id,
                                       @RequestParam(name = "name", defaultValue = "") String nameProduct) {
+//        ProductDTO product = productService.getById(1L);
+//        BufferedImage img = null;
+//        try {
+//            img = ImageIO.read(new ByteArrayInputStream(product.getImage()));
+//
+//        } catch (IOException e) {
+//            e.printStackTrace();
+//        }
+//        String base64image = Base64.getEncoder().encodeToString(product.getImage());
+
+//        List<ProductDTO> productDTOS = productService.findByParams(null, user, store_id, manufacturer_id, categories_id, nameProduct);
+//        productDTOS = productService.convertImage(productDTOS);
         model.addAttribute("user", user);
         model.addAttribute("stores", storeService.findAllByUsersId(user.getId()));
         model.addAttribute("categories", categoriesService.findAll());
         model.addAttribute("manufacturer", manufacturerService.findAll());
+
         model.addAttribute("products", productService.findByParams(null, user, store_id, manufacturer_id, categories_id, nameProduct));
+//        model.addAttribute("test", base64image);
         model.addAttribute("countAllProduct", productService.countProductByUserId(user.getId()));
         return "listProductsByProviderCard";
     }
@@ -225,6 +247,7 @@ public class UiController {
                                    @RequestParam(name = "manufacturer_id", defaultValue = "0") Long manufacturer_id,
                                    @RequestParam(name = "categories_id", defaultValue = "0") Long categories_id,
                                    @RequestParam(name = "name", defaultValue = "") String nameProduct) {
+
         model.addAttribute("user", user);
         model.addAttribute("categories", categoriesService.findAll());
         model.addAttribute("manufacturer", manufacturerService.findAll());

@@ -9,7 +9,7 @@
         <div class="col-sm-9">
             <div class="container-fluid">
                 <div id="listProducts" class="row row-cols-1 row-cols-md-4 listProducts">
-<#--                    <@lpc.listPruduct products=products categories=categories/>-->
+                    <@lpc.listPruduct products=products categories=categories/>
                 </div>
             </div>
         </div>

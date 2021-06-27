@@ -67,7 +67,7 @@ public class User implements UserDetails, Serializable {
     @Column(unique = true)
     private String nameFirm;
 
-    @ManyToMany(fetch = FetchType.EAGER, cascade = CascadeType.ALL)
+    @ManyToMany(fetch = FetchType.LAZY, cascade = CascadeType.ALL)
     @JoinTable(name = "user_store", joinColumns = {@JoinColumn(name = "user_id")}, inverseJoinColumns = {@JoinColumn(name = "store_id")})
     private List<Store> stores = new ArrayList<>();
 

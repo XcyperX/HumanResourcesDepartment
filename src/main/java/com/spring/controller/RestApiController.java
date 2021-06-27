@@ -73,14 +73,15 @@ public class RestApiController {
         ProductDTO product = null;
         try {
             product = new ObjectMapper().readValue(productDTO, ProductDTO.class);
-            File uploadDir = new File(uploadPath);
-            if (!uploadDir.exists()) {
-                uploadDir.mkdir();
-            }
+//            File uploadDir = new File(uploadPath);
+//            if (!uploadDir.exists()) {
+//                uploadDir.mkdir();
+//            }
             String uuidFile = UUID.randomUUID().toString();
             String resultFileName = uuidFile + "." + file.getOriginalFilename();
-            file.transferTo(new File(uploadPath + "/" + resultFileName));
+//            file.transferTo(new File(uploadPath + "/" + resultFileName));
             product.setUrlPhoto(resultFileName);
+            product.setImage(file.getBytes());
         } catch (IOException e) {
             e.printStackTrace();
         }

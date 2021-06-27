@@ -841,7 +841,7 @@ setProductsInCustomerBasket = () => {
                         let product_html = `<div class="col mb-4" id="product_${product.product_id}">
                                             <div class="card h-100">
                                                 <div class="card-body pb-0">
-                                                    <img src="/img/${product.url_photo}" class="card-img-top rounded mx-auto d-block" alt="..."
+                                                    <img src="data:image/jpg;base64,${product.base64Image}" class="card-img-top rounded mx-auto d-block" alt="..."
                                                          style="width: 60%;">
                                                 </div>
                                                 <div class="card-body">

@@ -3,6 +3,7 @@ package com.spring.DTO;
 import com.fasterxml.jackson.annotation.JsonProperty;
 import lombok.Data;
 import lombok.NoArgsConstructor;
+import org.springframework.web.multipart.MultipartFile;
 
 import javax.validation.constraints.NotBlank;
 import javax.validation.constraints.NotNull;
@@ -14,6 +15,10 @@ import java.io.Serializable;
 public class ProductDTO implements Serializable {
     @JsonProperty("product_id")
     private Long id;
+
+    private byte[] image;
+
+    private String base64Image;
 
     @NotBlank
     private String name;

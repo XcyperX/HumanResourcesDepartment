@@ -6,7 +6,7 @@
                 <div class="card">
                     <div class="row no-gutters">
                         <div class="col-md-5">
-                            <img src="/img/${product.urlPhoto}" class="card-img" alt="...">
+                            <img src="data:image/jpg;base64,${product.base64Image}" class="card-img" alt="...">
                         </div>
                         <div class="col-md-7">
                             <div class="card-body">
