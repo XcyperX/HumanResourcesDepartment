@@ -6,7 +6,7 @@
                        placeholder="Введите название должности">
             </div>
             <div class="col">
-                <input class="btn btn-primary btn-block" type="button" onclick="submitNewManufacturer()"
+                <input class="btn btn-primary btn-block" type="button" onclick="submitNewPosition()"
                        value="Добавить должность">
             </div>
         </div>

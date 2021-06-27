@@ -6,7 +6,7 @@
                        placeholder="Введите название подразделения">
             </div>
             <div class="col">
-                <input class="btn btn-primary btn-block" type="button" onclick="submitNewManufacturer()"
+                <input class="btn btn-primary btn-block" type="button" onclick="submitNewSubdivision()"
                        value="Добавить подразделение">
             </div>
         </div>

@@ -14,7 +14,7 @@
                 </div>
                 <div class="row mb-2">
                     <label>Выберите статус</label>
-                    <select id="filter_provider_id" class="form-control">
+                    <select id="filter_provider_id" class="form-control" disabled>
                         <option value="0">Все</option>
                         <#list statuses?values as status>
                             <option value="${status}">${status.getNameStatus()}</option>
@@ -23,8 +23,8 @@
                 </div>
                 <div class="row mb-2">
                     <label>Выберите даты</label>
-                    <input id="date_start" type="date" name="date_start" class="form-control mb-1">
-                    <input id="date_final" type="date" name="date_final" class="form-control">
+                    <input id="date_start" type="date" name="date_start" class="form-control mb-1" disabled>
+                    <input id="date_final" type="date" name="date_final" class="form-control" disabled>
                 </div>
                 <div class="row mb-2">
                     <a type="button" href="/pdf/request/sales" class="btn btn-primary btn-block mt-3 mb-3">Отчет по продажам
@@ -34,7 +34,7 @@
         </div>
         <div class="col-sm-10">
             <div class="container-fluid">
-                <@sb.searchBlock />
+<#--                <@sb.searchBlock />-->
                 <div class="row">
                     <@loh.listOrders users=users stores="" orderHistories=orderHistories manufacturer=manufacturer categories=categories products=products />
                 </div>

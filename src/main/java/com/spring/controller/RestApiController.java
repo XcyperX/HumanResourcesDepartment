@@ -2,12 +2,14 @@ package com.spring.controller;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.spring.DTO.*;
+import com.spring.model.User;
 import com.spring.repository.SubdivisionRepository;
 import com.spring.service.*;
 import lombok.RequiredArgsConstructor;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.http.ResponseEntity;
+import org.springframework.security.core.annotation.AuthenticationPrincipal;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.multipart.MultipartFile;
 
@@ -200,7 +202,7 @@ public class RestApiController {
     }
 
     @PostMapping("add/products/orders/{orderId}/stock/{stockId}")
-    public void addProductsInStockByOrder(@PathVariable("orderId") Long orderId, @PathVariable("stockId") Long stockId) {
-        orderHistoryService.addProductsInStock(orderId, stockId);
+    public void addProductsInStockByOrder(@PathVariable("orderId") Long orderId, @PathVariable("stockId") Long stockId, @AuthenticationPrincipal User user) {
+        orderHistoryService.addProductsInStock(orderId, stockId, user);
     }
 }

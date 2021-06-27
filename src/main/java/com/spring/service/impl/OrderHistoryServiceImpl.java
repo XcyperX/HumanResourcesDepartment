@@ -3,10 +3,7 @@ package com.spring.service.impl;
 import com.spring.DTO.OrderHistoryDTO;
 import com.spring.DTO.ProductDTO;
 import com.spring.mapper.OrderHistoryMapper;
-import com.spring.model.OrderHistory;
-import com.spring.model.Product;
-import com.spring.model.Role;
-import com.spring.model.Store;
+import com.spring.model.*;
 import com.spring.repository.OrderHistoryRepository;
 import com.spring.repository.ProductRepository;
 import com.spring.service.OrderHistoryService;
@@ -80,7 +77,7 @@ public class OrderHistoryServiceImpl implements OrderHistoryService {
     }
 
     @Override
-    public void addProductsInStock(Long orderId, Long stockId) {
+    public void addProductsInStock(Long orderId, Long stockId, User user) {
         if (orderHistoryRepository.findById(orderId).isEmpty()) {
             throw new RuntimeException("Ошибка, нет такого заказа!");
         }
@@ -88,6 +85,7 @@ public class OrderHistoryServiceImpl implements OrderHistoryService {
         orderHistory.getOrderProductInfos().forEach(orderProductInfo -> {
             Product product = productRepository.findById(orderProductInfo.getProduct().getId()).get();
             Product test = new Product();
+            test.setId(null);
             test.setStore(new Store(stockId));
             test.setPrice(product.getPrice());
             test.setAmount(orderProductInfo.getAmount());
@@ -96,11 +94,14 @@ public class OrderHistoryServiceImpl implements OrderHistoryService {
             test.setDescription(product.getDescription());
             test.setManufacturer(product.getManufacturer());
             test.setName(product.getName());
-            test.setSupplies(product.getSupplies());
+            test.setSupplies(null);
             test.setUrlPhoto(product.getUrlPhoto());
-            test.setUser(product.getUser());
+            test.setUser(user);
+
+            product.setAmount(product.getAmount() - orderProductInfo.getAmount());
 
             productRepository.save(test);
+            productRepository.save(product);
         });
         orderHistoryRepository.deleteById(orderId);
     }
